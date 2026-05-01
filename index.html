@@ -1,18 +1,600 @@
 <!DOCTYPE html>
-<html lang="en-US" id="ls-global" class="js webgl no-touch geolocation video svg inlinesvg smil svgclippaths mediaqueries cssresize skrollr skrollr-desktop">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRC Islamic Center - Karachi, Pakistan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <head>
-    <title>JAFARIA ASSOCIATION OF CONNECTICUT – ISLAMIC EDUCATION CENTER</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="robots" content="max-image-preview:large" />
-    <meta name="generator" content="WordPress 6.8.2" …2x192.jpeg" sizes="192x192" />
-…          <script type="text/javascript" src="https://jaoct.org/wp-content/plugins/contact-form-7/includes/js/html5-fallback.js?ver=6.1.1" id="contact-form-7-html5-fallback-js"></script>
-          <script type="text/javascript" src="https://jaoct.org/wp-content/plugins/youtube-embed-plus/scripts/fitvids.min.js?ver=14.2.3" id="__ytprefsfitvids__-js"></script>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        /* Header Section with Background Image */
+        .header {
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.pexels.com/photos/2590921/pexels-photo-2590921.jpeg?auto=compress&cs=tinysrgb&w=1600');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            text-align: center;
+            padding: 120px 20px;
+        }
+
+        .header h1 {
+            font-size: 56px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .header .btn {
+            background: #2e7d32;
+            color: white;
+            padding: 15px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 18px;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .header .btn:hover {
+            background: #1b5e20;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: #1a1a2e;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            transition: 0.3s;
+        }
+
+        .navbar a:hover {
+            background: #2e7d32;
+            border-radius: 5px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Section Titles */
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            color: #1a1a2e;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: #2e7d32;
+            margin: 15px auto 0;
+        }
+
+        /* Welcome Box */
+        .welcome-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+            margin-bottom: 50px;
+        }
+
+        .welcome-box h2 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+
+        .welcome-box p {
+            color: #666;
+            line-height: 1.8;
+            font-size: 18px;
+        }
+
+        /* Box Grid - 3 Boxes */
+        .box-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .box:hover {
+            transform: translateY(-10px);
+        }
+
+        .box .icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        .box h3 {
+            color: #1a1a2e;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .box p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Prayer Times Box (Special Design) */
+        .prayer-times {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .prayer-times h2 {
+            margin-bottom: 30px;
+        }
+
+        .prayer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .prayer-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .prayer-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .prayer-time {
+            font-size: 24px;
+            font-family: monospace;
+        }
+
+        /* Two Column Layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* Video & Audio Section */
+        .media-section {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 50px;
+        }
+
+        .media-section h2 {
+            text-align: center;
+            color: #1a1a2e;
+            margin-bottom: 30px;
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .audio-player {
+            background: #f0f2f5;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* Visitor Counter & Clock */
+        .counter-clock {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .counter-clock h3 {
+            color: #1a1a2e;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .clock {
+            font-size: 32px;
+            font-family: monospace;
+            background: #1a1a2e;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        /* Map & Location */
+        .location-box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 50px;
+        }
+
+        /* Links Section */
+        .links-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 50px;
+        }
+
+        .link-list {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            list-style: none;
+        }
+
+        .link-list a {
+            color: #2e7d32;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: #f0f2f5;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .link-list a:hover {
+            background: #2e7d32;
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a1a2e;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 32px;
+            }
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+            .media-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Button style */
+        .donate-btn {
+            background: #ff6d00;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="nav-container">
+            <a href="#">Home</a>
+            <a href="#">About Us</a>
+            <a href="#">Prayer Times</a>
+            <a href="#">Events</a>
+            <a href="#">Education</a>
+            <a href="#">Donate</a>
+            <a href="#">Contact</a>
         </div>
-      </div>
     </div>
-    <div class="mm-menu-mask" id="icicy3g"></div>
-  </body>
 
+    <!-- Header with Background -->
+    <div class="header">
+        <h1>🕌 IRC Islamic Center</h1>
+        <p>Karachi, Pakistan | Serving the Community Since 1985</p>
+        <a href="#" class="btn">Learn More About Us</a>
+    </div>
+
+    <div class="container">
+
+        <!-- Welcome Box -->
+        <div class="welcome-box">
+            <h2>Welcome to IRC Islamic Center</h2>
+            <p>The Islamic Research Center (IRC) in Karachi is dedicated to providing authentic Islamic education, fostering community spirit, and serving humanity. We welcome everyone - Muslims and non-Muslims - to learn about Islam in a peaceful, respectful environment.</p>
+        </div>
+
+        <!-- 3 Main Boxes -->
+        <div class="box-grid">
+            <div class="box">
+                <div class="icon">📚</div>
+                <h3>Islamic Education</h3>
+                <p>Quran classes, Arabic language courses, and Islamic studies for all ages. Weekend school for children.</p>
+            </div>
+            <div class="box">
+                <div class="icon">🤝</div>
+                <h3>Community Services</h3>
+                <p>Food distribution, financial assistance, marriage counseling, and funeral services for the community.</p>
+            </div>
+            <div class="box">
+                <div class="icon">🌙</div>
+                <h3>Daily Prayers</h3>
+                <p>Five daily prayers, Jummah congregation, Taraweeh during Ramadan, and Eid celebrations.</p>
+            </div>
+        </div>
+
+        <!-- Prayer Times Section -->
+        <div class="prayer-times">
+            <h2>📿 Today's Prayer Times (Karachi)</h2>
+            <div class="prayer-grid">
+                <div class="prayer-item">
+                    <div class="prayer-name">Fajr</div>
+                    <div class="prayer-time">4:45 AM</div>
+                </div>
+                <div class="prayer-item">
+                    <div class="prayer-name">Dhuhr</div>
+                    <div class="prayer-time">12:30 PM</div>
+                </div>
+                <div class="prayer-item">
+                    <div class="prayer-name">Asr</div>
+                    <div class="prayer-time">3:45 PM</div>
+                </div>
+                <div class="prayer-item">
+                    <div class="prayer-name">Maghrib</div>
+                    <div class="prayer-time">6:00 PM</div>
+                </div>
+                <div class="prayer-item">
+                    <div class="prayer-name">Isha</div>
+                    <div class="prayer-time">7:30 PM</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Two Column Section -->
+        <div class="two-col">
+            <div class="card">
+                <h3>📖 About IRC</h3>
+                <p>The Islamic Research Center (IRC) was established in Karachi to promote authentic Islamic knowledge based on the Quran and Sunnah.</p>
+                <p>Our mission is to serve the Muslim community of Karachi and surrounding areas by providing religious education, social services, and a place for worship.</p>
+                <p><strong>Location:</strong> Block 7, Gulshan-e-Iqbal, Karachi, Pakistan</p>
+            </div>
+            <div class="card">
+                <h3>⭐ Upcoming Events</h3>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>📅 Weekly Quran Tafsir - Every Friday after Maghrib</li>
+                    <li>📅 Children's Islamic Summer Camp - June 15-30</li>
+                    <li>📅 Monthly Food Drive - First Saturday of each month</li>
+                    <li>📅 New Muslim Classes - Every Sunday 10 AM</li>
+                </ul>
+                <button class="donate-btn" style="margin-top: 20px;">View All Events →</button>
+            </div>
+        </div>
+
+        <!-- Video & Audio Section -->
+        <div class="media-section">
+            <h2>🎥 Weekly Lectures & Quran Recitation</h2>
+            <div class="media-grid">
+                <div>
+                    <h3 style="margin-bottom: 15px;">📺 Featured Lecture</h3>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/XkfDsJh_4vY" 
+                                title="Islamic Lecture" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                    <p style="margin-top: 10px;">Weekly Friday Sermon by Imam</p>
+                </div>
+                <div>
+                    <h3 style="margin-bottom: 15px;">🎙️ Quran Recitation</h3>
+                    <div class="audio-player">
+                        <p>Listen to Beautiful Quran Recitation</p>
+                        <audio controls>
+                            <source src="https://www.islamcan.com/audio/quran/surah-yasin.shtml" type="audio/mpeg">
+                            Your browser does not support audio.
+                        </audio>
+                        <p style="margin-top: 10px;">Surah Al-Fatiha - Recitation</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visitor Counter & Live Clock -->
+        <div class="counter-clock">
+            <h3>🌐 Website Visitors & Live Time</h3>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="visitor-count">Loading...</div>
+                    <div>Total Visitors</div>
+                </div>
+                <div class="stat-item">
+                    <div class="clock" id="live-clock">--:--:--</div>
+                    <div>Pakistan Standard Time (PKT)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location / Map Box -->
+        <div class="location-box">
+            <h3 style="text-align: center; margin-bottom: 20px;">📍 Our Location</h3>
+            <div style="background: #e0e0e0; padding: 60px; text-align: center; border-radius: 15px;">
+                <p>📍 Block 7, Gulshan-e-Iqbal</p>
+                <p>Karachi, Pakistan - 75300</p>
+                <p>📞 +92 21 3482 1234</p>
+                <p>📧 info@ircislamiccenter.pk</p>
+                <p style="margin-top: 15px;">🕌 Near KDA Chowrangi, Main University Road</p>
+            </div>
+        </div>
+
+        <!-- Web Links Section -->
+        <div class="links-section">
+            <h3 style="text-align: center; margin-bottom: 20px;">🔗 Useful Links</h3>
+            <ul class="link-list">
+                <li><a href="#">Download Prayer Schedule</a></li>
+                <li><a href="#">Quran with Translation</a></li>
+                <li><a href="#">Donation Portal</a></li>
+                <li><a href="#">Volunteer Registration</a></li>
+                <li><a href="#">Contact Imam</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>🕌 IRC Islamic Center - Karachi, Pakistan</p>
+        <p>Serving the community since 1985</p>
+        <p style="margin-top: 20px;">© 2026 IRC Islamic Center | All Rights Reserved</p>
+        <p style="margin-top: 10px; font-size: 14px;">Follow us: Facebook | Twitter | YouTube | WhatsApp</p>
+    </div>
+
+    <script>
+        // Visitor Counter
+        let count = localStorage.getItem('ircVisitors');
+        if (count === null) {
+            count = 1250;
+        } else {
+            count = parseInt(count) + 1;
+        }
+        localStorage.setItem('ircVisitors', count);
+        document.getElementById('visitor-count').innerText = count.toLocaleString();
+
+        // Live Clock (Pakistan Time - UTC+5)
+        function updateClock() {
+            const now = new Date();
+            // Convert to Pakistan Time (UTC+5)
+            const pakistanTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Karachi"}));
+            const time = pakistanTime.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+            document.getElementById('live-clock').innerText = time;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+
+</body>
 </html>
