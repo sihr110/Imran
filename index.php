@@ -1,186 +1,256 @@
-<?php
-// include config which is used to derive site state
-// if we don't have config, ignore this file and force index.html to
-// be the output
-if (file_exists('config.php')) {
-  include_once 'config.php';
-  $HAXSiteConfig = $GLOBALS["HAXSiteConfig"];
-}
-else {
-  print file_get_contents('index.html');
-  exit();
-}
-?>
 <!DOCTYPE html>
-<html lang="<?php print $HAXSiteConfig->getLanguage(); ?>">
+<html lang="en">
 <head>
-  <script type="importmap">
-    {
-      "scopes": {
-        "./custom/build/": {
-          "@haxtheweb/": "./build/es6/node_modules/@haxtheweb/"
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Awesome Website</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-      }
-    }
-  </script>
-  <?php print $HAXSiteConfig->getBaseTag(); ?>
-  <?php print $HAXSiteConfig->getSiteMetadata($HAXSiteConfig->page); ?>
-  <?php print $HAXSiteConfig->getServiceWorkerScript(null, FALSE, $HAXSiteConfig->getServiceWorkerStatus()); ?>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      min-height: 98vh;
-    }
-    haxcms-site-builder:not([theme-loaded]) * {
-      margin-top: 100px;
-      display: block;
-      max-width: 50vw;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    haxcms-site-builder[theme-loaded] .haxcms-theme-element:not(:defined) {
-      margin-top: 100px;
-    }
-    haxcms-site-builder[theme-loaded] .haxcms-theme-element:not(:defined) * {
-      max-width: 50vw;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    haxcms-site-builder[theme-loaded] .haxcms-theme-element:not(:defined) *:not(:defined) {
-      display: block;
-      min-height: 50px;
-      min-width: 200px;
-    }
-  </style>
-  <style id="loadingstyles">
-    haxcms-site-builder {
-      display: block;
-    }
-    body {
-      background-color: #ffffff;
-      color: rgba(0,0,0, 0.2);
-    }
-    #loading {
-      background-color: #ffffff;
-      bottom: 0px;
-      left: 0px;
-      opacity: 1;
-      position: absolute;
-      right: 0px;
-      top: 0px;
-      z-index: 99999999;
-    }
-    #loading.loaded {
-      animation: fade-out .1s ease-in-out;
-      animation-fill-mode: forwards;
-    }
-    #loading div.messaging {
-      color: rgba(0,0,0, 0.2);
-      left: 0px;
-      position: absolute;
-      right: 0px;
-      text-align: center;
-      top: 25vh;
-    }
-    #loading div.messaging h1 {
-      font-family: Helvetica, "Trebuchet MS", Verdana, sans-serif !important;
-      line-height: 2;
-      font-size: 18px !important;
-      margin: 0;
-      padding: 0;
-    }
 
-    .progress-line,
-    .progress-line:before {
-      height: 8px;
-      width: 100%;
-      margin: auto;
-    }
-    .progress-line {
-      background-color: rgba(0,0,0, 0.1);
-      display: -webkit-flex;
-      display: flex;
-      width: 50vw;
-    }
-    .progress-line:before {
-      background-color: <?php print $HAXSiteConfig->color;?>;
-      content: '';
-      animation: running-progress 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    }
-    @keyframes running-progress {
-      0% {
-        margin-left: 0px;
-        margin-right: 100%;
-      }
-      50% {
-        margin-left: 25%;
-        margin-right: 0%;
-      }
-      100% {
-        margin-left: 100%;
-        margin-right: 0;
-      }
-    }
-    @keyframes fade-out {
-      0% {
-        opacity: 1;
-      }
-      99% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 0;
-      }
-    }
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: #333333;
-        color: rgba(255,255,255, 0.2);
-      }
-      #loading {
-        background-color: #333333;
-      }
-      #loading div.messaging {
-        color: rgba(255,255,255, 0.2);
-      }
-    }
-  </style>
-  <script id="loadingscript">
-    globalThis.addEventListener('haxcms-ready', function(e) {
-      // give the web components a second to build
-      setTimeout(function() {
-        document.querySelector('#loading').classList.add('loaded');
-        setTimeout(function() {
-          document.querySelector('#loading').parentNode.removeChild(document.querySelector('#loading'));
-          document.querySelector('#loadingstyles').parentNode.removeChild(document.querySelector('#loadingstyles'));
-          document.querySelector('#loadingscript').parentNode.removeChild(document.querySelector('#loadingscript'));
-        }, 100);
-      }, 300);
-    });
-  </script>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.95);
+            padding: 60px 30px;
+            text-align: center;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            font-size: 48px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            font-size: 20px;
+            color: #666;
+        }
+
+        .box-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .box .icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .box h3 {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .box p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .box button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .box button:hover {
+            background: #764ba2;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-box:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .footer {
+            background: rgba(255,255,255,0.95);
+            padding: 30px;
+            text-align: center;
+            border-radius: 20px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
 </head>
-<body <?php print $HAXSiteConfig->getSitePageAttributes();?>>
-  <section role="alert" id="loading" aria-busy="true">
-    <div class="messaging">
-      <div class="progress-line"></div>
-      <h1>Loading <?php print $HAXSiteConfig->name; ?>..</h1>
+<body>
+    <div class="container">
+        <!-- HEADER BOX - REPLACE THIS TEXT -->
+        <div class="header">
+            <h1>🌍 Welcome to My Digital Space</h1>
+            <p>Creating beautiful websites made simple and fun!</p>
+        </div>
+
+        <!-- 3 BOXES GRID - REPLACE THESE TEXTS -->
+        <div class="box-grid">
+            <div class="box">
+                <div class="icon">💼</div>
+                <h3>Our Services</h3>
+                <p>We offer professional web design, development, and consulting services tailored to your needs.</p>
+                <button>Explore Services →</button>
+            </div>
+
+            <div class="box">
+                <div class="icon">🌟</div>
+                <h3>Our Mission</h3>
+                <p>To help people create stunning websites without any coding stress or technical difficulties.</p>
+                <button>Learn More →</button>
+            </div>
+
+            <div class="box">
+                <div class="icon">🤝</div>
+                <h3>Get Support</h3>
+                <p>24/7 customer support to help you with any questions or issues you might encounter.</p>
+                <button>Contact Us →</button>
+            </div>
+        </div>
+
+        <!-- TWO COLUMN SECTION - REPLACE THESE TEXTS -->
+        <div class="two-col">
+            <div class="card">
+                <h2>📖 Our Story</h2>
+                <p>We started this journey to make website creation accessible to everyone. No complicated coding, no expensive software - just simple tools that work.</p>
+                <p>Today, we've helped hundreds of people launch their websites and grow their online presence.</p>
+                <p><strong>✨ Join our community:</strong> It's free and always will be!</p>
+            </div>
+
+            <div class="card">
+                <h2>🎯 Why Choose Us</h2>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>✅ 100% Free to use</li>
+                    <li>✅ No coding required</li>
+                    <li>✅ Mobile responsive designs</li>
+                    <li>✅ Fast and reliable hosting</li>
+                    <li>✅ Regular updates & support</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- STATS BOXES - REPLACE THESE NUMBERS AND LABELS -->
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number">1,000+</div>
+                <div class="stat-label">Active Users</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">⭐ 4.9</div>
+                <div class="stat-label">User Rating</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Countries</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Possibilities</div>
+            </div>
+        </div>
+
+        <!-- FOOTER - REPLACE THIS TEXT -->
+        <div class="footer">
+            <p>❤️ Built with passion | © 2026 My Awesome Website</p>
+            <p style="margin-top: 10px; font-size: 14px;">📧 Contact: hello@mywebsite.com | 📱 Follow us on social media</p>
+        </div>
     </div>
-  </section>
-  <haxcms-site-builder id="site" file="site.json<?php print $HAXSiteConfig->cacheBusterHash();?>">
-    <?php print $HAXSiteConfig->getPageContent($HAXSiteConfig->page); ?>
-  </haxcms-site-builder>
-  <script>
-    <?php 
-      // support for local dev overrides of where microservices / other JS comes from
-      if (file_exists('../../_config/.local.microservice.config.php')) {
-        include_once '../../_config/.local.microservice.config.php';
-      }
-    ?>
-    globalThis.HAXCMSContext="php";globalThis.__appCDN="<?php print $HAXSiteConfig->getCDNForDynamic();?>";
-  </script>
-  <script src="<?php print $HAXSiteConfig->getCDNForDynamic();?>build-haxcms.js"></script>
-  <script src="<?php print $HAXSiteConfig->getCDNForDynamic();?>build.js"></script>
-  <?php print $HAXSiteConfig->getGaCode(); ?>
 </body>
 </html>
