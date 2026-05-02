@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IRC Islamic Center - Karachi, Pakistan</title>
@@ -181,15 +181,18 @@
             margin-bottom: 30px;
         }
 
-        .prayer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
+  .prayer-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
 
-        .prayer-item {
+       .prayer-item {
+    	flex: 1;
+    	min-width: 100px;
             background: rgba(255,255,255,0.1);
             padding: 20px;
             border-radius: 10px;
@@ -397,180 +400,212 @@
             font-size: 16px;
         }
     </style>
-</head>
+<style id="iframe-editor-styles">
+                    .iframe-edit-modal {
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: white;
+                        padding: 25px;
+                        border-radius: 20px;
+                        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                        z-index: 10001;
+                        min-width: 340px;
+                        font-family: 'Segoe UI', sans-serif;
+                    }
+                    .iframe-edit-modal input {
+                        width: 100%;
+                        margin: 10px 0;
+                        padding: 10px;
+                        border-radius: 8px;
+                        border: 1px solid #ccc;
+                    }
+                    .iframe-edit-modal button {
+                        margin-top: 10px;
+                        padding: 10px 16px;
+                        border-radius: 8px;
+                        border: none;
+                        cursor: pointer;
+                    }
+                    .iframe-modal-overlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0,0,0,0.5);
+                        z-index: 10000;
+                    }
+                </style></head>
 <body>
 
     <!-- Navigation Bar -->
-    <div class="navbar">
-        <div class="nav-container">
-            <a href="#">Home</a>
-            <a href="#">About Us</a>
-            <a href="#">Prayer Times</a>
-            <a href="#">Events</a>
-            <a href="#">Education</a>
-            <a href="#">Donate</a>
-            <a href="#">Contact</a>
+    <div class="navbar" contenteditable="true" style="cursor: text;">
+        <div class="nav-container" contenteditable="true" style="cursor: text;">
+            <a href="#" contenteditable="true" style="cursor: pointer;" data-editable-link="true" title="🔧 Double-click to edit this link">Home</a>
+            <a href="#" contenteditable="true" style="cursor: pointer;" data-editable-link="true" title="🔧 Double-click to edit this link">About Us</a>
+            <a href="#" contenteditable="true" style="cursor: pointer;" data-editable-link="true" title="🔧 Double-click to edit this link">Prayer Times</a>
+            <a href="#" contenteditable="true" style="cursor: pointer;" data-editable-link="true" title="🔧 Double-click to edit this link">Events</a>
+            <a href="#" contenteditable="true" style="cursor: pointer;" data-editable-link="true" title="🔧 Double-click to edit this link">Education</a>
+            <a href="#" contenteditable="true" style="cursor: pointer;" data-editable-link="true" title="🔧 Double-click to edit this link">Donate</a>
+            <a href="#" contenteditable="true" style="cursor: pointer;" data-editable-link="true" title="🔧 Double-click to edit this link">Contact</a>
         </div>
     </div>
 
     <!-- Header with Background -->
-    <div class="header">
-        <h1>🕌 IRC Islamic Center</h1>
-        <p>Karachi, Pakistan | Serving the Community Since 1985</p>
-        <a href="#" class="btn">Learn More About Us</a>
+    <div class="header" contenteditable="true" style="cursor: text;">
+        <h1 contenteditable="true" style="cursor: text;">🕌 IRC Islamic Center</h1>
+        <p contenteditable="true" style="cursor: text;">Karachi, Pakistan | Serving the Community Since 1985</p>
+        <a href="#" class="btn" contenteditable="true" style="cursor: pointer;" data-editable-link="true" title="🔧 Double-click to edit this link">Learn More About Us</a>
     </div>
 
-    <div class="container">
+    <div class="container" contenteditable="true" style="cursor: text;">
 
         <!-- Welcome Box -->
-        <div class="welcome-box">
-            <h2>Welcome to IRC Islamic Center</h2>
-            <p>The Islamic Research Center (IRC) in Karachi is dedicated to providing authentic Islamic education, fostering community spirit, and serving humanity. We welcome everyone - Muslims and non-Muslims - to learn about Islam in a peaceful, respectful environment.</p>
+        <div class="welcome-box" contenteditable="true" style="cursor: text;">
+            <h2 contenteditable="true" style="cursor: text;">Welcome to IRC Islamic Center</h2>
+            <p contenteditable="true" style="cursor: text;">The Islamic Research Center (IRC) in Karachi is dedicated to providing authentic Islamic education, fostering community spirit, and serving humanity. We welcome everyone - Muslims and non-Muslims - to learn about Islam in a peaceful, respectful environment.</p>
         </div>
 
         <!-- 3 Main Boxes -->
-        <div class="box-grid">
-            <div class="box">
-                <div class="icon">📚</div>
-                <h3>Islamic Education</h3>
-                <p>Quran classes, Arabic language courses, and Islamic studies for all ages. Weekend school for children.</p>
+        <div class="box-grid" contenteditable="true" style="cursor: text;">
+            <div class="box" contenteditable="true" style="cursor: text;">
+                <div class="icon" contenteditable="true" style="cursor: text;">📚</div>
+                <h3 contenteditable="true" style="cursor: text;">Islamic Education</h3>
+                <p contenteditable="true" style="cursor: text;">Quran classes, Arabic language courses, and Islamic studies for all ages. Weekend school for children.</p>
             </div>
-            <div class="box">
-                <div class="icon">🤝</div>
-                <h3>Community Services</h3>
-                <p>Food distribution, financial assistance, marriage counseling, and funeral services for the community.</p>
+            <div class="box" contenteditable="true" style="cursor: text;">
+                <div class="icon" contenteditable="true" style="cursor: text;">🤝</div>
+                <h3 contenteditable="true" style="cursor: text;">Community Services</h3>
+                <p contenteditable="true" style="cursor: text;">Food distribution, financial assistance, marriage counseling, and funeral services for the community.</p>
             </div>
-            <div class="box">
-                <div class="icon">🌙</div>
-                <h3>Daily Prayers</h3>
-                <p>Five daily prayers, Jummah congregation, Taraweeh during Ramadan, and Eid celebrations.</p>
+            <div class="box" contenteditable="true" style="cursor: text;">
+                <div class="icon" contenteditable="true" style="cursor: text;">🌙</div>
+                <h3 contenteditable="true" style="cursor: text;">Daily Prayers</h3>
+                <p contenteditable="true" style="cursor: text;">Five daily prayers and&nbsp;</p><p contenteditable="true" style="cursor: text;">Jummah congregation.</p>
             </div>
         </div>
 
         <!-- Prayer Times Section -->
-        <div class="prayer-times">
-            <h2>📿 Today's Prayer Times (Karachi)</h2>
-            <div class="prayer-grid">
-                <div class="prayer-item">
-                    <div class="prayer-name">Fajr</div>
-                    <div class="prayer-time">4:45 AM</div>
+        <div class="prayer-times" contenteditable="true" style="cursor: text;">
+            <h2 contenteditable="true" style="cursor: text;">📿 Today's Prayer Times (Karachi)</h2>
+            <div class="prayer-grid" contenteditable="true" style="cursor: text;">
+                <div class="prayer-item" contenteditable="true" style="cursor: text;">
+                    <div class="prayer-name" contenteditable="true" style="cursor: text;">Fajr</div>
+                    <div class="prayer-time" contenteditable="true" style="cursor: text;">4:45 AM</div>
                 </div>
-                <div class="prayer-item">
-                    <div class="prayer-name">Dhuhr</div>
-                    <div class="prayer-time">12:30 PM</div>
+                <div class="prayer-item" contenteditable="true" style="cursor: text;">
+                    <div class="prayer-name" contenteditable="true" style="cursor: text;">Dhuhr</div>
+                    <div class="prayer-time" contenteditable="true" style="cursor: text;">12:30 PM</div>
                 </div>
-                <div class="prayer-item">
-                    <div class="prayer-name">Asr</div>
-                    <div class="prayer-time">3:45 PM</div>
+                <div class="prayer-item" contenteditable="true" style="cursor: text;">
+                    <div class="prayer-name" contenteditable="true" style="cursor: text;">Asr</div>
+                    <div class="prayer-time" contenteditable="true" style="cursor: text;">3:45 PM</div>
                 </div>
-                <div class="prayer-item">
-                    <div class="prayer-name">Maghrib</div>
-                    <div class="prayer-time">6:00 PM</div>
+                <div class="prayer-item" contenteditable="true" style="cursor: text;">
+                    <div class="prayer-name" contenteditable="true" style="cursor: text;">Maghrib</div>
+                    <div class="prayer-time" contenteditable="true" style="cursor: text;">6:00 PM</div>
                 </div>
-                <div class="prayer-item">
-                    <div class="prayer-name">Isha</div>
-                    <div class="prayer-time">7:30 PM</div>
+                <div class="prayer-item" contenteditable="true" style="cursor: text;">
+                    <div class="prayer-name" contenteditable="true" style="cursor: text;">Isha</div>
+                    <div class="prayer-time" contenteditable="true" style="cursor: text;">7:30 PM</div>
                 </div>
             </div>
         </div>
 
         <!-- Two Column Section -->
-        <div class="two-col">
-            <div class="card">
-                <h3>📖 About IRC</h3>
-                <p>The Islamic Research Center (IRC) was established in Karachi to promote authentic Islamic knowledge based on the Quran and Sunnah.</p>
-                <p>Our mission is to serve the Muslim community of Karachi and surrounding areas by providing religious education, social services, and a place for worship.</p>
-                <p><strong>Location:</strong> Block 7, Gulshan-e-Iqbal, Karachi, Pakistan</p>
+        <div class="two-col" contenteditable="true" style="cursor: text;">
+            <div class="card" contenteditable="true" style="cursor: text;">
+                <h3 contenteditable="true" style="cursor: text;">📖 About IRC</h3>
+                <p contenteditable="true" style="cursor: text;">The Islamic Research Center (IRC) was established in Karachi to promote authentic Islamic knowledge based on the Quran and Sunnah.</p>
+                <p contenteditable="true" style="cursor: text;">Our mission is to serve the Muslim community of Karachi and surrounding areas by providing religious education, social services, and a place for worship.</p>
+                <p contenteditable="true" style="cursor: text;"><strong contenteditable="true" style="cursor: text;">Location:</strong>&nbsp;<span style="color: rgb(0, 0, 0); text-align: center;">&nbsp;</span><span style="color: rgb(0, 0, 0); text-align: center;">F B Area Block 6,&nbsp;</span><span style="color: rgb(0, 0, 0); text-align: center;">Karachi, Pakistan</span></p>
             </div>
-            <div class="card">
-                <h3>⭐ Upcoming Events</h3>
+            <div class="card" contenteditable="true" style="cursor: text;">
+                <h3 contenteditable="true" style="cursor: text;">⭐ Upcoming Events</h3>
                 <ul style="margin-left: 20px; line-height: 1.8;">
-                    <li>📅 Weekly Quran Tafsir - Every Friday after Maghrib</li>
-                    <li>📅 Children's Islamic Summer Camp - June 15-30</li>
-                    <li>📅 Monthly Food Drive - First Saturday of each month</li>
-                    <li>📅 New Muslim Classes - Every Sunday 10 AM</li>
+                    <li contenteditable="true" style="cursor: text;">📅 Weekly Quran Tafsir - Every Friday after Maghrib</li>
+                    <li contenteditable="true" style="cursor: text;">📅 Children's Islamic Summer Camp - June 15-30</li>
+                    <li contenteditable="true" style="cursor: text;">📅 Monthly Food Drive - First Saturday of each month</li>
+                    <li contenteditable="true" style="cursor: text;">📅 New Muslim Classes - Every Sunday 10 AM</li>
                 </ul>
-                <button class="donate-btn" style="margin-top: 20px;">View All Events →</button>
+                <button class="donate-btn" style="margin-top: 20px; cursor: text;" contenteditable="true">View All Events →</button>
             </div>
         </div>
 
         <!-- Video & Audio Section -->
-        <div class="media-section">
-            <h2>🎥 Weekly Lectures & Quran Recitation</h2>
-            <div class="media-grid">
-                <div>
-                    <h3 style="margin-bottom: 15px;">📺 Featured Lecture</h3>
-                    <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/XkfDsJh_4vY" 
-                                title="Islamic Lecture" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen>
-                        </iframe>
+        <div class="media-section" contenteditable="true" style="cursor: text;">
+            <h2 contenteditable="true" style="cursor: text;">🎥 Weekly Lectures &amp; Quran Recitation</h2>
+            <div class="media-grid" contenteditable="true" style="cursor: text;">
+                <div contenteditable="true" style="cursor: text;">
+                    <h3 style="margin-bottom: 15px; cursor: text;" contenteditable="true">📺 Featured Lecture</h3>
+                    <div class="video-container" title="🔧 Double-click to change YouTube video" style="cursor: pointer;">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/kuXS7ctecZg?si=ktM1sUmTv--Zfu9x" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
-                    <p style="margin-top: 10px;">Weekly Friday Sermon by Imam</p>
+                    <p style="margin-top: 10px; cursor: text;" contenteditable="true">Weekly Friday Sermon by Imam</p>
                 </div>
-                <div>
-                    <h3 style="margin-bottom: 15px;">🎙️ Quran Recitation</h3>
-                    <div class="audio-player">
-                        <p>Listen to Beautiful Quran Recitation</p>
-                        <audio controls>
+                <div contenteditable="true" style="cursor: text;">
+                    <h3 style="margin-bottom: 15px; cursor: text;" contenteditable="true">🎙️ Quran Recitation</h3>
+                    <div class="audio-player" contenteditable="true" style="cursor: text;">
+                        <p contenteditable="true" style="cursor: text;">Listen to Beautiful Quran Recitation</p>
+                        <audio controls="">
                             <source src="https://www.islamcan.com/audio/quran/surah-yasin.shtml" type="audio/mpeg">
                             Your browser does not support audio.
                         </audio>
-                        <p style="margin-top: 10px;">Surah Al-Fatiha - Recitation</p>
+                        <p style="margin-top: 10px; cursor: text;" contenteditable="true">Surah Al-Fatiha - Recitation</p>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Visitor Counter & Live Clock -->
-        <div class="counter-clock">
-            <h3>🌐 Website Visitors & Live Time</h3>
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-number" id="visitor-count">Loading...</div>
-                    <div>Total Visitors</div>
+        <div class="counter-clock" contenteditable="true" style="cursor: text;">
+            <h3 contenteditable="true" style="cursor: text;">🌐 Website Visitors &amp; Live Time</h3>
+            <div class="stats" contenteditable="true" style="cursor: text;">
+                <div class="stat-item" contenteditable="true" style="cursor: text;">
+                    <div class="stat-number" id="visitor-count" contenteditable="true" style="cursor: text;">1,275</div>
+                    <div contenteditable="true" style="cursor: text;">Total Visitors</div>
                 </div>
-                <div class="stat-item">
-                    <div class="clock" id="live-clock">--:--:--</div>
-                    <div>Pakistan Standard Time (PKT)</div>
+                <div class="stat-item" contenteditable="true" style="cursor: text;">
+                    <div class="clock" id="live-clock" contenteditable="true" style="cursor: text;">12:53:23 PM</div>
+                    <div contenteditable="true" style="cursor: text;">Pakistan Standard Time (PKT)</div>
                 </div>
             </div>
         </div>
 
         <!-- Location / Map Box -->
-        <div class="location-box">
-            <h3 style="text-align: center; margin-bottom: 20px;">📍 Our Location</h3>
-            <div style="background: #e0e0e0; padding: 60px; text-align: center; border-radius: 15px;">
-                <p>📍 Block 7, Gulshan-e-Iqbal</p>
-                <p>Karachi, Pakistan - 75300</p>
-                <p>📞 +92 21 3482 1234</p>
-                <p>📧 info@ircislamiccenter.pk</p>
-                <p style="margin-top: 15px;">🕌 Near KDA Chowrangi, Main University Road</p>
+        <div class="location-box" contenteditable="true" style="cursor: text;">
+            <h3 style="text-align: center; margin-bottom: 20px; cursor: text;" contenteditable="true">📍 Our Location</h3>
+            <div style="background: rgb(224, 224, 224); padding: 60px; text-align: center; border-radius: 15px; cursor: text;" contenteditable="true">
+                <p contenteditable="true" style="cursor: text;">📍 F B Area Block 6</p>
+                <p contenteditable="true" style="cursor: text;">Karachi, Pakistan - 75300</p>
+                <p contenteditable="true" style="cursor: text;">📞 +92 21 1234 1234</p>
+                <p contenteditable="true" style="cursor: text;">📧 info@ircislamiccenter.pk</p>
+                <p style="margin-top: 15px; cursor: text;" contenteditable="true">🕌 Near Petrol Pump</p>
             </div>
         </div>
 
         <!-- Web Links Section -->
-        <div class="links-section">
-            <h3 style="text-align: center; margin-bottom: 20px;">🔗 Useful Links</h3>
+        <div class="links-section" contenteditable="true" style="cursor: text;">
+            <h3 style="text-align: center; margin-bottom: 20px; cursor: text;" contenteditable="true">🔗 Useful Links</h3>
             <ul class="link-list">
-                <li><a href="#">Download Prayer Schedule</a></li>
-                <li><a href="#">Quran with Translation</a></li>
-                <li><a href="#">Donation Portal</a></li>
-                <li><a href="#">Volunteer Registration</a></li>
-                <li><a href="#">Contact Imam</a></li>
+                <li contenteditable="true" style="cursor: text;"><a href="#" contenteditable="true" style="cursor: pointer;" data-editable-link="true" title="🔧 Double-click to edit this link">Download Prayer Schedule</a></li>
+                <li contenteditable="true" style="cursor: text;"><a href="#" contenteditable="true" style="cursor: pointer;" data-editable-link="true" title="🔧 Double-click to edit this link">Quran with Translation</a></li>
+                <li contenteditable="true" style="cursor: text;"><a href="#" contenteditable="true" style="cursor: pointer;" data-editable-link="true" title="🔧 Double-click to edit this link">Donation Portal</a></li>
+                <li contenteditable="true" style="cursor: text;"><a href="#" contenteditable="true" style="cursor: pointer;" data-editable-link="true" title="🔧 Double-click to edit this link">Volunteer Registration</a></li>
+                <li contenteditable="true" style="cursor: text;"><a href="#" contenteditable="true" style="cursor: pointer;" data-editable-link="true" title="🔧 Double-click to edit this link">Contact Imam</a></li>
             </ul>
         </div>
 
     </div>
 
     <!-- Footer -->
-    <div class="footer">
-        <p>🕌 IRC Islamic Center - Karachi, Pakistan</p>
-        <p>Serving the community since 1985</p>
-        <p style="margin-top: 20px;">© 2026 IRC Islamic Center | All Rights Reserved</p>
-        <p style="margin-top: 10px; font-size: 14px;">Follow us: Facebook | Twitter | YouTube | WhatsApp</p>
+    <div class="footer" contenteditable="true" style="cursor: text;">
+        <p contenteditable="true" style="cursor: text;">🕌 IRC Islamic Center - Karachi, Pakistan</p>
+        <p contenteditable="true" style="cursor: text;">Serving the community since 1985</p>
+        <p style="margin-top: 20px; cursor: text;" contenteditable="true">© 2026 IRC Islamic Center | All Rights Reserved</p>
+        <p style="margin-top: 10px; font-size: 14px; cursor: text;" contenteditable="true">Follow us: Facebook | Twitter | YouTube | WhatsApp</p>
     </div>
 
     <script>
@@ -596,5 +631,163 @@
         setInterval(updateClock, 1000);
     </script>
 
-</body>
+
+
+
+<script id="iframe-editor-script">
+                (function() {
+                    // Function to show edit modal for links
+                    function showLinkEditor(linkElement) {
+                        const overlay = document.createElement('div');
+                        overlay.className = 'iframe-modal-overlay';
+                        const modal = document.createElement('div');
+                        modal.className = 'iframe-edit-modal';
+                        
+                        const currentText = linkElement.innerText.trim();
+                        const currentHref = linkElement.getAttribute('href') || '';
+                        
+                        modal.innerHTML = `
+                            <h3 style="margin-bottom:15px">✏️ Edit Link</h3>
+                            <label>Link Text:</label>
+                            <input type="text" id="editLinkText" value="${escapeHtml(currentText)}">
+                            <label>URL (href):</label>
+                            <input type="text" id="editLinkUrl" value="${escapeHtml(currentHref)}">
+                            <div style="display:flex; gap:10px; margin-top:15px;">
+                                <button id="saveLinkBtn" style="background:#2e7d32; color:white;">💾 Save</button>
+                                <button id="cancelLinkBtn" style="background:#aaa;">Cancel</button>
+                            </div>
+                        `;
+                        
+                        document.body.appendChild(overlay);
+                        document.body.appendChild(modal);
+                        
+                        document.getElementById('saveLinkBtn').onclick = () => {
+                            const newText = document.getElementById('editLinkText').value;
+                            const newUrl = document.getElementById('editLinkUrl').value;
+                            if (newText) linkElement.innerText = newText;
+                            if (newUrl) linkElement.setAttribute('href', newUrl);
+                            overlay.remove();
+                            modal.remove();
+                            showToast(`✅ Link updated: "${newText || linkElement.innerText}"`);
+                        };
+                        
+                        document.getElementById('cancelLinkBtn').onclick = () => {
+                            overlay.remove();
+                            modal.remove();
+                        };
+                    }
+                    
+                    function showYouTubeEditor(iframeElement) {
+                        const currentSrc = iframeElement.src;
+                        const overlay = document.createElement('div');
+                        overlay.className = 'iframe-modal-overlay';
+                        const modal = document.createElement('div');
+                        modal.className = 'iframe-edit-modal';
+                        
+                        modal.innerHTML = `
+                            <h3 style="margin-bottom:15px">🎬 Edit YouTube Video</h3>
+                            <label>YouTube Embed URL:</label>
+                            <input type="text" id="editYoutubeUrl" value="${escapeHtml(currentSrc)}" placeholder="https://www.youtube.com/embed/...">
+                            <p style="font-size:12px; color:#666; margin-top:5px;">Example: https://www.youtube.com/embed/XkfDsJh_4vY</p>
+                            <div style="display:flex; gap:10px; margin-top:15px;">
+                                <button id="saveYoutubeBtn" style="background:#2e7d32; color:white;">💾 Save</button>
+                                <button id="cancelYoutubeBtn" style="background:#aaa;">Cancel</button>
+                            </div>
+                        `;
+                        
+                        document.body.appendChild(overlay);
+                        document.body.appendChild(modal);
+                        
+                        document.getElementById('saveYoutubeBtn').onclick = () => {
+                            let newUrl = document.getElementById('editYoutubeUrl').value;
+                            if (newUrl && iframeElement) {
+                                if (newUrl.includes('watch?v=')) newUrl = newUrl.replace('watch?v=', 'embed/');
+                                if (newUrl.includes('youtu.be/')) newUrl = newUrl.replace('youtu.be/', 'youtube.com/embed/');
+                                iframeElement.src = newUrl;
+                                showToast('✅ YouTube video updated!');
+                            }
+                            overlay.remove();
+                            modal.remove();
+                        };
+                        
+                        document.getElementById('cancelYoutubeBtn').onclick = () => {
+                            overlay.remove();
+                            modal.remove();
+                        };
+                    }
+                    
+                    function escapeHtml(str) {
+                        if (!str) return '';
+                        return str.replace(/[&<>]/g, function(m) {
+                            if (m === '&') return '&amp;';
+                            if (m === '<') return '&lt;';
+                            if (m === '>') return '&gt;';
+                            return m;
+                        });
+                    }
+                    
+                    function showToast(msg) {
+                        let toast = document.createElement('div');
+                        toast.innerText = msg;
+                        toast.style.position = 'fixed';
+                        toast.style.bottom = '20px';
+                        toast.style.left = '20px';
+                        toast.style.background = '#2e7d32';
+                        toast.style.color = 'white';
+                        toast.style.padding = '10px 20px';
+                        toast.style.borderRadius = '30px';
+                        toast.style.zIndex = '10001';
+                        toast.style.fontSize = '14px';
+                        toast.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+                        document.body.appendChild(toast);
+                        setTimeout(() => toast.remove(), 2500);
+                    }
+                    
+                    // Attach double-click listeners to all links
+                    function attachLinkEditors() {
+                        const allLinks = document.querySelectorAll('a');
+                        allLinks.forEach(link => {
+                            link.style.cursor = 'pointer';
+                            link.setAttribute('data-editable-link', 'true');
+                            link.removeEventListener('dblclick', link._editHandler);
+                            const handler = (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                showLinkEditor(link);
+                            };
+                            link.addEventListener('dblclick', handler);
+                            link._editHandler = handler;
+                            link.title = "🔧 Double-click to edit this link";
+                        });
+                        
+                        // Find all YouTube iframes inside .video-container or any iframe with youtube src
+                        const youtubeIframes = document.querySelectorAll('iframe[src*="youtube.com/embed"], iframe[src*="youtu.be"]');
+                        youtubeIframes.forEach(ytIframe => {
+                            const container = ytIframe.closest('.video-container') || ytIframe.parentElement;
+                            if (container) {
+                                container.style.cursor = 'pointer';
+                                container.removeEventListener('dblclick', container._ytHandler);
+                                const ytHandler = (e) => {
+                                    e.stopPropagation();
+                                    showYouTubeEditor(ytIframe);
+                                };
+                                container.addEventListener('dblclick', ytHandler);
+                                container._ytHandler = ytHandler;
+                                container.title = "🔧 Double-click to change YouTube video";
+                            }
+                        });
+                    }
+                    
+                    // Run when DOM is ready and also observe for dynamic content
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', attachLinkEditors);
+                    } else {
+                        attachLinkEditors();
+                    }
+                    
+                    // Observe for dynamically added content
+                    const observer = new MutationObserver(() => attachLinkEditors());
+                    observer.observe(document.body, { childList: true, subtree: true });
+                })();
+            </script></body>
 </html>
