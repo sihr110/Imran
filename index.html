@@ -581,25 +581,17 @@
 
     <script>
         // ============================================
-        // LINK CONFIGURATION
-        // All PDF files stored in /pdf/ folder
-        // All links open in SAME TAB
-        // Home button reloads main page
-        // Quran button uses your custom link
+        // LINK CONFIGURATION - EMBEDDED PDF VIEWER
+        // All PDF files open in viewer.html with full screen option
         // ============================================
         
         const MAIN_PAGE_URL = 'https://sihr110.github.io/Imran/';
         const QURAN_URL = 'https://www.zad-e-rah.com/Video/Quran/Quran-e-Majeed.html';
-        const PDF_BASE_URL = 'https://sihr110.github.io/Imran/pdf/';
+        const VIEWER_URL = 'https://sihr110.github.io/Imran/viewer.html';
         
-        // Helper function to open link in same tab
-        function openLink(url) {
-            window.location.href = url;
-        }
-        
-        // Helper function to open PDF
-        function openPDF(filename) {
-            window.location.href = PDF_BASE_URL + filename;
+        // Helper function to open PDF in embedded viewer
+        function openPDFViewer(filename) {
+            window.location.href = VIEWER_URL + '?file=' + filename;
         }
         
         // HOME button - reload main page in same tab
@@ -608,7 +600,7 @@
         }
         
         // ============================================
-        // BUTTON MAPPING TO PDF FILES
+        // BUTTON MAPPING TO PDF FILES (with numbers)
         // ============================================
         
         // Navigation Bar Buttons
@@ -619,75 +611,75 @@
         
         document.getElementById('aboutUsNavBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            openPDF('about-us.pdf');
+            openPDFViewer('1-about-us.pdf');
         });
         
         document.getElementById('prayerTimesNavBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            openPDF('prayer-times.pdf');
+            openPDFViewer('2-prayer-times.pdf');
         });
         
         document.getElementById('eventsNavBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            openPDF('events.pdf');
+            openPDFViewer('3-events.pdf');
         });
         
         document.getElementById('educationNavBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            openPDF('education.pdf');
+            openPDFViewer('4-education.pdf');
         });
         
         document.getElementById('donateNavBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            openPDF('donate.pdf');
+            openPDFViewer('5-donate.pdf');
         });
         
         document.getElementById('contactNavBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            openPDF('contact.pdf');
+            openPDFViewer('6-contact.pdf');
         });
         
         // Header Button
         document.getElementById('learnMoreBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            openPDF('learn-more.pdf');
+            openPDFViewer('7-learn-more.pdf');
         });
         
         // View All Events Button
         document.getElementById('viewAllEventsBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            openPDF('events-all.pdf');
+            openPDFViewer('12-events-all.pdf');
         });
         
         // Useful Links Section
         document.getElementById('scheduleLink').addEventListener('click', function(e) {
             e.preventDefault();
-            openPDF('schedule.pdf');
+            openPDFViewer('8-schedule.pdf');
         });
         
-        // Quran button - YOUR CUSTOM LINK
+        // Quran button - YOUR CUSTOM LINK (opens directly, not in viewer)
         document.getElementById('quranLink').addEventListener('click', function(e) {
             e.preventDefault();
-            openLink(QURAN_URL);
+            window.location.href = QURAN_URL;
         });
         
         document.getElementById('donationPortalLink').addEventListener('click', function(e) {
             e.preventDefault();
-            openPDF('donation.pdf');
+            openPDFViewer('9-donation.pdf');
         });
         
         document.getElementById('volunteerLink').addEventListener('click', function(e) {
             e.preventDefault();
-            openPDF('volunteer.pdf');
+            openPDFViewer('10-volunteer.pdf');
         });
         
         document.getElementById('contactImamLink').addEventListener('click', function(e) {
             e.preventDefault();
-            openPDF('contact-imam.pdf');
+            openPDFViewer('11-contact-imam.pdf');
         });
         
         // ============================================
-        // VISITOR COUNTER & CLOCK (preserved from original)
+        // VISITOR COUNTER & CLOCK
         // ============================================
         
         let count = localStorage.getItem('ircVisitors');
@@ -709,7 +701,7 @@
         setInterval(updateClock, 1000);
         
         // ============================================
-        // PRAYER TIMES API (preserved from original)
+        // PRAYER TIMES API
         // ============================================
         
         async function fetchShiaPrayerTimes() {
