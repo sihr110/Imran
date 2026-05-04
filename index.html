@@ -1,102 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML Editor | Clean & Organized + Link Editor + Global Counter</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Firebase SDK (dynamic import in module) -->
-    <script type="module">
-        // ============================================================
-        // FIREBASE CONFIGURATION - REPLACE WITH YOUR OWN FIREBASE PROJECT
-        // ============================================================
-        // HOW TO SETUP (2 minutes, free):
-        // 1. Go to https://console.firebase.google.com/
-        // 2. Click "Add project" (name: IslamicCenterCounter or anything)
-        // 3. Disable Google Analytics (optional)
-        // 4. Click "Create project"
-        // 5. When ready, click "</>" (Web icon) to register a web app
-        // 6. Name your app (e.g., "IRC Editor"), click "Register app"
-        // 7. COPY the firebaseConfig object below and PASTE it here
-        // 8. Then go to "Firestore Database" → "Create database" → "Start in test mode"
-        // ============================================================
-        
-        const firebaseConfig = {
-            // 🔽🔽🔽 PASTE YOUR FIREBASE CONFIG HERE 🔽🔽🔽
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-            // 🔼🔼🔼 REPLACE WITH YOUR ACTUAL CONFIG 🔼🔼🔼
-        };
-        
-        let db = null;
-        let firebaseReady = false;
-        
-        try {
-            if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
-                const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js");
-                const { getFirestore, doc, getDoc, setDoc, updateDoc, increment } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                firebaseReady = true;
-                console.log("Firebase connected - global counter active");
-                window.__firebaseIncrement = increment;
-                window.__firestoreDb = db;
-            } else {
-                console.warn("Firebase not configured. Using fallback localStorage counter. Please replace firebaseConfig with your own.");
-            }
-        } catch (err) {
-            console.error("Firebase init error:", err);
-        }
-        
-        window.__firebaseReady = firebaseReady;
-        
-        // Expose counter function globally
-        window.updateGlobalCounterDisplay = async function(elementId) {
-            const counterEl = document.getElementById(elementId);
-            if (!counterEl) return;
-            
-            if (window.__firebaseReady && window.__firestoreDb) {
-                try {
-                    const { doc, getDoc, setDoc, updateDoc, increment } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
-                    const db = window.__firestoreDb;
-                    const counterRef = doc(db, "stats", "globalVisitors");
-                    const docSnap = await getDoc(counterRef);
-                    
-                    let currentCount = 0;
-                    if (!docSnap.exists()) {
-                        await setDoc(counterRef, { count: 1 });
-                        currentCount = 1;
-                    } else {
-                        const sessionKey = 'editor_global_visited';
-                        if (!sessionStorage.getItem(sessionKey)) {
-                            await updateDoc(counterRef, { count: increment(1) });
-                            sessionStorage.setItem(sessionKey, 'true');
-                        }
-                        const updated = await getDoc(counterRef);
-                        currentCount = updated.data().count;
-                    }
-                    counterEl.innerText = currentCount.toLocaleString();
-                } catch(err) {
-                    console.warn("Firebase error, using fallback", err);
-                    fallbackCounter(counterEl);
-                }
-            } else {
-                fallbackCounter(counterEl);
-            }
-        };
-        
-        function fallbackCounter(el) {
-            let count = localStorage.getItem('editorVisitors');
-            if (count === null) count = 1250;
-            else count = parseInt(count) + 1;
-            localStorage.setItem('editorVisitors', count);
-            el.innerText = count.toLocaleString();
-        }
-    </script>
+    <title>IRC Islamic Center - Berlin, Connecticut, USA</title>
     <style>
         * {
             margin: 0;
@@ -106,831 +13,745 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #1a1a2e;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+            background: #f5f5f5;
         }
 
-        /* ===== TOP BAR ===== */
-        .top-bar {
-            background: #0f0f1a;
+        /* Header Section with Background Image */
+        .header {
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.pexels.com/photos/2590921/pexels-photo-2590921.jpeg?auto=compress&cs=tinysrgb&w=1600');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: white;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            border-bottom: 1px solid #2a2a3a;
+            text-align: center;
+            padding: 120px 20px;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .header h1 {
+            font-size: 56px;
+            margin-bottom: 20px;
             font-weight: bold;
         }
 
-        .logo i {
-            color: #4c9aff;
-            font-size: 1.3rem;
+        .header p {
+            font-size: 24px;
+            margin-bottom: 30px;
         }
 
-        .file-controls {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .global-counter {
-            background: #2a2a3a;
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-left: 10px;
-        }
-        .global-counter i {
-            color: #ffd700;
-        }
-        .global-counter span {
-            font-weight: bold;
-            color: #4c9aff;
-            font-size: 1rem;
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-        }
-
-        .btn-blue {
-            background: #4c9aff;
+        .header .btn {
+            background: #2e7d32;
             color: white;
-        }
-
-        .btn-blue:hover {
-            background: #3a7bcb;
-        }
-
-        .btn-gray {
-            background: #2a2a3a;
-            color: white;
-        }
-
-        .btn-gray:hover {
-            background: #3d3d5c;
-        }
-
-        .btn-red {
-            background: #e74c3c;
-            color: white;
-        }
-
-        .btn-red:hover {
-            background: #c0392b;
-        }
-
-        .btn-purple {
-            background: #9b59b6;
-            color: white;
-        }
-        .btn-purple:hover {
-            background: #7d3c98;
-        }
-
-        .file-status {
-            background: #2a2a3a;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .file-status i {
-            color: #2ecc71;
-        }
-
-        .clear-file {
-            background: none;
-            border: none;
-            color: #e74c3c;
-            cursor: pointer;
-            font-size: 0.7rem;
-        }
-
-        /* ===== TOOLBAR ===== */
-        .toolbar {
-            background: #1e1e2e;
-            padding: 10px 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            align-items: center;
-            border-bottom: 1px solid #2a2a3a;
-        }
-
-        .tool-group {
-            display: flex;
-            gap: 4px;
-            padding: 0 8px;
-            border-right: 1px solid #3d3d5c;
-        }
-
-        .tool-group:last-child {
-            border-right: none;
-        }
-
-        .tool-btn {
-            background: #2d2d44;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            color: white;
-            cursor: pointer;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-
-        .tool-btn:hover {
-            background: #4c9aff;
-        }
-
-        .tool-select {
-            background: #2d2d44;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            color: white;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .color-picker {
-            width: 36px;
-            height: 36px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            background: #2d2d44;
-        }
-
-        /* ===== EDITOR AREA ===== */
-        .editor-area {
-            flex: 1;
-            display: flex;
-            padding: 16px;
-            gap: 16px;
-            overflow: hidden;
-        }
-
-        .iframe-container {
-            flex: 1;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-
-        .iframe-header {
-            background: #f0f0f0;
-            padding: 10px 16px;
-            font-size: 0.8rem;
-            color: #555;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        iframe {
-            flex: 1;
-            width: 100%;
-            border: none;
-        }
-
-        .code-container {
-            flex: 1;
-            background: #1e1e2e;
-            border-radius: 12px;
-            overflow: hidden;
-            display: none;
-            flex-direction: column;
-        }
-
-        .code-container.active {
-            display: flex;
-        }
-
-        .code-header {
-            background: #0f0f1a;
-            padding: 10px 16px;
-            color: #ccc;
-            border-bottom: 1px solid #2a2a3a;
-        }
-
-        textarea {
-            flex: 1;
-            background: #1e1e2e;
-            color: #e2e8f0;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            padding: 16px;
-            border: none;
-            resize: none;
-            outline: none;
-        }
-
-        .code-actions {
-            padding: 8px;
-            background: #0f0f1a;
-            text-align: right;
-        }
-
-        /* ===== STATUS ===== */
-        .status-toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #2ecc71;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            z-index: 1000;
+            padding: 15px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 18px;
+            display: inline-block;
             transition: 0.3s;
         }
 
-        .status-toast.error {
-            background: #e74c3c;
+        .header .btn:hover {
+            background: #1b5e20;
         }
-        
-        /* Modal for editing */
-        .edit-modal-global {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            z-index: 10001;
-            min-width: 400px;
-            font-family: 'Segoe UI', sans-serif;
+
+        /* Navigation */
+        .navbar {
+            background: #1a1a2e;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .edit-modal-global input {
-            width: 100%;
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
         }
-        .edit-modal-global button {
-            margin-top: 10px;
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: none;
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            transition: 0.3s;
             cursor: pointer;
         }
-        .modal-overlay-global {
-            position: fixed;
+
+        .navbar a:hover {
+            background: #2e7d32;
+            border-radius: 5px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Section Titles */
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            color: #1a1a2e;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: #2e7d32;
+            margin: 15px auto 0;
+        }
+
+        /* Welcome Box */
+        .welcome-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+            margin-bottom: 50px;
+        }
+
+        .welcome-box h2 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+
+        .welcome-box p {
+            color: #666;
+            line-height: 1.8;
+            font-size: 18px;
+        }
+
+        /* Box Grid - 3 Boxes */
+        .box-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .box:hover {
+            transform: translateY(-10px);
+        }
+
+        .box .icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        .box h3 {
+            color: #1a1a2e;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .box p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Prayer Times Box (Special Design) */
+        .prayer-times {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .prayer-times h2 {
+            margin-bottom: 30px;
+        }
+
+        .prayer-grid {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .prayer-item {
+            flex: 1;
+            min-width: 100px;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .prayer-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .prayer-time {
+            font-size: 24px;
+            font-family: monospace;
+        }
+
+        /* Two Column Layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* Video & Audio Section */
+        .media-section {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 50px;
+        }
+
+        .media-section h2 {
+            text-align: center;
+            color: #1a1a2e;
+            margin-bottom: 30px;
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+
+        .video-container iframe {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 10000;
+        }
+
+        .audio-player {
+            background: #f0f2f5;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* Visitor Counter & Clock */
+        .counter-clock {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .counter-clock h3 {
+            color: #1a1a2e;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .clock {
+            font-size: 32px;
+            font-family: monospace;
+            background: #1a1a2e;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        /* Map & Location */
+        .location-box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 50px;
+        }
+
+        /* Links Section */
+        .links-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 50px;
+        }
+
+        .link-list {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            list-style: none;
+        }
+
+        .link-list a {
+            color: #2e7d32;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: #f0f2f5;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .link-list a:hover {
+            background: #2e7d32;
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a1a2e;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 32px;
+            }
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+            .media-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Button style */
+        .donate-btn {
+            background: #ff6d00;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .donate-btn:hover {
+            background: #e65c00;
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== TOP BAR ===== -->
-    <div class="top-bar">
-        <div class="logo">
-            <i class="fas fa-code"></i>
-            <span>HTML Pro Editor</span>
-        </div>
-        <div class="file-controls">
-            <button id="loadFileBtn" class="btn btn-blue"><i class="fas fa-folder-open"></i> Load HTML</button>
-            <input type="file" id="fileInput" accept=".html,.htm" style="display: none">
-            <div id="fileStatus" class="file-status" style="display: none;">
-                <i class="fas fa-check-circle"></i>
-                <span id="fileName"></span>
-                <button id="clearFileBtn" class="clear-file"><i class="fas fa-times"></i></button>
-            </div>
-            <button id="saveBtn" class="btn btn-gray"><i class="fas fa-download"></i> Save</button>
-            <button id="resetBtn" class="btn btn-gray"><i class="fas fa-undo"></i> Reset</button>
-            <button id="toggleCodeBtn" class="btn btn-gray"><i class="fas fa-code"></i> Code View</button>
-            <div class="global-counter">
-                <i class="fas fa-globe"></i> Global Visitors: <span id="globalVisitorCount">--</span>
-            </div>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="nav-container">
+            <a href="#" id="homeNavBtn">Home</a>
+            <a href="#" id="aboutUsNavBtn">About Us</a>
+            <a href="#" id="prayerTimesNavBtn">Prayer Times</a>
+            <a href="#" id="eventsNavBtn">Events</a>
+            <a href="#" id="educationNavBtn">Education</a>
+            <a href="#" id="donateNavBtn">Donate</a>
+            <a href="#" id="contactNavBtn">Contact</a>
         </div>
     </div>
 
-    <!-- ===== FORMAT TOOLBAR ===== -->
-    <div class="toolbar">
-        <div class="tool-group">
-            <button class="tool-btn" id="undoBtn" title="Undo (Ctrl+Z)"><i class="fas fa-undo"></i></button>
-            <button class="tool-btn" id="redoBtn" title="Redo (Ctrl+Y)"><i class="fas fa-redo"></i></button>
-        </div>
-        <div class="tool-group">
-            <button class="tool-btn" id="boldBtn" title="Bold (Ctrl+B)"><i class="fas fa-bold"></i></button>
-            <button class="tool-btn" id="italicBtn" title="Italic (Ctrl+I)"><i class="fas fa-italic"></i></button>
-            <button class="tool-btn" id="underlineBtn" title="Underline (Ctrl+U)"><i class="fas fa-underline"></i></button>
-            <button class="tool-btn" id="strikeBtn" title="Strike"><i class="fas fa-strikethrough"></i></button>
-        </div>
-        <div class="tool-group">
-            <button class="tool-btn" id="alignLeftBtn"><i class="fas fa-align-left"></i></button>
-            <button class="tool-btn" id="alignCenterBtn"><i class="fas fa-align-center"></i></button>
-            <button class="tool-btn" id="alignRightBtn"><i class="fas fa-align-right"></i></button>
-            <button class="tool-btn" id="alignJustifyBtn"><i class="fas fa-align-justify"></i></button>
-        </div>
-        <div class="tool-group">
-            <button class="tool-btn" id="listUlBtn"><i class="fas fa-list-ul"></i></button>
-            <button class="tool-btn" id="listOlBtn"><i class="fas fa-list-ol"></i></button>
-            <button class="tool-btn" id="indentBtn"><i class="fas fa-indent"></i></button>
-            <button class="tool-btn" id="outdentBtn"><i class="fas fa-outdent"></i></button>
-        </div>
-        <div class="tool-group">
-            <select id="fontSelect" class="tool-select">
-                <option value="Arial">Arial</option>
-                <option value="'Segoe UI'">Segoe UI</option>
-                <option value="'Times New Roman'">Times New Roman</option>
-                <option value="Georgia">Georgia</option>
-                <option value="'Courier New'">Courier New</option>
-            </select>
-            <select id="fontSizeSelect" class="tool-select">
-                <option value="1">10px</option>
-                <option value="2">13px</option>
-                <option value="3" selected>16px</option>
-                <option value="4">20px</option>
-                <option value="5">26px</option>
-                <option value="6">32px</option>
-            </select>
-        </div>
-        <div class="tool-group">
-            <input type="color" id="textColorPicker" class="color-picker" value="#000000">
-            <input type="color" id="bgColorPicker" class="color-picker" value="#ffffff">
-        </div>
-        <div class="tool-group">
-            <button class="tool-btn" id="linkBtn" title="Insert Link"><i class="fas fa-link"></i></button>
-            <button class="tool-btn" id="imageBtn" title="Insert Image"><i class="fas fa-image"></i></button>
-            <button class="tool-btn" id="clearFormatBtn" title="Clear Format"><i class="fas fa-eraser"></i></button>
-        </div>
-        <div class="tool-group">
-            <button id="editVideoUrlBtn" class="tool-btn btn-purple" title="Edit YouTube Video URL"><i class="fab fa-youtube"></i> Edit Video URL</button>
-            <button id="editAudioUrlBtn" class="tool-btn btn-purple" title="Edit Audio URL"><i class="fas fa-music"></i> Edit Audio</button>
-        </div>
+    <!-- Header with Background -->
+    <div class="header">
+        <h1>🕌 IRC Islamic Center</h1>
+        <p>Berlin, Connecticut, USA | Serving the Community Since 2005</p>
+        <a href="#" class="btn" id="learnMoreBtn">Learn More About Us</a>
     </div>
 
-    <!-- ===== EDITOR AREA ===== -->
-    <div class="editor-area">
-        <div class="iframe-container" id="iframeContainer">
-            <div class="iframe-header">
-                <span><i class="fas fa-eye"></i> Live Preview (click inside, select text, use toolbar)</span>
-                <span style="font-size:12px; background:#e0e0e0; padding:2px 8px; border-radius:20px;"><i class="fas fa-mouse-pointer"></i> Use "Edit Video URL" button to change YouTube</span>
-            </div>
-            <iframe id="editorIframe" srcdoc="<!DOCTYPE html><html><head><meta charset='UTF-8'></head><body style='font-family: Arial; padding: 40px; text-align: center; color: #666;'><h2>📂 No File Loaded</h2><p>Click 'Load HTML' to start editing</p><p style='font-size:14px'>💡 Use the 'Edit Video URL' button to change YouTube videos</p></body></html>"></iframe>
+    <div class="container">
+
+        <!-- Welcome Box -->
+        <div class="welcome-box">
+            <h2>Welcome to IRC Islamic Center</h2>
+            <p>The Islamic Research Center (IRC) in Berlin, Connecticut is dedicated to providing authentic Islamic education, fostering community spirit, and serving humanity. We welcome everyone - Muslims and non-Muslims - to learn about Islam in a peaceful, respectful environment.</p>
         </div>
-        <div class="code-container" id="codeContainer">
-            <div class="code-header"><i class="fas fa-code"></i> HTML Source Code</div>
-            <textarea id="codeEditor" placeholder="HTML code..."></textarea>
-            <div class="code-actions">
-                <button id="applyCodeBtn" class="btn btn-blue" style="padding: 6px 12px;">Apply Changes</button>
+
+        <!-- 3 Main Boxes -->
+        <div class="box-grid">
+            <div class="box">
+                <div class="icon">📚</div>
+                <h3>Islamic Education</h3>
+                <p>Quran classes, Arabic language courses, and Islamic studies for all ages. Weekend school for children.</p>
+            </div>
+            <div class="box">
+                <div class="icon">🤝</div>
+                <h3>Community Services</h3>
+                <p>Food distribution, financial assistance, marriage counseling, and funeral services for the community.</p>
+            </div>
+            <div class="box">
+                <div class="icon">🌙</div>
+                <h3>Daily Prayers</h3>
+                <p>Five daily prayers and Jummah congregation.</p>
             </div>
         </div>
+
+        <!-- Prayer Times Section - SHIA 3 TIMES: Fajr, Zohrain, Maghribain -->
+        <div class="prayer-times">
+            <h2>📿 Shia Prayer Times (3 Time Periods) — Berlin, Connecticut, USA</h2>
+            <div class="prayer-grid" style="display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; max-width: 1000px; margin: 0 auto;">
+                
+                <!-- Fajr -->
+                <div class="prayer-item" style="flex: 1; min-width: 100px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                    <div class="prayer-name" style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">🌙 Fajr</div>
+                    <div class="prayer-time" id="fajrTime" style="font-size: 24px; font-family: monospace;">--:--</div>
+                </div>
+                
+                <!-- Zohrain (Dhuhr + Asr combined) -->
+                <div class="prayer-item" style="flex: 1; min-width: 100px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                    <div class="prayer-name" style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">☀️ Zohrain</div>
+                    <div class="prayer-time" id="zohrainTime" style="font-size: 24px; font-family: monospace;">--:--</div>
+                    <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Dhuhr + Asr combined</div>
+                </div>
+                
+                <!-- Maghribain (Maghrib + Isha combined) -->
+                <div class="prayer-item" style="flex: 1; min-width: 100px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                    <div class="prayer-name" style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">🌟 Maghribain</div>
+                    <div class="prayer-time" id="maghribainTime" style="font-size: 24px; font-family: monospace;">--:--</div>
+                    <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Maghrib + Isha combined</div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Two Column Section -->
+        <div class="two-col">
+            <div class="card">
+                <h3>📖 About IRC</h3>
+                <p>The Islamic Research Center (IRC) was established in Berlin, Connecticut to promote authentic Islamic knowledge based on the Quran and Sunnah.</p>
+                <p>Our mission is to serve the Muslim community of Berlin and surrounding areas in Connecticut by providing religious education, social services, and a place for worship.</p>
+                <p><strong>Location:</strong> Berlin, Connecticut, USA</p>
+            </div>
+            <div class="card">
+                <h3>⭐ Upcoming Events</h3>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>📅 Weekly Quran Tafsir - Every Friday after Maghrib</li>
+                    <li>📅 Children's Islamic Summer Camp - June 15-30</li>
+                    <li>📅 Monthly Food Drive - First Saturday of each month</li>
+                    <li>📅 New Muslim Classes - Every Sunday 10 AM</li>
+                </ul>
+                <a href="#" class="donate-btn" id="viewAllEventsBtn" style="display: inline-block; margin-top: 20px; text-decoration: none; text-align: center;">View All Events →</a>
+            </div>
+        </div>
+
+        <!-- Video & Audio Section -->
+        <div class="media-section">
+            <h2>🎥 Weekly Lectures &amp; Quran Recitation</h2>
+            <div class="media-grid">
+                <div>
+                    <h3 style="margin-bottom: 15px;">📺 Featured Lecture</h3>
+                    <div class="video-container">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/kuXS7ctecZg?si=ktM1sUmTv--Zfu9x" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <p style="margin-top: 10px;">Weekly Friday Sermon by Imam</p>
+                </div>
+                <div>
+                    <h3 style="margin-bottom: 15px;">🎙️ Quran Recitation</h3>
+                    <div class="audio-player">
+                        <p>Listen to Beautiful Quran Recitation</p>
+                        <audio controls>
+                            <source src="https://www.islamcan.com/audio/quran/surah-yasin.shtml" type="audio/mpeg">
+                            Your browser does not support audio.
+                        </audio>
+                        <p style="margin-top: 10px;">Surah Al-Fatiha - Recitation</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visitor Counter & Live Clock -->
+        <div class="counter-clock">
+            <h3>🌐 Website Visitors &amp; Live Time</h3>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="visitor-count">1,275</div>
+                    <div>Total Visitors</div>
+                </div>
+                <div class="stat-item">
+                    <div class="clock" id="live-clock">--:--:-- --</div>
+                    <div>Eastern Time (Berlin, CT, USA)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location / Map Box -->
+        <div class="location-box">
+            <h3 style="text-align: center; margin-bottom: 20px;">📍 Our Location</h3>
+            <div style="background: rgb(224, 224, 224); padding: 60px; text-align: center; border-radius: 15px;">
+                <p>📍 Main Street, Berlin</p>
+                <p>Berlin, Connecticut, USA - 06037</p>
+                <p>📞 +1 (860) 555-1234</p>
+                <p>📧 info@ircislamiccenter.us</p>
+                <p style="margin-top: 15px;">🕌 Near Berlin Town Hall</p>
+            </div>
+        </div>
+
+        <!-- Links Section -->
+        <div class="links-section">
+            <h3 style="text-align: center; margin-bottom: 20px;">🔗 Useful Links</h3>
+            <ul class="link-list">
+                <li><a href="#" id="scheduleLink">Download Prayer Schedule</a></li>
+                <li><a href="#" id="quranLink">Quran with Translation</a></li>
+                <li><a href="#" id="donationPortalLink">Donation Portal</a></li>
+                <li><a href="#" id="volunteerLink">Volunteer Registration</a></li>
+                <li><a href="#" id="contactImamLink">Contact Imam</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>🕌 IRC Islamic Center - Berlin, Connecticut, USA</p>
+        <p>Serving the community since 2005</p>
+        <p style="margin-top: 20px;">© 2026 IRC Islamic Center | All Rights Reserved</p>
+        <p style="margin-top: 10px; font-size: 14px;">Follow us: Facebook | Twitter | YouTube | WhatsApp</p>
     </div>
 
     <script>
-        // ============================================================
-        // 1. DOM ELEMENTS
-        // ============================================================
-        const iframe = document.getElementById('editorIframe');
-        const fileInput = document.getElementById('fileInput');
-        const loadFileBtn = document.getElementById('loadFileBtn');
-        const saveBtn = document.getElementById('saveBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const toggleCodeBtn = document.getElementById('toggleCodeBtn');
-        const codeContainer = document.getElementById('codeContainer');
-        const iframeContainer = document.getElementById('iframeContainer');
-        const codeEditor = document.getElementById('codeEditor');
-        const applyCodeBtn = document.getElementById('applyCodeBtn');
-        const fileStatus = document.getElementById('fileStatus');
-        const fileNameSpan = document.getElementById('fileName');
-        const clearFileBtn = document.getElementById('clearFileBtn');
-        const editVideoUrlBtn = document.getElementById('editVideoUrlBtn');
-        const editAudioUrlBtn = document.getElementById('editAudioUrlBtn');
-
-        // ============================================================
-        // 2. VARIABLES
-        // ============================================================
-        let originalContent = '';
-        let currentContent = '';
-        let currentFileName = '';
-        let isCodeView = false;
-
-        // ============================================================
-        // 3. HELPER FUNCTIONS
-        // ============================================================
-        function showStatus(message, isError = false) {
-            const toast = document.createElement('div');
-            toast.className = 'status-toast' + (isError ? ' error' : '');
-            toast.innerHTML = isError ? '<i class="fas fa-exclamation-circle"></i> ' + message : '<i class="fas fa-check-circle"></i> ' + message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2500);
-        }
-
-        function getIframeDoc() {
-            return iframe.contentDocument || iframe.contentWindow.document;
-        }
-
-        function getIframeHtml() {
-            const doc = getIframeDoc();
-            return '<!DOCTYPE html>\n<html>\n<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">' + doc.head.innerHTML + '</head>\n<body>' + doc.body.innerHTML + '</body>\n</html>';
-        }
-
-        function loadHtmlToIframe(html) {
-            const doc = getIframeDoc();
-            doc.open();
-            doc.write(html);
-            doc.close();
-            doc.designMode = 'on';
+        // ============================================
+        // LINK CONFIGURATION
+        // All PDF files stored in /pdf/ folder
+        // All links open in SAME TAB
+        // Home button reloads main page
+        // Quran button uses your custom link
+        // ============================================
+        
+        const MAIN_PAGE_URL = 'https://sihr110.github.io/Imran/';
+        const QURAN_URL = 'https://www.zad-e-rah.com/Video/Quran/Quran-e-Majeed.html';
+        const PDF_BASE_URL = 'https://sihr110.github.io/Imran/pdf/';
+        
+        // Helper function to open link in same tab
+        function openLink(url) {
+            window.location.href = url;
         }
         
-        function updateCurrentFromIframe() {
-            currentContent = getIframeHtml();
-            if (isCodeView) {
-                codeEditor.value = currentContent;
-            }
-        }
-
-
-function stripEditorInjectedContent(html) {
-    let cleaned = html;
-    
-    // Remove editor script
-    cleaned = cleaned.replace(/<script id="iframe-editor-script">[\s\S]*?<\/script>/gi, '');
-    
-    // Remove editor styles
-    cleaned = cleaned.replace(/<style id="iframe-editor-styles">[\s\S]*?<\/style>/gi, '');
-    
-    // Remove data-editable-link attribute
-    cleaned = cleaned.replace(/data-editable-link="true"\s*/gi, '');
-    
-    // Remove title attributes
-    cleaned = cleaned.replace(/title="🔧 Double-click to edit this link"\s*/gi, '');
-    cleaned = cleaned.replace(/title="🔧 Double-click to change YouTube video"\s*/gi, '');
-    
-    // Remove cursor:pointer styles
-    cleaned = cleaned.replace(/style="cursor: pointer;"\s*/gi, '');
-    
-    // Clean up empty style attributes
-    cleaned = cleaned.replace(/style="\s*"/gi, '');
-    
-    return cleaned;
-}
-
-
-
-
-        // ============================================================
-        // 4. EDIT VIDEO URL BUTTON (WORKS WITHOUT designMode ISSUES)
-        // ============================================================
-        function editVideoUrl() {
-            const html = getIframeHtml();
-            
-            // Find YouTube iframe pattern
-            const youtubePattern = /<iframe[^>]*src=["']([^"']*youtube\.com\/embed\/[^"']*)[^>]*>/i;
-            const match = html.match(youtubePattern);
-            
-            if (!match) {
-                showStatus('No YouTube video found in this page', true);
-                return;
-            }
-            
-            const currentUrl = match[1];
-            
-            // Create modal
-            const overlay = document.createElement('div');
-            overlay.className = 'modal-overlay-global';
-            const modal = document.createElement('div');
-            modal.className = 'edit-modal-global';
-            
-            modal.innerHTML = `
-                <h3 style="margin-bottom:15px"><i class="fab fa-youtube" style="color:#ff0000"></i> Edit YouTube Video URL</h3>
-                <label>YouTube Embed URL:</label>
-                <input type="text" id="videoUrlInput" value="${escapeHtml(currentUrl)}" placeholder="https://www.youtube.com/embed/VIDEO_ID">
-                <p style="font-size:12px; color:#666; margin-top:5px;">Example: https://www.youtube.com/embed/XkfDsJh_4vY</p>
-                <p style="font-size:12px; color:#888; margin-top:5px;">Video ID from URL: ${extractVideoId(currentUrl)}</p>
-                <div style="display:flex; gap:10px; margin-top:15px;">
-                    <button id="saveVideoBtn" style="background:#2e7d32; color:white;">💾 Save & Update</button>
-                    <button id="cancelVideoBtn" style="background:#aaa;">Cancel</button>
-                </div>
-            `;
-            
-            document.body.appendChild(overlay);
-            document.body.appendChild(modal);
-            
-            document.getElementById('saveVideoBtn').onclick = () => {
-                let newUrl = document.getElementById('videoUrlInput').value;
-                if (newUrl) {
-                    // Convert watch?v= to embed format
-                    if (newUrl.includes('watch?v=')) {
-                        newUrl = newUrl.replace('watch?v=', 'embed/');
-                    }
-                    if (newUrl.includes('youtu.be/')) {
-                        const videoId = newUrl.split('youtu.be/')[1].split('?')[0];
-                        newUrl = `https://www.youtube.com/embed/${videoId}`;
-                    }
-                    // Update the HTML
-                    const newHtml = html.replace(youtubePattern, `<iframe width="560" height="315" src="${newUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>`);
-                    currentContent = newHtml;
-                    loadHtmlToIframe(currentContent);
-                    showStatus('✅ YouTube video URL updated!');
-                }
-                overlay.remove();
-                modal.remove();
-            };
-            
-            document.getElementById('cancelVideoBtn').onclick = () => {
-                overlay.remove();
-                modal.remove();
-            };
+        // Helper function to open PDF
+        function openPDF(filename) {
+            window.location.href = PDF_BASE_URL + filename;
         }
         
-        // ============================================================
-        // 5. EDIT AUDIO URL BUTTON
-        // ============================================================
-        function editAudioUrl() {
-            const html = getIframeHtml();
-            
-            // Find audio source pattern
-            const audioPattern = /<audio[^>]*>[\s\S]*?<source\s+src=["']([^"']*)["'][^>]*>[\s\S]*?<\/audio>/i;
-            const match = html.match(audioPattern);
-            
-            if (!match) {
-                showStatus('No audio element found in this page', true);
-                return;
-            }
-            
-            const currentUrl = match[1];
-            
-            const overlay = document.createElement('div');
-            overlay.className = 'modal-overlay-global';
-            const modal = document.createElement('div');
-            modal.className = 'edit-modal-global';
-            
-            modal.innerHTML = `
-                <h3 style="margin-bottom:15px"><i class="fas fa-music" style="color:#9b59b6"></i> Edit Audio URL</h3>
-                <label>Audio MP3 URL:</label>
-                <input type="text" id="audioUrlInput" value="${escapeHtml(currentUrl)}" placeholder="https://example.com/audio.mp3">
-                <p style="font-size:12px; color:#666; margin-top:5px;">Enter direct URL to an MP3 file</p>
-                <div style="display:flex; gap:10px; margin-top:15px;">
-                    <button id="saveAudioBtn" style="background:#2e7d32; color:white;">💾 Save & Update</button>
-                    <button id="cancelAudioBtn" style="background:#aaa;">Cancel</button>
-                </div>
-            `;
-            
-            document.body.appendChild(overlay);
-            document.body.appendChild(modal);
-            
-            document.getElementById('saveAudioBtn').onclick = () => {
-                const newUrl = document.getElementById('audioUrlInput').value;
-                if (newUrl) {
-                    const newHtml = html.replace(audioPattern, `<audio controls><source src="${newUrl}" type="audio/mpeg">Your browser does not support audio.</audio>`);
-                    currentContent = newHtml;
-                    loadHtmlToIframe(currentContent);
-                    showStatus('✅ Audio URL updated!');
-                }
-                overlay.remove();
-                modal.remove();
-            };
-            
-            document.getElementById('cancelAudioBtn').onclick = () => {
-                overlay.remove();
-                modal.remove();
-            };
+        // HOME button - reload main page in same tab
+        function goHome() {
+            window.location.href = MAIN_PAGE_URL;
         }
         
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        }
+        // ============================================
+        // BUTTON MAPPING TO PDF FILES
+        // ============================================
         
-        function extractVideoId(url) {
-            const match = url.match(/embed\/([a-zA-Z0-9_-]+)/);
-            return match ? match[1] : 'Unknown';
+        // Navigation Bar Buttons
+        document.getElementById('homeNavBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            goHome();
+        });
+        
+        document.getElementById('aboutUsNavBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            openPDF('about-us.pdf');
+        });
+        
+        document.getElementById('prayerTimesNavBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            openPDF('prayer-times.pdf');
+        });
+        
+        document.getElementById('eventsNavBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            openPDF('events.pdf');
+        });
+        
+        document.getElementById('educationNavBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            openPDF('education.pdf');
+        });
+        
+        document.getElementById('donateNavBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            openPDF('donate.pdf');
+        });
+        
+        document.getElementById('contactNavBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            openPDF('contact.pdf');
+        });
+        
+        // Header Button
+        document.getElementById('learnMoreBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            openPDF('learn-more.pdf');
+        });
+        
+        // View All Events Button
+        document.getElementById('viewAllEventsBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            openPDF('events-all.pdf');
+        });
+        
+        // Useful Links Section
+        document.getElementById('scheduleLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            openPDF('schedule.pdf');
+        });
+        
+        // Quran button - YOUR CUSTOM LINK
+        document.getElementById('quranLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            openLink(QURAN_URL);
+        });
+        
+        document.getElementById('donationPortalLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            openPDF('donation.pdf');
+        });
+        
+        document.getElementById('volunteerLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            openPDF('volunteer.pdf');
+        });
+        
+        document.getElementById('contactImamLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            openPDF('contact-imam.pdf');
+        });
+        
+        // ============================================
+        // VISITOR COUNTER & CLOCK (preserved from original)
+        // ============================================
+        
+        let count = localStorage.getItem('ircVisitors');
+        if (count === null) {
+            count = 1250;
+        } else {
+            count = parseInt(count) + 1;
         }
-
-        function execCommand(command, value = null) {
-            const doc = getIframeDoc();
-            doc.execCommand(command, false, value);
-            iframe.focus();
-            updateCurrentFromIframe();
+        localStorage.setItem('ircVisitors', count);
+        document.getElementById('visitor-count').innerText = count.toLocaleString();
+        
+        function updateClock() {
+            const now = new Date();
+            const easternTime = new Date(now.toLocaleString("en-US", {timeZone: "America/New_York"}));
+            const time = easternTime.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+            document.getElementById('live-clock').innerText = time;
         }
-
-        // ============================================================
-        // 4. FILE HANDLING
-        // ============================================================
-        function loadFile(file) {
-            if (!file) return;
-            if (!file.name.match(/\.(html|htm)$/i)) {
-                showStatus('Please select an .html or .htm file', true);
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                originalContent = e.target.result;
-                currentContent = originalContent;
-                currentFileName = file.name;
-                fileNameSpan.textContent = file.name;
-                fileStatus.style.display = 'flex';
-                loadHtmlToIframe(currentContent);
-                showStatus('Loaded: ' + file.name);
-            };
-            reader.onerror = function() {
-                showStatus('Error reading file', true);
-            };
-            reader.readAsText(file, 'UTF-8');
-        }
-
-       function saveFile() {
-    if (!currentContent && !originalContent) {
-        showStatus('No file loaded to save', true);
-        return;
-    }
-    updateCurrentFromIframe();
-    
-    // Get clean version without editor scripts
-    let cleanVersion = stripEditorInjectedContent(currentContent);
-    
-    const blob = new Blob([cleanVersion], { type: 'text/html' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.href = url;
-    link.download = currentFileName ? currentFileName : 'document.html';
-    link.click();
-    URL.revokeObjectURL(url);
-    showStatus('Saved as ' + link.download + ' (clean website)');
-}
-
-        function clearFile() {
-            if (confirm('Clear current file?')) {
-                originalContent = '';
-                currentContent = '';
-                currentFileName = '';
-                fileStatus.style.display = 'none';
-                const emptyHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="font-family: Arial; padding: 40px; text-align: center; color: #666;"><h2>📂 No File Loaded</h2><p>Click "Load HTML" to start editing</p><p style="font-size:14px">💡 Use the "Edit Video URL" button to change YouTube videos</p></body></html>';
-                loadHtmlToIframe(emptyHtml);
-                showStatus('File cleared');
-            }
-        }
-
-        function toggleCodeView() {
-            isCodeView = !isCodeView;
-            if (isCodeView) {
-                updateCurrentFromIframe();
-                codeEditor.value = currentContent;
-                iframeContainer.style.display = 'none';
-                codeContainer.classList.add('active');
-                toggleCodeBtn.innerHTML = '<i class="fas fa-eye"></i> Preview';
-            } else {
-                iframeContainer.style.display = 'flex';
-                codeContainer.classList.remove('active');
-                toggleCodeBtn.innerHTML = '<i class="fas fa-code"></i> Code View';
-                if (codeEditor.value !== currentContent) {
-                    if (confirm('Apply changes from code editor?')) {
-                        currentContent = codeEditor.value;
-                        loadHtmlToIframe(currentContent);
-                        showStatus('Changes applied');
-                    }
-                }
-            }
-        }
-
-        function applyCodeChanges() {
-            currentContent = codeEditor.value;
-            loadHtmlToIframe(currentContent);
-            showStatus('Code changes applied');
-        }
-
-        // ============================================================
-        // 5. FORMATTING ACTIONS
-        // ============================================================
-        function insertLink() {
-            const url = prompt('Enter URL:', 'https://');
-            if (url) execCommand('createLink', url);
-        }
-
-        function insertImage() {
-            const url = prompt('Enter image URL:', 'https://via.placeholder.com/400');
-            if (url) execCommand('insertImage', url);
-        }
-
-        // ============================================================
-        // 6. KEYBOARD SHORTCUTS
-        // ============================================================
-        function setupShortcuts() {
-            iframe.addEventListener('load', () => {
-                const iframeWin = iframe.contentWindow;
-                iframeWin.addEventListener('keydown', (e) => {
-                    if (e.ctrlKey || e.metaKey) {
-                        switch(e.key) {
-                            case 'b': e.preventDefault(); execCommand('bold'); break;
-                            case 'i': e.preventDefault(); execCommand('italic'); break;
-                            case 'u': e.preventDefault(); execCommand('underline'); break;
-                            case 'z': e.preventDefault(); execCommand('undo'); break;
-                            case 'y': e.preventDefault(); execCommand('redo'); break;
+        updateClock();
+        setInterval(updateClock, 1000);
+        
+        // ============================================
+        // PRAYER TIMES API (preserved from original)
+        // ============================================
+        
+        async function fetchShiaPrayerTimes() {
+            const url = "https://api.aladhan.com/v1/timingsByCity?city=Berlin&country=USA&state=Connecticut&method=7";
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.code === 200) {
+                    const timings = data.data.timings;
+                    
+                    function to24Hour(time) {
+                        let match = time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+                        if (match) {
+                            let hour = parseInt(match[1]);
+                            let minute = match[2];
+                            let period = match[3].toUpperCase();
+                            if (period === 'PM' && hour !== 12) hour += 12;
+                            if (period === 'AM' && hour === 12) hour = 0;
+                            return `${hour.toString().padStart(2, '0')}:${minute}`;
                         }
+                        return time;
                     }
-                });
-            });
-        }
-
-        // ============================================================
-        // 7. EVENT LISTENERS
-        // ============================================================
-        function bindEvents() {
-            loadFileBtn.onclick = () => fileInput.click();
-            fileInput.onchange = (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); fileInput.value = ''; };
-            saveBtn.onclick = saveFile;
-            resetBtn.onclick = resetEdits;
-            clearFileBtn.onclick = clearFile;
-            toggleCodeBtn.onclick = toggleCodeView;
-            applyCodeBtn.onclick = applyCodeChanges;
-            
-            // New buttons for editing video/audio URLs
-            editVideoUrlBtn.onclick = editVideoUrl;
-            editAudioUrlBtn.onclick = editAudioUrl;
-
-            document.getElementById('undoBtn').onclick = () => execCommand('undo');
-            document.getElementById('redoBtn').onclick = () => execCommand('redo');
-            document.getElementById('boldBtn').onclick = () => execCommand('bold');
-            document.getElementById('italicBtn').onclick = () => execCommand('italic');
-            document.getElementById('underlineBtn').onclick = () => execCommand('underline');
-            document.getElementById('strikeBtn').onclick = () => execCommand('strikeThrough');
-            document.getElementById('alignLeftBtn').onclick = () => execCommand('justifyLeft');
-            document.getElementById('alignCenterBtn').onclick = () => execCommand('justifyCenter');
-            document.getElementById('alignRightBtn').onclick = () => execCommand('justifyRight');
-            document.getElementById('alignJustifyBtn').onclick = () => execCommand('justifyFull');
-            document.getElementById('listUlBtn').onclick = () => execCommand('insertUnorderedList');
-            document.getElementById('listOlBtn').onclick = () => execCommand('insertOrderedList');
-            document.getElementById('indentBtn').onclick = () => execCommand('indent');
-            document.getElementById('outdentBtn').onclick = () => execCommand('outdent');
-            document.getElementById('clearFormatBtn').onclick = () => execCommand('removeFormat');
-            document.getElementById('linkBtn').onclick = insertLink;
-            document.getElementById('imageBtn').onclick = insertImage;
-
-            document.getElementById('fontSelect').onchange = (e) => execCommand('fontName', e.target.value);
-            document.getElementById('fontSizeSelect').onchange = (e) => {
-                const sizes = {1:'1',2:'2',3:'3',4:'4',5:'5',6:'6'};
-                execCommand('fontSize', sizes[e.target.value]);
-            };
-            document.getElementById('textColorPicker').onchange = (e) => execCommand('foreColor', e.target.value);
-            document.getElementById('bgColorPicker').onchange = (e) => execCommand('backColor', e.target.value);
-
-            iframe.onload = () => {
-                getIframeDoc().designMode = 'on';
-                setupShortcuts();
-            };
-        }
-
-        // ============================================================
-        // 8. INIT
-        // ============================================================
-        function init() {
-            bindEvents();
-            getIframeDoc().designMode = 'on';
-            // Initialize global visitor counter
-            if (window.updateGlobalCounterDisplay) {
-                window.updateGlobalCounterDisplay('globalVisitorCount');
+                    
+                    const fajr = to24Hour(timings.Fajr);
+                    const dhuhr = to24Hour(timings.Dhuhr);
+                    const maghrib = to24Hour(timings.Maghrib);
+                    
+                    document.getElementById('fajrTime').innerText = fajr;
+                    document.getElementById('zohrainTime').innerText = dhuhr;
+                    document.getElementById('maghribainTime').innerText = maghrib;
+                }
+            } catch (error) {
+                document.getElementById('fajrTime').innerText = "04:02";
+                document.getElementById('zohrainTime').innerText = "12:50";
+                document.getElementById('maghribainTime').innerText = "20:15";
             }
         }
-
-        init();
+        
+        fetchShiaPrayerTimes();
     </script>
+
 </body>
 </html>
