@@ -410,16 +410,16 @@
 </head>
 <body>
 
-    <!-- Navigation Bar -->
+    <!-- Navigation Bar - Links to button-html folder -->
     <div class="navbar">
         <div class="nav-container">
-            <a href="#" id="homeNavBtn">Home</a>
-            <a href="#" id="aboutUsNavBtn">About Us</a>
-            <a href="#" id="prayerTimesNavBtn">Prayer Times</a>
-            <a href="#" id="eventsNavBtn">Events</a>
-            <a href="#" id="educationNavBtn">Education</a>
-            <a href="#" id="donateNavBtn">Donate</a>
-            <a href="#" id="contactNavBtn">Contact</a>
+            <a href="index.html">Home</a>
+            <a href="button-html/1-about-us.html">About Us</a>
+            <a href="button-html/2-prayer-times.html">Prayer Times</a>
+            <a href="button-html/3-events.html">Events</a>
+            <a href="button-html/4-education.html">Education</a>
+            <a href="button-html/5-donate.html">Donate</a>
+            <a href="button-html/6-contact.html">Contact</a>
         </div>
     </div>
 
@@ -427,7 +427,7 @@
     <div class="header">
         <h1>🕌 IRC Islamic Center</h1>
         <p>Berlin, Connecticut, USA | Serving the Community Since 2005</p>
-        <a href="#" class="btn" id="learnMoreBtn">Learn More About Us</a>
+        <a href="button-html/7-learn-more.html" class="btn">Learn More About Us</a>
     </div>
 
     <div class="container">
@@ -501,7 +501,7 @@
                     <li>📅 Monthly Food Drive - First Saturday of each month</li>
                     <li>📅 New Muslim Classes - Every Sunday 10 AM</li>
                 </ul>
-                <a href="#" class="donate-btn" id="viewAllEventsBtn" style="display: inline-block; margin-top: 20px; text-decoration: none; text-align: center;">View All Events →</a>
+                <a href="button-html/12-events-all.html" class="donate-btn" style="display: inline-block; margin-top: 20px; text-decoration: none; text-align: center;">View All Events →</a>
             </div>
         </div>
 
@@ -561,11 +561,11 @@
         <div class="links-section">
             <h3 style="text-align: center; margin-bottom: 20px;">🔗 Useful Links</h3>
             <ul class="link-list">
-                <li><a href="#" id="scheduleLink">Download Prayer Schedule</a></li>
-                <li><a href="#" id="quranLink">Quran with Translation</a></li>
-                <li><a href="#" id="donationPortalLink">Donation Portal</a></li>
-                <li><a href="#" id="volunteerLink">Volunteer Registration</a></li>
-                <li><a href="#" id="contactImamLink">Contact Imam</a></li>
+                <li><a href="button-html/8-schedule.html">Download Prayer Schedule</a></li>
+                <li><a href="https://www.zad-e-rah.com/Video/Quran/Quran-e-Majeed.html" target="_blank">Quran with Translation</a></li>
+                <li><a href="button-html/9-donation.html">Donation Portal</a></li>
+                <li><a href="button-html/10-volunteer.html">Volunteer Registration</a></li>
+                <li><a href="button-html/11-contact-imam.html">Contact Imam</a></li>
             </ul>
         </div>
 
@@ -580,104 +580,6 @@
     </div>
 
     <script>
-        // ============================================
-        // LINK CONFIGURATION - EMBEDDED PDF VIEWER
-        // All PDF files open in viewer.html with full screen option
-        // ============================================
-        
-        const MAIN_PAGE_URL = 'https://sihr110.github.io/Imran/';
-        const QURAN_URL = 'https://www.zad-e-rah.com/Video/Quran/Quran-e-Majeed.html';
-        const VIEWER_URL = 'https://sihr110.github.io/Imran/viewer.html';
-        
-        // Helper function to open PDF in embedded viewer
-        function openPDFViewer(filename) {
-            window.location.href = VIEWER_URL + '?file=' + filename;
-        }
-        
-        // HOME button - reload main page in same tab
-        function goHome() {
-            window.location.href = MAIN_PAGE_URL;
-        }
-        
-        // ============================================
-        // BUTTON MAPPING TO PDF FILES (with numbers)
-        // ============================================
-        
-        // Navigation Bar Buttons
-        document.getElementById('homeNavBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            goHome();
-        });
-        
-        document.getElementById('aboutUsNavBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            openPDFViewer('1-about-us.pdf');
-        });
-        
-        document.getElementById('prayerTimesNavBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            openPDFViewer('2-prayer-times.pdf');
-        });
-        
-        document.getElementById('eventsNavBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            openPDFViewer('3-events.pdf');
-        });
-        
-        document.getElementById('educationNavBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            openPDFViewer('4-education.pdf');
-        });
-        
-        document.getElementById('donateNavBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            openPDFViewer('5-donate.pdf');
-        });
-        
-        document.getElementById('contactNavBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            openPDFViewer('6-contact.pdf');
-        });
-        
-        // Header Button
-        document.getElementById('learnMoreBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            openPDFViewer('7-learn-more.pdf');
-        });
-        
-        // View All Events Button
-        document.getElementById('viewAllEventsBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            openPDFViewer('12-events-all.pdf');
-        });
-        
-        // Useful Links Section
-        document.getElementById('scheduleLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            openPDFViewer('8-schedule.pdf');
-        });
-        
-        // Quran button - YOUR CUSTOM LINK (opens directly, not in viewer)
-        document.getElementById('quranLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            window.location.href = QURAN_URL;
-        });
-        
-        document.getElementById('donationPortalLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            openPDFViewer('9-donation.pdf');
-        });
-        
-        document.getElementById('volunteerLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            openPDFViewer('10-volunteer.pdf');
-        });
-        
-        document.getElementById('contactImamLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            openPDFViewer('11-contact-imam.pdf');
-        });
-        
         // ============================================
         // VISITOR COUNTER & CLOCK
         // ============================================
