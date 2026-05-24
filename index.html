@@ -1,651 +1,809 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IRC Islamic Center - Berlin, Connecticut, USA</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA TV — Live Channels</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c14;
+    --surface: #0f1623;
+    --card: #141d2e;
+    --border: #1e2d47;
+    --accent: #e63946;
+    --accent2: #f4a261;
+    --live: #2ecc71;
+    --text: #e8eaf0;
+    --muted: #6b7a99;
+    --glow: 0 0 24px rgba(230,57,70,0.35);
+  }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
-        }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* Header Section with Background Image */
-        .header {
-            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.pexels.com/photos/2590921/pexels-photo-2590921.jpeg?auto=compress&cs=tinysrgb&w=1600');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: white;
-            text-align: center;
-            padding: 120px 20px;
-        }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-        .header h1 {
-            font-size: 56px;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
+  /* Animated background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(230,57,70,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(230,57,70,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-        .header p {
-            font-size: 24px;
-            margin-bottom: 30px;
-        }
+  /* ── HEADER ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,12,20,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
 
-        .header .btn {
-            background: #2e7d32;
-            color: white;
-            padding: 15px 35px;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 18px;
-            display: inline-block;
-            transition: 0.3s;
-        }
+  .logo {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-shadow: var(--glow);
+  }
+  .logo span { color: var(--text); }
 
-        .header .btn:hover {
-            background: #1b5e20;
-        }
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--live);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .live-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--live);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
 
-        /* Navigation */
-        .navbar {
-            background: #1a1a2e;
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
 
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            transition: 0.3s;
-            cursor: pointer;
-        }
+  .admin-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .admin-btn:hover, .admin-btn.active {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    background: rgba(244,162,97,0.07);
+  }
+  .admin-btn.active {
+    box-shadow: 0 0 12px rgba(244,162,97,0.2);
+  }
 
-        .navbar a:hover {
-            background: #2e7d32;
-            border-radius: 5px;
-        }
+  /* ── MAIN PLAYER ── */
+  .player-section {
+    position: relative;
+    z-index: 1;
+    padding: 2rem 2rem 0;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
 
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
+  .player-wrapper {
+    position: relative;
+    width: 100%;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 0 60px rgba(0,0,0,0.6);
+    aspect-ratio: 16/9;
+    max-height: 540px;
+  }
 
-        /* Section Titles */
-        .section-title {
-            text-align: center;
-            font-size: 36px;
-            color: #1a1a2e;
-            margin-bottom: 40px;
-            position: relative;
-        }
+  .player-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
 
-        .section-title:after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 4px;
-            background: #2e7d32;
-            margin: 15px auto 0;
-        }
+  .player-overlay-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    padding: 2rem 1.5rem 1rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    pointer-events: none;
+  }
 
-        /* Welcome Box */
-        .welcome-box {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 5px 30px rgba(0,0,0,0.1);
-            margin-bottom: 50px;
-        }
+  .now-playing-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
 
-        .welcome-box h2 {
-            color: #2e7d32;
-            margin-bottom: 20px;
-        }
+  .now-playing-name {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
 
-        .welcome-box p {
-            color: #666;
-            line-height: 1.8;
-            font-size: 18px;
-        }
+  .channel-flag {
+    font-size: 1.6rem;
+  }
 
-        /* Box Grid - 3 Boxes */
-        .box-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
-        }
+  /* ── CHANNELS GRID ── */
+  .channels-section {
+    position: relative;
+    z-index: 1;
+    padding: 1.5rem 2rem 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
 
-        .box {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-            cursor: pointer;
-        }
+  .section-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.1rem;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
 
-        .box:hover {
-            transform: translateY(-10px);
-        }
+  .channels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
 
-        .box .icon {
-            font-size: 50px;
-            margin-bottom: 20px;
-        }
+  .channel-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(.4,0,.2,1);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 
-        .box h3 {
-            color: #1a1a2e;
-            margin-bottom: 15px;
-            font-size: 24px;
-        }
+  .channel-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(230,57,70,0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
 
-        .box p {
-            color: #666;
-            line-height: 1.6;
-        }
+  .channel-card:hover {
+    border-color: rgba(230,57,70,0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 20px rgba(230,57,70,0.1);
+  }
 
-        /* Prayer Times Box (Special Design) */
-        .prayer-times {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            margin-bottom: 50px;
-        }
+  .channel-card:hover::before { opacity: 1; }
 
-        .prayer-times h2 {
-            margin-bottom: 30px;
-        }
+  .channel-card.active {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(230,57,70,0.25);
+    background: #1a1020;
+  }
 
-        .prayer-grid {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-            flex-wrap: wrap;
-        }
+  .channel-card.active::before { opacity: 1; }
 
-        .prayer-item {
-            flex: 1;
-            min-width: 100px;
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 10px;
-        }
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-        .prayer-name {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+  .ch-flag { font-size: 1.4rem; }
 
-        .prayer-time {
-            font-size: 24px;
-            font-family: monospace;
-        }
+  .ch-live-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--live);
+    background: rgba(46,204,113,0.1);
+    border: 1px solid rgba(46,204,113,0.25);
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+  }
 
-        /* Two Column Layout */
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 50px;
-        }
+  .ch-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text);
+    line-height: 1.2;
+  }
 
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
+  .ch-category {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
 
-        .card h3 {
-            color: #2e7d32;
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
+  /* Admin edit btn on card */
+  .card-edit-btn {
+    display: none;
+    position: absolute;
+    top: 8px; right: 8px;
+    background: rgba(244,162,97,0.15);
+    border: 1px solid rgba(244,162,97,0.4);
+    color: var(--accent2);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-family: 'JetBrains Mono', monospace;
+    cursor: pointer;
+    z-index: 5;
+    transition: all 0.15s;
+  }
+  .card-edit-btn:hover {
+    background: rgba(244,162,97,0.25);
+  }
 
-        .card p {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
+  body.admin-mode .card-edit-btn { display: block; }
+  body.admin-mode .ch-live-badge { display: none; }
 
-        /* Video & Audio Section */
-        .media-section {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            margin-bottom: 50px;
-        }
+  /* Admin mode card glow */
+  body.admin-mode .channel-card {
+    border-color: rgba(244,162,97,0.2);
+  }
+  body.admin-mode .channel-card:hover {
+    border-color: var(--accent2);
+    box-shadow: 0 0 15px rgba(244,162,97,0.15);
+  }
 
-        .media-section h2 {
-            text-align: center;
-            color: #1a1a2e;
-            margin-bottom: 30px;
-        }
+  /* Admin mode banner */
+  .admin-banner {
+    display: none;
+    position: relative;
+    z-index: 10;
+    background: linear-gradient(90deg, rgba(244,162,97,0.12), rgba(244,162,97,0.05));
+    border-bottom: 1px solid rgba(244,162,97,0.25);
+    padding: 8px 2rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent2);
+    letter-spacing: 1px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+  }
+  body.admin-mode .admin-banner { display: flex; }
 
-        .media-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
+  .admin-banner-icon { font-size: 1rem; }
 
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 15px;
-        }
+  /* Add Channel btn */
+  .add-channel-btn {
+    display: none;
+    background: rgba(244,162,97,0.1);
+    border: 1.5px dashed rgba(244,162,97,0.4);
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+    color: var(--accent2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    text-align: center;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .add-channel-btn:hover {
+    background: rgba(244,162,97,0.18);
+    border-color: var(--accent2);
+  }
+  body.admin-mode .add-channel-btn { display: flex; }
 
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
+  .add-icon { font-size: 1.4rem; }
 
-        .audio-player {
-            background: #f0f2f5;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-        }
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
 
-        audio {
-            width: 100%;
-            margin-top: 10px;
-        }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2rem;
+    width: 480px;
+    max-width: 95vw;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+    animation: slideUp 0.25s cubic-bezier(.4,0,.2,1);
+  }
 
-        /* Visitor Counter & Clock */
-        .counter-clock {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            margin-bottom: 50px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
 
-        .counter-clock h3 {
-            color: #1a1a2e;
-            margin-bottom: 20px;
-        }
+  .modal-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.5rem;
+    letter-spacing: 3px;
+    color: var(--accent2);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
-            flex-wrap: wrap;
-        }
+  .form-group {
+    margin-bottom: 1rem;
+  }
 
-        .stat-item {
-            text-align: center;
-        }
+  .form-label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
 
-        .stat-number {
-            font-size: 36px;
-            font-weight: bold;
-            color: #2e7d32;
-        }
+  .form-input {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 10px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus {
+    border-color: var(--accent2);
+    box-shadow: 0 0 0 3px rgba(244,162,97,0.1);
+  }
 
-        .clock {
-            font-size: 32px;
-            font-family: monospace;
-            background: #1a1a2e;
-            color: white;
-            padding: 15px 30px;
-            border-radius: 10px;
-            display: inline-block;
-        }
+  .form-input::placeholder { color: var(--muted); }
 
-        /* Map & Location */
-        .location-box {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            margin-bottom: 50px;
-        }
+  .form-select {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 10px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    cursor: pointer;
+  }
 
-        /* Links Section */
-        .links-section {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            margin-bottom: 50px;
-        }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 1.5rem;
+    justify-content: flex-end;
+  }
 
-        .link-list {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            list-style: none;
-        }
+  .btn {
+    padding: 9px 20px;
+    border-radius: 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    cursor: pointer;
+    letter-spacing: 1px;
+    border: none;
+    transition: all 0.18s;
+  }
 
-        .link-list a {
-            color: #2e7d32;
-            text-decoration: none;
-            padding: 10px 20px;
-            background: #f0f2f5;
-            border-radius: 8px;
-            transition: 0.3s;
-        }
+  .btn-save {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(230,57,70,0.35);
+  }
+  .btn-save:hover { background: #c0303b; box-shadow: 0 4px 20px rgba(230,57,70,0.5); }
 
-        .link-list a:hover {
-            background: #2e7d32;
-            color: white;
-        }
+  .btn-cancel {
+    background: var(--card);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-cancel:hover { color: var(--text); border-color: var(--muted); }
 
-        /* Footer */
-        .footer {
-            background: #1a1a2e;
-            color: white;
-            text-align: center;
-            padding: 40px 20px;
-        }
+  .btn-delete {
+    background: transparent;
+    color: #e74c3c;
+    border: 1px solid rgba(231,76,60,0.3);
+    margin-right: auto;
+  }
+  .btn-delete:hover { background: rgba(231,76,60,0.1); }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 32px;
-            }
-            .two-col {
-                grid-template-columns: 1fr;
-            }
-            .media-grid {
-                grid-template-columns: 1fr;
-            }
-            .nav-container {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
+  /* Admin Login Modal */
+  .admin-login-modal .modal-title { color: var(--accent2); }
 
-        /* Button style */
-        .donate-btn {
-            background: #ff6d00;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .donate-btn:hover {
-            background: #e65c00;
-        }
-    </style>
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    header { padding: 0 1rem; }
+    .logo { font-size: 1.5rem; }
+    .player-section, .channels-section { padding-left: 1rem; padding-right: 1rem; }
+    .channels-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.7rem; }
+  }
+</style>
 </head>
 <body>
 
-    <!-- Navigation Bar - Links to button-html folder -->
-    <div class="navbar">
-        <div class="nav-container">
-            <a href="index.html">Home</a>
-            <a href="button-html/1-about-us.html">About Us</a>
-            <a href="button-html/2-prayer-times.html">Prayer Times</a>
-            <a href="button-html/3-events.html">Events</a>
-            <a href="button-html/4-education.html">Education</a>
-            <a href="button-html/5-donate.html">Donate</a>
-            <a href="button-html/6-contact.html">Contact</a>
-        </div>
+<!-- Admin Banner -->
+<div class="admin-banner">
+  <span class="admin-banner-icon">⚙️</span>
+  ADMIN MODE — Click any channel card to edit · Add new channels below
+  <span style="margin-left:auto; opacity:0.6;">Changes saved to localStorage</span>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="logo">NOVA<span>TV</span></div>
+  <div class="live-badge">
+    <div class="live-dot"></div>
+    Live Now
+  </div>
+  <div class="header-right">
+    <button class="admin-btn" id="adminToggleBtn" onclick="toggleAdminMode()">⚙ Admin</button>
+  </div>
+</header>
+
+<!-- Player -->
+<div class="player-section">
+  <div class="player-wrapper">
+    <iframe id="mainPlayer" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+    <div class="player-overlay-info">
+      <div>
+        <div class="now-playing-label">▶ Now Playing</div>
+        <div class="now-playing-name" id="nowPlayingName">Select a Channel</div>
+      </div>
+      <div class="channel-flag" id="nowPlayingFlag">📺</div>
     </div>
+  </div>
+</div>
 
-    <!-- Header with Background -->
-    <div class="header">
-        <h1>🕌 IRC Islamic Center</h1>
-        <p>Berlin, Connecticut, USA | Serving the Community Since 2005</p>
-        <a href="button-html/7-learn-more.html" class="btn">Learn More About Us</a>
+<!-- Channels -->
+<div class="channels-section">
+  <div class="section-title">Live Channels</div>
+  <div class="channels-grid" id="channelsGrid">
+    <!-- Cards injected by JS -->
+    <button class="add-channel-btn" onclick="openAddModal()">
+      <span class="add-icon">＋</span>
+      Add Channel
+    </button>
+  </div>
+</div>
+
+<!-- Edit/Add Channel Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">✏️ Edit Channel</div>
+    <div class="form-group">
+      <label class="form-label">Channel Name</label>
+      <input class="form-input" id="editName" type="text" placeholder="e.g. CNN International">
     </div>
-
-    <div class="container">
-
-        <!-- Welcome Box -->
-        <div class="welcome-box">
-            <h2>Welcome to IRC Islamic Center</h2>
-            <p>The Islamic Research Center (IRC) in Berlin, Connecticut is dedicated to providing authentic Islamic education, fostering community spirit, and serving humanity. We welcome everyone - Muslims and non-Muslims - to learn about Islam in a peaceful, respectful environment.</p>
-        </div>
-
-        <!-- 3 Main Boxes -->
-        <div class="box-grid">
-            <div class="box">
-                <div class="icon">📚</div>
-                <h3>Islamic Education</h3>
-                <p>Quran classes, Arabic language courses, and Islamic studies for all ages. Weekend school for children.</p>
-            </div>
-            <div class="box">
-                <div class="icon">🤝</div>
-                <h3>Community Services</h3>
-                <p>Food distribution, financial assistance, marriage counseling, and funeral services for the community.</p>
-            </div>
-            <div class="box">
-                <div class="icon">🌙</div>
-                <h3>Daily Prayers</h3>
-                <p>Five daily prayers and Jummah congregation.</p>
-            </div>
-        </div>
-
-        <!-- Prayer Times Section - SHIA 3 TIMES: Fajr, Zohrain, Maghribain -->
-        <div class="prayer-times">
-            <h2>📿 Shia Prayer Times (3 Time Periods) — Berlin, Connecticut, USA</h2>
-            <div class="prayer-grid" style="display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; max-width: 1000px; margin: 0 auto;">
-                
-                <!-- Fajr -->
-                <div class="prayer-item" style="flex: 1; min-width: 100px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
-                    <div class="prayer-name" style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">🌙 Fajr</div>
-                    <div class="prayer-time" id="fajrTime" style="font-size: 24px; font-family: monospace;">--:--</div>
-                </div>
-                
-                <!-- Zohrain (Dhuhr + Asr combined) -->
-                <div class="prayer-item" style="flex: 1; min-width: 100px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
-                    <div class="prayer-name" style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">☀️ Zohrain</div>
-                    <div class="prayer-time" id="zohrainTime" style="font-size: 24px; font-family: monospace;">--:--</div>
-                    <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Dhuhr + Asr combined</div>
-                </div>
-                
-                <!-- Maghribain (Maghrib + Isha combined) -->
-                <div class="prayer-item" style="flex: 1; min-width: 100px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
-                    <div class="prayer-name" style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">🌟 Maghribain</div>
-                    <div class="prayer-time" id="maghribainTime" style="font-size: 24px; font-family: monospace;">--:--</div>
-                    <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Maghrib + Isha combined</div>
-                </div>
-                
-            </div>
-        </div>
-
-        <!-- Two Column Section -->
-        <div class="two-col">
-            <div class="card">
-                <h3>📖 About IRC</h3>
-                <p>The Islamic Research Center (IRC) was established in Berlin, Connecticut to promote authentic Islamic knowledge based on the Quran and Sunnah.</p>
-                <p>Our mission is to serve the Muslim community of Berlin and surrounding areas in Connecticut by providing religious education, social services, and a place for worship.</p>
-                <p><strong>Location:</strong> Berlin, Connecticut, USA</p>
-            </div>
-            <div class="card">
-                <h3>⭐ Upcoming Events</h3>
-                <ul style="margin-left: 20px; line-height: 1.8;">
-                    <li>📅 Weekly Quran Tafsir - Every Friday after Maghrib</li>
-                    <li>📅 Children's Islamic Summer Camp - June 15-30</li>
-                    <li>📅 Monthly Food Drive - First Saturday of each month</li>
-                    <li>📅 New Muslim Classes - Every Sunday 10 AM</li>
-                </ul>
-                <a href="button-html/12-events-all.html" class="donate-btn" style="display: inline-block; margin-top: 20px; text-decoration: none; text-align: center;">View All Events →</a>
-            </div>
-        </div>
-
-        <!-- Video & Audio Section -->
-        <div class="media-section">
-            <h2>🎥 Weekly Lectures &amp; Quran Recitation</h2>
-            <div class="media-grid">
-                <div>
-                    <h3 style="margin-bottom: 15px;">📺 Featured Lecture</h3>
-                    <div class="video-container">
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/kuXS7ctecZg?si=ktM1sUmTv--Zfu9x" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                    </div>
-                    <p style="margin-top: 10px;">Weekly Friday Sermon by Imam</p>
-                </div>
-                <div>
-                    <h3 style="margin-bottom: 15px;">🎙️ Quran Recitation</h3>
-                    <div class="audio-player">
-                        <p>Listen to Beautiful Quran Recitation</p>
-                        <audio controls>
-                            <source src="https://www.islamcan.com/audio/quran/surah-yasin.shtml" type="audio/mpeg">
-                            Your browser does not support audio.
-                        </audio>
-                        <p style="margin-top: 10px;">Surah Al-Fatiha - Recitation</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Visitor Counter & Live Clock -->
-        <div class="counter-clock">
-            <h3>🌐 Website Visitors &amp; Live Time</h3>
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-number" id="visitor-count">1,275</div>
-                    <div>Total Visitors</div>
-                </div>
-                <div class="stat-item">
-                    <div class="clock" id="live-clock">--:--:-- --</div>
-                    <div>Eastern Time (Berlin, CT, USA)</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Location / Map Box -->
-        <div class="location-box">
-            <h3 style="text-align: center; margin-bottom: 20px;">📍 Our Location</h3>
-            <div style="background: rgb(224, 224, 224); padding: 60px; text-align: center; border-radius: 15px;">
-                <p>📍 Main Street, Berlin</p>
-                <p>Berlin, Connecticut, USA - 06037</p>
-                <p>📞 +1 (860) 555-1234</p>
-                <p>📧 info@ircislamiccenter.us</p>
-                <p style="margin-top: 15px;">🕌 Near Berlin Town Hall</p>
-            </div>
-        </div>
-
-        <!-- Links Section -->
-        <div class="links-section">
-            <h3 style="text-align: center; margin-bottom: 20px;">🔗 Useful Links</h3>
-            <ul class="link-list">
-                <li><a href="button-html/8-schedule.html">Download Prayer Schedule</a></li>
-                <li><a href="https://www.zad-e-rah.com/Video/Quran/Quran-e-Majeed.html" target="_blank">Quran with Translation</a></li>
-                <li><a href="button-html/9-donation.html">Donation Portal</a></li>
-                <li><a href="button-html/10-volunteer.html">Volunteer Registration</a></li>
-                <li><a href="button-html/11-contact-imam.html">Contact Imam</a></li>
-            </ul>
-        </div>
-
+    <div class="form-group">
+      <label class="form-label">Stream URL (embed / m3u8 / iframe src)</label>
+      <input class="form-input" id="editUrl" type="text" placeholder="https://...">
     </div>
-
-    <!-- Footer -->
-    <div class="footer">
-        <p>🕌 IRC Islamic Center - Berlin, Connecticut, USA</p>
-        <p>Serving the community since 2005</p>
-        <p style="margin-top: 20px;">© 2026 IRC Islamic Center | All Rights Reserved</p>
-        <p style="margin-top: 10px; font-size: 14px;">Follow us: Facebook | Twitter | YouTube | WhatsApp</p>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-select" id="editCategory">
+        <option>News</option>
+        <option>Sports</option>
+        <option>Entertainment</option>
+        <option>Kids</option>
+        <option>Music</option>
+        <option>Documentary</option>
+        <option>Religious</option>
+        <option>Regional</option>
+        <option>Other</option>
+      </select>
     </div>
+    <div class="form-group">
+      <label class="form-label">Flag / Emoji Icon</label>
+      <input class="form-input" id="editFlag" type="text" placeholder="🇵🇰 or 📺 or any emoji">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-delete" id="deleteBtn" onclick="deleteChannel()">🗑 Delete</button>
+      <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-save" onclick="saveChannel()">Save Channel</button>
+    </div>
+  </div>
+</div>
 
-    <script>
-        // ============================================
-        // VISITOR COUNTER & CLOCK
-        // ============================================
-        
-        let count = localStorage.getItem('ircVisitors');
-        if (count === null) {
-            count = 1250;
-        } else {
-            count = parseInt(count) + 1;
-        }
-        localStorage.setItem('ircVisitors', count);
-        document.getElementById('visitor-count').innerText = count.toLocaleString();
-        
-        function updateClock() {
-            const now = new Date();
-            const easternTime = new Date(now.toLocaleString("en-US", {timeZone: "America/New_York"}));
-            const time = easternTime.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit', second:'2-digit'});
-            document.getElementById('live-clock').innerText = time;
-        }
-        updateClock();
-        setInterval(updateClock, 1000);
-        
-        // ============================================
-        // PRAYER TIMES API
-        // ============================================
-        
-        async function fetchShiaPrayerTimes() {
-            const url = "https://api.aladhan.com/v1/timingsByCity?city=Berlin&country=USA&state=Connecticut&method=7";
-            
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data.code === 200) {
-                    const timings = data.data.timings;
-                    
-                    function to24Hour(time) {
-                        let match = time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-                        if (match) {
-                            let hour = parseInt(match[1]);
-                            let minute = match[2];
-                            let period = match[3].toUpperCase();
-                            if (period === 'PM' && hour !== 12) hour += 12;
-                            if (period === 'AM' && hour === 12) hour = 0;
-                            return `${hour.toString().padStart(2, '0')}:${minute}`;
-                        }
-                        return time;
-                    }
-                    
-                    const fajr = to24Hour(timings.Fajr);
-                    const dhuhr = to24Hour(timings.Dhuhr);
-                    const maghrib = to24Hour(timings.Maghrib);
-                    
-                    document.getElementById('fajrTime').innerText = fajr;
-                    document.getElementById('zohrainTime').innerText = dhuhr;
-                    document.getElementById('maghribainTime').innerText = maghrib;
-                }
-            } catch (error) {
-                document.getElementById('fajrTime').innerText = "04:02";
-                document.getElementById('zohrainTime').innerText = "12:50";
-                document.getElementById('maghribainTime').innerText = "20:15";
-            }
-        }
-        
-        fetchShiaPrayerTimes();
-    </script>
+<!-- Admin Login Modal -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal admin-login-modal">
+    <div class="modal-title">🔐 Admin Access</div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" id="adminPassword" type="password" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')checkPassword()">
+    </div>
+    <div style="font-size:0.72rem;color:var(--muted);margin-top:-4px;font-family:'JetBrains Mono',monospace;">
+      Default password: <span style="color:var(--accent2)">admin123</span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeLoginModal()">Cancel</button>
+      <button class="btn btn-save" onclick="checkPassword()">Enter Admin</button>
+    </div>
+  </div>
+</div>
 
+<script>
+// ─── DEFAULT CHANNELS ───────────────────────────────────────
+const DEFAULT_CHANNELS = [
+  { id: 1, name: "ARY News", url: "https://www.youtube.com/embed/live_stream?channel=UCStyle7KJlj7CMKyn3VK_fPGw&autoplay=1", category: "News", flag: "🇵🇰" },
+  { id: 2, name: "Geo News", url: "https://www.youtube.com/embed/live_stream?channel=UC7P7gPkPU2CJ0yq-76eO4Ag&autoplay=1", category: "News", flag: "🇵🇰" },
+  { id: 3, name: "Al Jazeera", url: "https://www.youtube.com/embed/F422qLnClNY?autoplay=1", category: "News", flag: "🌍" },
+  { id: 4, name: "BBC World", url: "https://www.youtube.com/embed/live_stream?channel=UC16niRr50-MSBwiO3YDb3RA&autoplay=1", category: "News", flag: "🇬🇧" },
+  { id: 5, name: "CNN International", url: "https://www.youtube.com/embed/live_stream?channel=UCupvZG-5ko_eiXAupbDfxWw&autoplay=1", category: "News", flag: "🇺🇸" },
+  { id: 6, name: "Hum TV", url: "https://www.youtube.com/embed/live_stream?channel=UCDshLBQP3TFqJgVGp53b3Lg&autoplay=1", category: "Entertainment", flag: "🇵🇰" },
+  { id: 7, name: "PTV Sports", url: "https://www.youtube.com/embed/live_stream?channel=UCyLLDFSZen8TIZdcPHzxkTg&autoplay=1", category: "Sports", flag: "🇵🇰" },
+  { id: 8, name: "Ten Sports", url: "https://www.youtube.com/embed/live_stream?channel=UCqKPKBe5r3UfUXdFlr3pIhg&autoplay=1", category: "Sports", flag: "🏏" },
+  { id: 9, name: "Islam Channel", url: "https://www.youtube.com/embed/live_stream?channel=UCq7Gh6BV5k2PVxYPQFOkRfQ&autoplay=1", category: "Religious", flag: "☪️" },
+  { id: 10, name: "Express TV", url: "https://www.youtube.com/embed/live_stream?channel=UCEMwTOeEYPwAIiLzGmDuEjQ&autoplay=1", category: "News", flag: "🇵🇰" },
+  { id: 11, name: "Samaa TV", url: "https://www.youtube.com/embed/live_stream?channel=UCSEymcmVLGFsKbvnPAYyByQ&autoplay=1", category: "News", flag: "🇵🇰" },
+  { id: 12, name: "Cartoon Network", url: "https://www.youtube.com/embed/live_stream?channel=UCq_BxN0o2bhXFRdCKBfKpkQ&autoplay=1", category: "Kids", flag: "🎉" },
+];
+
+const ADMIN_PASSWORD = "admin123";
+
+let channels = [];
+let editingId = null;
+let isAdminMode = false;
+let activeChannelId = null;
+
+// ─── INIT ────────────────────────────────────────────────────
+function init() {
+  const saved = localStorage.getItem('novaTV_channels');
+  channels = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_CHANNELS));
+  renderChannels();
+  // Auto-play first channel
+  if (channels.length > 0) playChannel(channels[0].id);
+}
+
+function save() {
+  localStorage.setItem('novaTV_channels', JSON.stringify(channels));
+}
+
+// ─── RENDER ──────────────────────────────────────────────────
+function renderChannels() {
+  const grid = document.getElementById('channelsGrid');
+  // Remove old cards (keep add-btn)
+  const addBtn = grid.querySelector('.add-channel-btn');
+  grid.innerHTML = '';
+
+  channels.forEach(ch => {
+    const card = document.createElement('div');
+    card.className = 'channel-card' + (ch.id === activeChannelId ? ' active' : '');
+    card.id = 'ch-' + ch.id;
+    card.innerHTML = `
+      <button class="card-edit-btn" onclick="openEditModal(${ch.id}, event)">✏ Edit</button>
+      <div class="card-top">
+        <span class="ch-flag">${ch.flag || '📺'}</span>
+        <span class="ch-live-badge">LIVE</span>
+      </div>
+      <div class="ch-name">${ch.name}</div>
+      <div class="ch-category">${ch.category}</div>
+    `;
+    card.onclick = (e) => {
+      if (e.target.classList.contains('card-edit-btn')) return;
+      playChannel(ch.id);
+    };
+    grid.appendChild(card);
+  });
+
+  grid.appendChild(addBtn || (() => {
+    const b = document.createElement('button');
+    b.className = 'add-channel-btn';
+    b.onclick = openAddModal;
+    b.innerHTML = '<span class="add-icon">＋</span>Add Channel';
+    return b;
+  })());
+}
+
+function playChannel(id) {
+  const ch = channels.find(c => c.id === id);
+  if (!ch) return;
+  activeChannelId = id;
+  document.getElementById('mainPlayer').src = ch.url;
+  document.getElementById('nowPlayingName').textContent = ch.name;
+  document.getElementById('nowPlayingFlag').textContent = ch.flag || '📺';
+  // Update active card
+  document.querySelectorAll('.channel-card').forEach(el => el.classList.remove('active'));
+  const card = document.getElementById('ch-' + id);
+  if (card) card.classList.add('active');
+}
+
+// ─── ADMIN ───────────────────────────────────────────────────
+function toggleAdminMode() {
+  if (!isAdminMode) {
+    // Show login
+    document.getElementById('loginModal').classList.add('open');
+    document.getElementById('adminPassword').value = '';
+    setTimeout(() => document.getElementById('adminPassword').focus(), 100);
+  } else {
+    exitAdmin();
+  }
+}
+
+function checkPassword() {
+  const pwd = document.getElementById('adminPassword').value;
+  if (pwd === ADMIN_PASSWORD) {
+    closeLoginModal();
+    enterAdmin();
+  } else {
+    document.getElementById('adminPassword').style.borderColor = 'var(--accent)';
+    document.getElementById('adminPassword').placeholder = '✗ Wrong password';
+    setTimeout(() => {
+      document.getElementById('adminPassword').style.borderColor = '';
+      document.getElementById('adminPassword').placeholder = 'Enter admin password';
+    }, 1500);
+  }
+}
+
+function enterAdmin() {
+  isAdminMode = true;
+  document.body.classList.add('admin-mode');
+  document.getElementById('adminToggleBtn').classList.add('active');
+  document.getElementById('adminToggleBtn').textContent = '✓ Exit Admin';
+}
+
+function exitAdmin() {
+  isAdminMode = false;
+  document.body.classList.remove('admin-mode');
+  document.getElementById('adminToggleBtn').classList.remove('active');
+  document.getElementById('adminToggleBtn').textContent = '⚙ Admin';
+}
+
+function closeLoginModal() {
+  document.getElementById('loginModal').classList.remove('open');
+}
+
+// ─── MODAL ───────────────────────────────────────────────────
+function openEditModal(id, e) {
+  e && e.stopPropagation();
+  editingId = id;
+  const ch = channels.find(c => c.id === id);
+  document.getElementById('modalTitle').textContent = '✏️ Edit Channel';
+  document.getElementById('editName').value = ch.name;
+  document.getElementById('editUrl').value = ch.url;
+  document.getElementById('editCategory').value = ch.category;
+  document.getElementById('editFlag').value = ch.flag || '';
+  document.getElementById('deleteBtn').style.display = 'inline-block';
+  document.getElementById('editModal').classList.add('open');
+}
+
+function openAddModal() {
+  editingId = null;
+  document.getElementById('modalTitle').textContent = '＋ Add Channel';
+  document.getElementById('editName').value = '';
+  document.getElementById('editUrl').value = '';
+  document.getElementById('editCategory').value = 'News';
+  document.getElementById('editFlag').value = '📺';
+  document.getElementById('deleteBtn').style.display = 'none';
+  document.getElementById('editModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('editModal').classList.remove('open');
+}
+
+function saveChannel() {
+  const name = document.getElementById('editName').value.trim();
+  const url = document.getElementById('editUrl').value.trim();
+  const category = document.getElementById('editCategory').value;
+  const flag = document.getElementById('editFlag').value.trim() || '📺';
+
+  if (!name || !url) {
+    alert('Please fill in the channel name and stream URL.');
+    return;
+  }
+
+  if (editingId !== null) {
+    const idx = channels.findIndex(c => c.id === editingId);
+    channels[idx] = { ...channels[idx], name, url, category, flag };
+    if (activeChannelId === editingId) playChannel(editingId);
+  } else {
+    const newId = Date.now();
+    channels.push({ id: newId, name, url, category, flag });
+  }
+
+  save();
+  renderChannels();
+  closeModal();
+}
+
+function deleteChannel() {
+  if (!confirm('Delete this channel?')) return;
+  channels = channels.filter(c => c.id !== editingId);
+  if (activeChannelId === editingId) {
+    document.getElementById('mainPlayer').src = '';
+    document.getElementById('nowPlayingName').textContent = 'Select a Channel';
+    document.getElementById('nowPlayingFlag').textContent = '📺';
+    activeChannelId = null;
+  }
+  save();
+  renderChannels();
+  closeModal();
+}
+
+// Close modals on overlay click
+document.getElementById('editModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+document.getElementById('loginModal').addEventListener('click', function(e) {
+  if (e.target === this) closeLoginModal();
+});
+
+// ─── START ────────────────────────────────────────────────────
+init();
+</script>
 </body>
 </html>
