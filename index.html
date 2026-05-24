@@ -629,6 +629,12 @@ function deleteChannel() {
 }
 
 init();
+
+function resetAllChannels() {
+    localStorage.removeItem('novaTV_channels');
+    location.reload();
+}
+  
 </script>
 </body>
 </html>
