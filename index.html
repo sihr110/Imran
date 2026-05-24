@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NOVA TV — Live Channels</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
 <style>
   :root {
     --bg: #080c14;
@@ -29,7 +32,6 @@
     overflow-x: hidden;
   }
 
-  /* Animated background grid */
   body::before {
     content: '';
     position: fixed;
@@ -136,10 +138,14 @@
     max-height: 540px;
   }
 
-  .player-wrapper iframe {
+  .player-wrapper iframe, .player-wrapper video {
     width: 100%;
     height: 100%;
     border: none;
+    display: none;
+  }
+
+  .player-wrapper .active-player {
     display: block;
   }
 
@@ -152,6 +158,7 @@
     align-items: flex-end;
     justify-content: space-between;
     pointer-events: none;
+    z-index: 5;
   }
 
   .now-playing-label {
@@ -170,9 +177,7 @@
     line-height: 1;
   }
 
-  .channel-flag {
-    font-size: 1.6rem;
-  }
+  .channel-flag { font-size: 1.6rem; }
 
   /* ── CHANNELS GRID ── */
   .channels-section {
@@ -237,8 +242,6 @@
     background: #1a1020;
   }
 
-  .channel-card.active::before { opacity: 1; }
-
   .card-top {
     display: flex;
     align-items: center;
@@ -258,20 +261,9 @@
     letter-spacing: 1px;
   }
 
-  .ch-name {
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: var(--text);
-    line-height: 1.2;
-  }
+  .ch-name { font-weight: 600; font-size: 0.9rem; color: var(--text); line-height: 1.2; }
+  .ch-category { font-size: 0.72rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
 
-  .ch-category {
-    font-size: 0.72rem;
-    color: var(--muted);
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  /* Admin edit btn on card */
   .card-edit-btn {
     display: none;
     position: absolute;
@@ -287,23 +279,13 @@
     z-index: 5;
     transition: all 0.15s;
   }
-  .card-edit-btn:hover {
-    background: rgba(244,162,97,0.25);
-  }
+  .card-edit-btn:hover { background: rgba(244,162,97,0.25); }
 
   body.admin-mode .card-edit-btn { display: block; }
   body.admin-mode .ch-live-badge { display: none; }
+  body.admin-mode .channel-card { border-color: rgba(244,162,97,0.2); }
+  body.admin-mode .channel-card:hover { border-color: var(--accent2); box-shadow: 0 0 15px rgba(244,162,97,0.15); }
 
-  /* Admin mode card glow */
-  body.admin-mode .channel-card {
-    border-color: rgba(244,162,97,0.2);
-  }
-  body.admin-mode .channel-card:hover {
-    border-color: var(--accent2);
-    box-shadow: 0 0 15px rgba(244,162,97,0.15);
-  }
-
-  /* Admin mode banner */
   .admin-banner {
     display: none;
     position: relative;
@@ -315,15 +297,11 @@
     font-size: 0.72rem;
     color: var(--accent2);
     letter-spacing: 1px;
-    display: none;
     align-items: center;
     gap: 10px;
   }
   body.admin-mode .admin-banner { display: flex; }
 
-  .admin-banner-icon { font-size: 1rem; }
-
-  /* Add Channel btn */
   .add-channel-btn {
     display: none;
     background: rgba(244,162,97,0.1);
@@ -341,15 +319,10 @@
     align-items: center;
     gap: 6px;
   }
-  .add-channel-btn:hover {
-    background: rgba(244,162,97,0.18);
-    border-color: var(--accent2);
-  }
+  .add-channel-btn:hover { background: rgba(244,162,97,0.18); border-color: var(--accent2); }
   body.admin-mode .add-channel-btn { display: flex; }
 
-  .add-icon { font-size: 1.4rem; }
-
-  /* ── MODAL ── */
+  /* ── MODALS ── */
   .modal-overlay {
     display: none;
     position: fixed;
@@ -370,153 +343,45 @@
     width: 480px;
     max-width: 95vw;
     box-shadow: 0 30px 80px rgba(0,0,0,0.7);
-    animation: slideUp 0.25s cubic-bezier(.4,0,.2,1);
   }
 
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(30px) scale(0.97); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
+  .modal-title { font-family: 'Bebas Neue', cursive; font-size: 1.5rem; letter-spacing: 3px; color: var(--accent2); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px; }
+  .form-group { margin-bottom: 1rem; }
+  .form-label { display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+  .form-input, .form-select { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 10px 12px; font-size: 0.9rem; outline: none; }
+  .form-input:focus { border-color: var(--accent2); }
+  .modal-actions { display: flex; gap: 10px; margin-top: 1.5rem; justify-content: flex-end; }
 
-  .modal-title {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 1.5rem;
-    letter-spacing: 3px;
-    color: var(--accent2);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+  .btn { padding: 9px 20px; border-radius: 7px; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; cursor: pointer; letter-spacing: 1px; border: none; }
+  .btn-save { background: var(--accent); color: #fff; }
+  .btn-cancel { background: var(--card); color: var(--muted); border: 1px solid var(--border); }
+  .btn-delete { background: transparent; color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); margin-right: auto; }
 
-  .form-group {
-    margin-bottom: 1rem;
-  }
-
-  .form-label {
-    display: block;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.68rem;
-    color: var(--muted);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-
-  .form-input {
-    width: 100%;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    padding: 10px 12px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .form-input:focus {
-    border-color: var(--accent2);
-    box-shadow: 0 0 0 3px rgba(244,162,97,0.1);
-  }
-
-  .form-input::placeholder { color: var(--muted); }
-
-  .form-select {
-    width: 100%;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    padding: 10px 12px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    outline: none;
-    cursor: pointer;
-  }
-
-  .modal-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 1.5rem;
-    justify-content: flex-end;
-  }
-
-  .btn {
-    padding: 9px 20px;
-    border-radius: 7px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
-    cursor: pointer;
-    letter-spacing: 1px;
-    border: none;
-    transition: all 0.18s;
-  }
-
-  .btn-save {
-    background: var(--accent);
-    color: #fff;
-    box-shadow: 0 4px 16px rgba(230,57,70,0.35);
-  }
-  .btn-save:hover { background: #c0303b; box-shadow: 0 4px 20px rgba(230,57,70,0.5); }
-
-  .btn-cancel {
-    background: var(--card);
-    color: var(--muted);
-    border: 1px solid var(--border);
-  }
-  .btn-cancel:hover { color: var(--text); border-color: var(--muted); }
-
-  .btn-delete {
-    background: transparent;
-    color: #e74c3c;
-    border: 1px solid rgba(231,76,60,0.3);
-    margin-right: auto;
-  }
-  .btn-delete:hover { background: rgba(231,76,60,0.1); }
-
-  /* Admin Login Modal */
-  .admin-login-modal .modal-title { color: var(--accent2); }
-
-  /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 640px) {
-    header { padding: 0 1rem; }
-    .logo { font-size: 1.5rem; }
-    .player-section, .channels-section { padding-left: 1rem; padding-right: 1rem; }
-    .channels-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.7rem; }
-  }
 </style>
 </head>
 <body>
 
-<!-- Admin Banner -->
 <div class="admin-banner">
-  <span class="admin-banner-icon">⚙️</span>
-  ADMIN MODE — Click any channel card to edit · Add new channels below
-  <span style="margin-left:auto; opacity:0.6;">Changes saved to localStorage</span>
+  <span>⚙️</span> ADMIN MODE — Changes are temporary unless exported/saved back to channels.js.
 </div>
 
-<!-- Header -->
 <header>
   <div class="logo">NOVA<span>TV</span></div>
-  <div class="live-badge">
-    <div class="live-dot"></div>
-    Live Now
-  </div>
+  <div class="live-badge"><div class="live-dot"></div>Live Now</div>
   <div class="header-right">
     <button class="admin-btn" id="adminToggleBtn" onclick="toggleAdminMode()">⚙ Admin</button>
   </div>
 </header>
 
-<!-- Player -->
 <div class="player-section">
   <div class="player-wrapper">
-    <iframe id="mainPlayer" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+    <iframe id="iframePlayer" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+    
+    <video id="hlsPlayer" controls autoplay playsinline></video>
+
     <div class="player-overlay-info">
       <div>
         <div class="now-playing-label">▶ Now Playing</div>
@@ -527,29 +392,25 @@
   </div>
 </div>
 
-<!-- Channels -->
 <div class="channels-section">
   <div class="section-title">Live Channels</div>
   <div class="channels-grid" id="channelsGrid">
-    <!-- Cards injected by JS -->
     <button class="add-channel-btn" onclick="openAddModal()">
-      <span class="add-icon">＋</span>
-      Add Channel
+      <span class="add-icon">＋</span>Add Channel
     </button>
   </div>
 </div>
 
-<!-- Edit/Add Channel Modal -->
 <div class="modal-overlay" id="editModal">
   <div class="modal">
     <div class="modal-title" id="modalTitle">✏️ Edit Channel</div>
     <div class="form-group">
       <label class="form-label">Channel Name</label>
-      <input class="form-input" id="editName" type="text" placeholder="e.g. CNN International">
+      <input class="form-input" id="editName" type="text">
     </div>
     <div class="form-group">
-      <label class="form-label">Stream URL (embed / m3u8 / iframe src)</label>
-      <input class="form-input" id="editUrl" type="text" placeholder="https://...">
+      <label class="form-label">Stream URL (YouTube, m3u8, or Web Embed)</label>
+      <input class="form-input" id="editUrl" type="text">
     </div>
     <div class="form-group">
       <label class="form-label">Category</label>
@@ -557,17 +418,13 @@
         <option>News</option>
         <option>Sports</option>
         <option>Entertainment</option>
-        <option>Kids</option>
-        <option>Music</option>
-        <option>Documentary</option>
         <option>Religious</option>
-        <option>Regional</option>
         <option>Other</option>
       </select>
     </div>
     <div class="form-group">
       <label class="form-label">Flag / Emoji Icon</label>
-      <input class="form-input" id="editFlag" type="text" placeholder="🇵🇰 or 📺 or any emoji">
+      <input class="form-input" id="editFlag" type="text">
     </div>
     <div class="modal-actions">
       <button class="btn btn-delete" id="deleteBtn" onclick="deleteChannel()">🗑 Delete</button>
@@ -577,16 +434,12 @@
   </div>
 </div>
 
-<!-- Admin Login Modal -->
 <div class="modal-overlay" id="loginModal">
-  <div class="modal admin-login-modal">
+  <div class="modal">
     <div class="modal-title">🔐 Admin Access</div>
     <div class="form-group">
       <label class="form-label">Password</label>
-      <input class="form-input" id="adminPassword" type="password" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')checkPassword()">
-    </div>
-    <div style="font-size:0.72rem;color:var(--muted);margin-top:-4px;font-family:'JetBrains Mono',monospace;">
-      Default password: <span style="color:var(--accent2)">admin123</span>
+      <input class="form-input" id="adminPassword" type="password">
     </div>
     <div class="modal-actions">
       <button class="btn btn-cancel" onclick="closeLoginModal()">Cancel</button>
@@ -595,36 +448,21 @@
   </div>
 </div>
 
+<script src="channels.js"></script>
+
 <script>
-// ─── DEFAULT CHANNELS ───────────────────────────────────────
-const DEFAULT_CHANNELS = [
-  { id: 1, name: "ARY News", url: "https://www.youtube.com/embed/live_stream?channel=UCStyle7KJlj7CMKyn3VK_fPGw&autoplay=1", category: "News", flag: "🇵🇰" },
-  { id: 2, name: "Geo News", url: "https://www.youtube.com/embed/live_stream?channel=UC7P7gPkPU2CJ0yq-76eO4Ag&autoplay=1", category: "News", flag: "🇵🇰" },
-  { id: 3, name: "Al Jazeera", url: "https://www.youtube.com/embed/F422qLnClNY?autoplay=1", category: "News", flag: "🌍" },
-  { id: 4, name: "BBC World", url: "https://www.youtube.com/embed/live_stream?channel=UC16niRr50-MSBwiO3YDb3RA&autoplay=1", category: "News", flag: "🇬🇧" },
-  { id: 5, name: "CNN International", url: "https://www.youtube.com/embed/live_stream?channel=UCupvZG-5ko_eiXAupbDfxWw&autoplay=1", category: "News", flag: "🇺🇸" },
-  { id: 6, name: "Hum TV", url: "https://www.youtube.com/embed/live_stream?channel=UCDshLBQP3TFqJgVGp53b3Lg&autoplay=1", category: "Entertainment", flag: "🇵🇰" },
-  { id: 7, name: "PTV Sports", url: "https://www.youtube.com/embed/live_stream?channel=UCyLLDFSZen8TIZdcPHzxkTg&autoplay=1", category: "Sports", flag: "🇵🇰" },
-  { id: 8, name: "Ten Sports", url: "https://www.youtube.com/embed/live_stream?channel=UCqKPKBe5r3UfUXdFlr3pIhg&autoplay=1", category: "Sports", flag: "🏏" },
-  { id: 9, name: "Islam Channel", url: "https://www.youtube.com/embed/live_stream?channel=UCq7Gh6BV5k2PVxYPQFOkRfQ&autoplay=1", category: "Religious", flag: "☪️" },
-  { id: 10, name: "Express TV", url: "https://www.youtube.com/embed/live_stream?channel=UCEMwTOeEYPwAIiLzGmDuEjQ&autoplay=1", category: "News", flag: "🇵🇰" },
-  { id: 11, name: "Samaa TV", url: "https://www.youtube.com/embed/live_stream?channel=UCSEymcmVLGFsKbvnPAYyByQ&autoplay=1", category: "News", flag: "🇵🇰" },
-  { id: 12, name: "Cartoon Network", url: "https://www.youtube.com/embed/live_stream?channel=UCq_BxN0o2bhXFRdCKBfKpkQ&autoplay=1", category: "Kids", flag: "🎉" },
-];
-
 const ADMIN_PASSWORD = "admin123";
-
 let channels = [];
 let editingId = null;
 let isAdminMode = false;
 let activeChannelId = null;
+let hlsInstance = null;
 
-// ─── INIT ────────────────────────────────────────────────────
 function init() {
+  // Pull from localStorage first; if empty, use values defined in channels.js
   const saved = localStorage.getItem('novaTV_channels');
   channels = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_CHANNELS));
   renderChannels();
-  // Auto-play first channel
   if (channels.length > 0) playChannel(channels[0].id);
 }
 
@@ -632,10 +470,8 @@ function save() {
   localStorage.setItem('novaTV_channels', JSON.stringify(channels));
 }
 
-// ─── RENDER ──────────────────────────────────────────────────
 function renderChannels() {
   const grid = document.getElementById('channelsGrid');
-  // Remove old cards (keep add-btn)
   const addBtn = grid.querySelector('.add-channel-btn');
   grid.innerHTML = '';
 
@@ -658,75 +494,85 @@ function renderChannels() {
     };
     grid.appendChild(card);
   });
-
-  grid.appendChild(addBtn || (() => {
-    const b = document.createElement('button');
-    b.className = 'add-channel-btn';
-    b.onclick = openAddModal;
-    b.innerHTML = '<span class="add-icon">＋</span>Add Channel';
-    return b;
-  })());
+  grid.appendChild(addBtn);
 }
 
 function playChannel(id) {
   const ch = channels.find(c => c.id === id);
   if (!ch) return;
   activeChannelId = id;
-  document.getElementById('mainPlayer').src = ch.url;
+
   document.getElementById('nowPlayingName').textContent = ch.name;
   document.getElementById('nowPlayingFlag').textContent = ch.flag || '📺';
-  // Update active card
+
+  const iframePlayer = document.getElementById('iframePlayer');
+  const hlsPlayer = document.getElementById('hlsPlayer');
+
+  // Reset engine instances
+  if (hlsInstance) {
+    hlsInstance.destroy();
+    hlsInstance = null;
+  }
+  hlsPlayer.pause();
+  hlsPlayer.src = "";
+
+  // ENGINE SWITCHER MATRIX
+  if (ch.url.includes('.m3u8')) {
+    // Switch viewports to Native Video Player
+    iframePlayer.className = "";
+    iframePlayer.src = "";
+    hlsPlayer.className = "active-player";
+
+    if (Hls.isSupported()) {
+      hlsInstance = new Hls();
+      hlsInstance.loadSource(ch.url);
+      hlsInstance.attachMedia(hlsPlayer);
+    } else if (hlsPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+      // Native fallback (Safari/iOS)
+      hlsPlayer.src = ch.url;
+    }
+  } else {
+    // Switch viewports to Standard Iframe Player
+    hlsPlayer.className = "";
+    iframePlayer.className = "active-player";
+    iframePlayer.src = ch.url;
+  }
+
   document.querySelectorAll('.channel-card').forEach(el => el.classList.remove('active'));
   const card = document.getElementById('ch-' + id);
   if (card) card.classList.add('active');
 }
 
-// ─── ADMIN ───────────────────────────────────────────────────
 function toggleAdminMode() {
   if (!isAdminMode) {
-    // Show login
     document.getElementById('loginModal').classList.add('open');
     document.getElementById('adminPassword').value = '';
-    setTimeout(() => document.getElementById('adminPassword').focus(), 100);
   } else {
     exitAdmin();
   }
 }
 
 function checkPassword() {
-  const pwd = document.getElementById('adminPassword').value;
-  if (pwd === ADMIN_PASSWORD) {
+  if (document.getElementById('adminPassword').value === ADMIN_PASSWORD) {
     closeLoginModal();
     enterAdmin();
-  } else {
-    document.getElementById('adminPassword').style.borderColor = 'var(--accent)';
-    document.getElementById('adminPassword').placeholder = '✗ Wrong password';
-    setTimeout(() => {
-      document.getElementById('adminPassword').style.borderColor = '';
-      document.getElementById('adminPassword').placeholder = 'Enter admin password';
-    }, 1500);
   }
 }
 
 function enterAdmin() {
   isAdminMode = true;
   document.body.classList.add('admin-mode');
-  document.getElementById('adminToggleBtn').classList.add('active');
   document.getElementById('adminToggleBtn').textContent = '✓ Exit Admin';
 }
 
 function exitAdmin() {
   isAdminMode = false;
   document.body.classList.remove('admin-mode');
-  document.getElementById('adminToggleBtn').classList.remove('active');
   document.getElementById('adminToggleBtn').textContent = '⚙ Admin';
 }
 
-function closeLoginModal() {
-  document.getElementById('loginModal').classList.remove('open');
-}
+function closeLoginModal() { document.getElementById('loginModal').classList.remove('open'); }
 
-// ─── MODAL ───────────────────────────────────────────────────
 function openEditModal(id, e) {
   e && e.stopPropagation();
   editingId = id;
@@ -751,9 +597,7 @@ function openAddModal() {
   document.getElementById('editModal').classList.add('open');
 }
 
-function closeModal() {
-  document.getElementById('editModal').classList.remove('open');
-}
+function closeModal() { document.getElementById('editModal').classList.remove('open'); }
 
 function saveChannel() {
   const name = document.getElementById('editName').value.trim();
@@ -761,18 +605,14 @@ function saveChannel() {
   const category = document.getElementById('editCategory').value;
   const flag = document.getElementById('editFlag').value.trim() || '📺';
 
-  if (!name || !url) {
-    alert('Please fill in the channel name and stream URL.');
-    return;
-  }
+  if (!name || !url) return;
 
   if (editingId !== null) {
     const idx = channels.findIndex(c => c.id === editingId);
     channels[idx] = { ...channels[idx], name, url, category, flag };
     if (activeChannelId === editingId) playChannel(editingId);
   } else {
-    const newId = Date.now();
-    channels.push({ id: newId, name, url, category, flag });
+    channels.push({ id: Date.now(), name, url, category, flag });
   }
 
   save();
@@ -781,28 +621,13 @@ function saveChannel() {
 }
 
 function deleteChannel() {
-  if (!confirm('Delete this channel?')) return;
+  if (!confirm('Delete channel?')) return;
   channels = channels.filter(c => c.id !== editingId);
-  if (activeChannelId === editingId) {
-    document.getElementById('mainPlayer').src = '';
-    document.getElementById('nowPlayingName').textContent = 'Select a Channel';
-    document.getElementById('nowPlayingFlag').textContent = '📺';
-    activeChannelId = null;
-  }
   save();
   renderChannels();
   closeModal();
 }
 
-// Close modals on overlay click
-document.getElementById('editModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-document.getElementById('loginModal').addEventListener('click', function(e) {
-  if (e.target === this) closeLoginModal();
-});
-
-// ─── START ────────────────────────────────────────────────────
 init();
 </script>
 </body>
