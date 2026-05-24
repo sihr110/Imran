@@ -5,636 +5,71 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NOVA TV — Live Channels</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-
 <style>
-  :root {
-    --bg: #080c14;
-    --surface: #0f1623;
-    --card: #141d2e;
-    --border: #1e2d47;
-    --accent: #e63946;
-    --accent2: #f4a261;
-    --live: #2ecc71;
-    --text: #e8eaf0;
-    --muted: #6b7a99;
-    --glow: 0 0 24px rgba(230,57,70,0.35);
-  }
-
+  :root { --bg: #080c14; --surface: #0f1623; --card: #141d2e; --border: #1e2d47; --accent: #e63946; --accent2: #f4a261; --text: #e8eaf0; --muted: #6b7a99; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(230,57,70,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(230,57,70,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* ── HEADER ── */
-  header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(8,12,20,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 64px;
-  }
-
-  .logo {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 2rem;
-    letter-spacing: 4px;
-    color: var(--accent);
-    text-shadow: var(--glow);
-  }
-  .logo span { color: var(--text); }
-
-  .live-badge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--live);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-  }
-  .live-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--live);
-    animation: pulse 1.4s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%,100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.7); }
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .admin-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    padding: 6px 14px;
-    border-radius: 6px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    cursor: pointer;
-    letter-spacing: 1px;
-    transition: all 0.2s;
-  }
-  .admin-btn:hover, .admin-btn.active {
-    border-color: var(--accent2);
-    color: var(--accent2);
-    background: rgba(244,162,97,0.07);
-  }
-  .admin-btn.active {
-    box-shadow: 0 0 12px rgba(244,162,97,0.2);
-  }
-
-  /* ── MAIN PLAYER ── */
-  .player-section {
-    position: relative;
-    z-index: 1;
-    padding: 2rem 2rem 0;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-
-  .player-wrapper {
-    position: relative;
-    width: 100%;
-    background: #000;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    box-shadow: 0 0 60px rgba(0,0,0,0.6);
-    aspect-ratio: 16/9;
-    max-height: 540px;
-  }
-
-  .player-wrapper iframe, .player-wrapper video {
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: none;
-  }
-
-  .player-wrapper .active-player {
-    display: block;
-  }
-
-  .player-overlay-info {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.85));
-    padding: 2rem 1.5rem 1rem;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    pointer-events: none;
-    z-index: 5;
-  }
-
-  .now-playing-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--accent);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-
-  .now-playing-name {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 1.8rem;
-    letter-spacing: 2px;
-    line-height: 1;
-  }
-
-  .channel-flag { font-size: 1.6rem; }
-
-  /* ── CHANNELS GRID ── */
-  .channels-section {
-    position: relative;
-    z-index: 1;
-    padding: 1.5rem 2rem 3rem;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-
-  .section-title {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 1.1rem;
-    letter-spacing: 4px;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .channels-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-  }
-
-  .channel-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1rem;
-    cursor: pointer;
-    transition: all 0.22s cubic-bezier(.4,0,.2,1);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .channel-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(230,57,70,0.05), transparent);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .channel-card:hover {
-    border-color: rgba(230,57,70,0.4);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 20px rgba(230,57,70,0.1);
-  }
-
-  .channel-card:hover::before { opacity: 1; }
-
-  .channel-card.active {
-    border-color: var(--accent);
-    box-shadow: 0 0 20px rgba(230,57,70,0.25);
-    background: #1a1020;
-  }
-
-  .card-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .ch-flag { font-size: 1.4rem; }
-
-  .ch-live-badge {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--live);
-    background: rgba(46,204,113,0.1);
-    border: 1px solid rgba(46,204,113,0.25);
-    padding: 2px 6px;
-    border-radius: 4px;
-    letter-spacing: 1px;
-  }
-
-  .ch-name { font-weight: 600; font-size: 0.9rem; color: var(--text); line-height: 1.2; }
-  .ch-category { font-size: 0.72rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
-
-  .card-edit-btn {
-    display: none;
-    position: absolute;
-    top: 8px; right: 8px;
-    background: rgba(244,162,97,0.15);
-    border: 1px solid rgba(244,162,97,0.4);
-    color: var(--accent2);
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.65rem;
-    font-family: 'JetBrains Mono', monospace;
-    cursor: pointer;
-    z-index: 5;
-    transition: all 0.15s;
-  }
-  .card-edit-btn:hover { background: rgba(244,162,97,0.25); }
-
-  body.admin-mode .card-edit-btn { display: block; }
-  body.admin-mode .ch-live-badge { display: none; }
-  body.admin-mode .channel-card { border-color: rgba(244,162,97,0.2); }
-  body.admin-mode .channel-card:hover { border-color: var(--accent2); box-shadow: 0 0 15px rgba(244,162,97,0.15); }
-
-  .admin-banner {
-    display: none;
-    position: relative;
-    z-index: 10;
-    background: linear-gradient(90deg, rgba(244,162,97,0.12), rgba(244,162,97,0.05));
-    border-bottom: 1px solid rgba(244,162,97,0.25);
-    padding: 8px 2rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--accent2);
-    letter-spacing: 1px;
-    align-items: center;
-    gap: 10px;
-  }
-  body.admin-mode .admin-banner { display: flex; }
-
-  .add-channel-btn {
-    display: none;
-    background: rgba(244,162,97,0.1);
-    border: 1.5px dashed rgba(244,162,97,0.4);
-    border-radius: 10px;
-    padding: 1rem;
-    cursor: pointer;
-    color: var(--accent2);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    text-align: center;
-    letter-spacing: 1px;
-    transition: all 0.2s;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-  }
-  .add-channel-btn:hover { background: rgba(244,162,97,0.18); border-color: var(--accent2); }
-  body.admin-mode .add-channel-btn { display: flex; }
-
-  /* ── MODALS ── */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(6px);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-  }
-  .modal-overlay.open { display: flex; }
-
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 2rem;
-    width: 480px;
-    max-width: 95vw;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.7);
-  }
-
-  .modal-title { font-family: 'Bebas Neue', cursive; font-size: 1.5rem; letter-spacing: 3px; color: var(--accent2); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px; }
-  .form-group { margin-bottom: 1rem; }
-  .form-label { display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
-  .form-input, .form-select { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 10px 12px; font-size: 0.9rem; outline: none; }
-  .form-input:focus { border-color: var(--accent2); }
-  .modal-actions { display: flex; gap: 10px; margin-top: 1.5rem; justify-content: flex-end; }
-
-  .btn { padding: 9px 20px; border-radius: 7px; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; cursor: pointer; letter-spacing: 1px; border: none; }
-  .btn-save { background: var(--accent); color: #fff; }
-  .btn-cancel { background: var(--card); color: var(--muted); border: 1px solid var(--border); }
-  .btn-delete { background: transparent; color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); margin-right: auto; }
-
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+  header { padding: 1rem 2rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .logo { font-family: 'Bebas Neue', cursive; font-size: 2rem; color: var(--accent); }
+  .player-section { padding: 2rem; max-width: 1000px; margin: 0 auto; }
+  .player-wrapper { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; }
+  iframe { width: 100%; height: 100%; border: none; }
+  .channels-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; padding: 2rem; max-width: 1200px; margin: 0 auto; }
+  .channel-card { background: var(--card); padding: 1rem; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); color: white; }
+  .channel-card:hover { border-color: var(--accent); }
 </style>
 </head>
 <body>
 
-<div class="admin-banner">
-  <span>⚙️</span> ADMIN MODE — Changes are temporary unless exported/saved back to channels.js.
-</div>
-
 <header>
-  <div class="logo">NOVA<span>TV</span></div>
-  <div class="live-badge"><div class="live-dot"></div>Live Now</div>
-  <div class="header-right">
-    <button class="admin-btn" id="adminToggleBtn" onclick="toggleAdminMode()">⚙ Admin</button>
-  </div>
+  <div class="logo">NOVA TV</div>
+  <button onclick="resetToDefaults()" style="cursor:pointer;">🔄 Reset Data</button>
 </header>
 
 <div class="player-section">
   <div class="player-wrapper">
-    <iframe id="iframePlayer" allowfullscreen allow="autoplay; encrypted-media"></iframe>
-    
-    <video id="hlsPlayer" controls autoplay playsinline></video>
-
-    <div class="player-overlay-info">
-      <div>
-        <div class="now-playing-label">▶ Now Playing</div>
-        <div class="now-playing-name" id="nowPlayingName">Select a Channel</div>
-      </div>
-      <div class="channel-flag" id="nowPlayingFlag">📺</div>
-    </div>
+    <iframe id="mainPlayer" src=""></iframe>
   </div>
 </div>
 
-<div class="channels-section">
-  <div class="section-title">Live Channels</div>
-  <div class="channels-grid" id="channelsGrid">
-    <button class="add-channel-btn" onclick="openAddModal()">
-      <span class="add-icon">＋</span>Add Channel
-    </button>
-  </div>
-</div>
-
-<div class="modal-overlay" id="editModal">
-  <div class="modal">
-    <div class="modal-title" id="modalTitle">✏️ Edit Channel</div>
-    <div class="form-group">
-      <label class="form-label">Channel Name</label>
-      <input class="form-input" id="editName" type="text">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Stream URL (YouTube, m3u8, or Web Embed)</label>
-      <input class="form-input" id="editUrl" type="text">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Category</label>
-      <select class="form-select" id="editCategory">
-        <option>News</option>
-        <option>Sports</option>
-        <option>Entertainment</option>
-        <option>Religious</option>
-        <option>Other</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Flag / Emoji Icon</label>
-      <input class="form-input" id="editFlag" type="text">
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-delete" id="deleteBtn" onclick="deleteChannel()">🗑 Delete</button>
-      <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-save" onclick="saveChannel()">Save Channel</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="loginModal">
-  <div class="modal">
-    <div class="modal-title">🔐 Admin Access</div>
-    <div class="form-group">
-      <label class="form-label">Password</label>
-      <input class="form-input" id="adminPassword" type="password">
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-cancel" onclick="closeLoginModal()">Cancel</button>
-      <button class="btn btn-save" onclick="checkPassword()">Enter Admin</button>
-    </div>
-  </div>
-</div>
+<div class="channels-grid" id="channelsGrid"></div>
 
 <script src="channels.js"></script>
 
 <script>
-const ADMIN_PASSWORD = "admin123";
 let channels = [];
-let editingId = null;
-let isAdminMode = false;
-let activeChannelId = null;
-let hlsInstance = null;
 
 function init() {
-  // Pull from localStorage first; if empty, use values defined in channels.js
   const saved = localStorage.getItem('novaTV_channels');
+  // If no saved data, use the data from channels.js
   channels = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_CHANNELS));
   renderChannels();
   if (channels.length > 0) playChannel(channels[0].id);
 }
 
-function save() {
-  localStorage.setItem('novaTV_channels', JSON.stringify(channels));
-}
-
 function renderChannels() {
   const grid = document.getElementById('channelsGrid');
-  const addBtn = grid.querySelector('.add-channel-btn');
   grid.innerHTML = '';
-
   channels.forEach(ch => {
     const card = document.createElement('div');
-    card.className = 'channel-card' + (ch.id === activeChannelId ? ' active' : '');
-    card.id = 'ch-' + ch.id;
-    card.innerHTML = `
-      <button class="card-edit-btn" onclick="openEditModal(${ch.id}, event)">✏ Edit</button>
-      <div class="card-top">
-        <span class="ch-flag">${ch.flag || '📺'}</span>
-        <span class="ch-live-badge">LIVE</span>
-      </div>
-      <div class="ch-name">${ch.name}</div>
-      <div class="ch-category">${ch.category}</div>
-    `;
-    card.onclick = (e) => {
-      if (e.target.classList.contains('card-edit-btn')) return;
-      playChannel(ch.id);
-    };
+    card.className = 'channel-card';
+    card.innerHTML = `${ch.flag} ${ch.name}`;
+    card.onclick = () => playChannel(ch.id);
     grid.appendChild(card);
   });
-  grid.appendChild(addBtn);
 }
 
 function playChannel(id) {
   const ch = channels.find(c => c.id === id);
-  if (!ch) return;
-  activeChannelId = id;
-
-  document.getElementById('nowPlayingName').textContent = ch.name;
-  document.getElementById('nowPlayingFlag').textContent = ch.flag || '📺';
-
-  const iframePlayer = document.getElementById('iframePlayer');
-  const hlsPlayer = document.getElementById('hlsPlayer');
-
-  // Reset engine instances
-  if (hlsInstance) {
-    hlsInstance.destroy();
-    hlsInstance = null;
-  }
-  hlsPlayer.pause();
-  hlsPlayer.src = "";
-
-  // ENGINE SWITCHER MATRIX
-  if (ch.url.includes('.m3u8')) {
-    // Switch viewports to Native Video Player
-    iframePlayer.className = "";
-    iframePlayer.src = "";
-    hlsPlayer.className = "active-player";
-
-    if (Hls.isSupported()) {
-      hlsInstance = new Hls();
-      hlsInstance.loadSource(ch.url);
-      hlsInstance.attachMedia(hlsPlayer);
-    } else if (hlsPlayer.canPlayType('application/vnd.apple.mpegurl')) {
-      // Native fallback (Safari/iOS)
-      hlsPlayer.src = ch.url;
-    }
-  } else {
-    // Switch viewports to Standard Iframe Player
-    hlsPlayer.className = "";
-    iframePlayer.className = "active-player";
-    iframePlayer.src = ch.url;
-  }
-
-  document.querySelectorAll('.channel-card').forEach(el => el.classList.remove('active'));
-  const card = document.getElementById('ch-' + id);
-  if (card) card.classList.add('active');
+  if (ch) document.getElementById('mainPlayer').src = ch.url;
 }
 
-function toggleAdminMode() {
-  if (!isAdminMode) {
-    document.getElementById('loginModal').classList.add('open');
-    document.getElementById('adminPassword').value = '';
-  } else {
-    exitAdmin();
-  }
-}
-
-function checkPassword() {
-  if (document.getElementById('adminPassword').value === ADMIN_PASSWORD) {
-    closeLoginModal();
-    enterAdmin();
-  }
-}
-
-function enterAdmin() {
-  isAdminMode = true;
-  document.body.classList.add('admin-mode');
-  document.getElementById('adminToggleBtn').textContent = '✓ Exit Admin';
-}
-
-function exitAdmin() {
-  isAdminMode = false;
-  document.body.classList.remove('admin-mode');
-  document.getElementById('adminToggleBtn').textContent = '⚙ Admin';
-}
-
-function closeLoginModal() { document.getElementById('loginModal').classList.remove('open'); }
-
-function openEditModal(id, e) {
-  e && e.stopPropagation();
-  editingId = id;
-  const ch = channels.find(c => c.id === id);
-  document.getElementById('modalTitle').textContent = '✏️ Edit Channel';
-  document.getElementById('editName').value = ch.name;
-  document.getElementById('editUrl').value = ch.url;
-  document.getElementById('editCategory').value = ch.category;
-  document.getElementById('editFlag').value = ch.flag || '';
-  document.getElementById('deleteBtn').style.display = 'inline-block';
-  document.getElementById('editModal').classList.add('open');
-}
-
-function openAddModal() {
-  editingId = null;
-  document.getElementById('modalTitle').textContent = '＋ Add Channel';
-  document.getElementById('editName').value = '';
-  document.getElementById('editUrl').value = '';
-  document.getElementById('editCategory').value = 'News';
-  document.getElementById('editFlag').value = '📺';
-  document.getElementById('deleteBtn').style.display = 'none';
-  document.getElementById('editModal').classList.add('open');
-}
-
-function closeModal() { document.getElementById('editModal').classList.remove('open'); }
-
-function saveChannel() {
-  const name = document.getElementById('editName').value.trim();
-  const url = document.getElementById('editUrl').value.trim();
-  const category = document.getElementById('editCategory').value;
-  const flag = document.getElementById('editFlag').value.trim() || '📺';
-
-  if (!name || !url) return;
-
-  if (editingId !== null) {
-    const idx = channels.findIndex(c => c.id === editingId);
-    channels[idx] = { ...channels[idx], name, url, category, flag };
-    if (activeChannelId === editingId) playChannel(editingId);
-  } else {
-    channels.push({ id: Date.now(), name, url, category, flag });
-  }
-
-  save();
-  renderChannels();
-  closeModal();
-}
-
-function deleteChannel() {
-  if (!confirm('Delete channel?')) return;
-  channels = channels.filter(c => c.id !== editingId);
-  save();
-  renderChannels();
-  closeModal();
+function resetToDefaults() {
+  localStorage.removeItem('novaTV_channels');
+  location.reload();
 }
 
 init();
-
-function resetAllChannels() {
-    localStorage.removeItem('novaTV_channels');
-    location.reload();
-}
-  
 </script>
 </body>
 </html>
