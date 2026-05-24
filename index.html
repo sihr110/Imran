@@ -5,73 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOVA TV — Live Channels</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        :root { --bg: #080c14; --surface: #0f1623; --card: #141d2e; --border: #1e2d47; --accent: #e63946; --accent2: #f4a261; --text: #e8eaf0; --muted: #6b7a99; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
-        header { padding: 1rem 2rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        :root { --bg: #080c14; --surface: #0f1623; --card: #141d2e; --border: #1e2d47; --accent: #e63946; --text: #e8eaf0; }
+        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; margin: 0; }
+        header { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .logo { font-family: 'Bebas Neue', cursive; font-size: 2rem; color: var(--accent); }
-        .player-section { padding: 2rem; max-width: 1000px; margin: 0 auto; }
+        .player-section { padding: 20px; max-width: 1000px; margin: 0 auto; }
         .player-wrapper { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
         #mainPlayer { width: 100%; height: 100%; border: none; }
-        .channels-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; padding: 2rem; max-width: 1200px; margin: 0 auto; }
-        .channel-card { background: var(--card); padding: 1rem; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); color: white; transition: 0.2s; }
+        .channels-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .channel-card { background: var(--card); padding: 15px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); color: white; transition: 0.2s; }
         .channel-card:hover { border-color: var(--accent); }
-        .btn { padding: 10px 20px; cursor: pointer; background: var(--border); color: white; border: none; border-radius: 5px; font-family: 'JetBrains Mono'; }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo">NOVA TV</div>
-    <button class="btn" onclick="resetToDefaults()">🔄 Reset Data</button>
-</header>
+    <header>
+        <div class="logo">NOVA TV</div>
+        <button onclick="localStorage.removeItem('novaTV_channels'); location.reload();" style="cursor:pointer; background:transparent; color:white; border:1px solid white; padding:5px 10px;">🔄 Reset</button>
+    </header>
 
-<div class="player-section">
-    <div class="player-wrapper">
-        <iframe id="mainPlayer" src=""></iframe>
+    <div class="player-section">
+        <div class="player-wrapper">
+            <iframe id="mainPlayer" src="" allow="autoplay" allowfullscreen></iframe>
+        </div>
     </div>
-</div>
 
-<div class="channels-grid" id="channelsGrid"></div>
+    <div class="channels-grid" id="channelsGrid"></div>
 
-<script src="channels.js"></script>
+    <script src="channels.js"></script>
 
-<script>
-    let channels = [];
+    <script>
+        let channels = [];
 
-    function init() {
-        const saved = localStorage.getItem('novaTV_channels');
-        // Prioritize saved edits, otherwise use the DEFAULT_CHANNELS from channels.js
-        channels = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_CHANNELS));
-        renderChannels();
-        if (channels.length > 0) playChannel(channels[0].id);
-    }
+        function init() {
+            // Priority: LocalStorage (edits) > channels.js (default)
+            const saved = localStorage.getItem('novaTV_channels');
+            channels = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_CHANNELS));
+            renderChannels();
+            if (channels.length > 0) playChannel(channels[0].id);
+        }
 
-    function renderChannels() {
-        const grid = document.getElementById('channelsGrid');
-        grid.innerHTML = '';
-        channels.forEach(ch => {
-            const card = document.createElement('div');
-            card.className = 'channel-card';
-            card.innerHTML = `${ch.flag} ${ch.name}`;
-            card.onclick = () => playChannel(ch.id);
-            grid.appendChild(card);
-        });
-    }
+        function renderChannels() {
+            const grid = document.getElementById('channelsGrid');
+            grid.innerHTML = '';
+            channels.forEach(ch => {
+                const card = document.createElement('div');
+                card.className = 'channel-card';
+                card.innerHTML = `${ch.flag} ${ch.name}`;
+                card.onclick = () => playChannel(ch.id);
+                grid.appendChild(card);
+            });
+        }
 
-    function playChannel(id) {
-        const ch = channels.find(c => c.id === id);
-        if (ch) document.getElementById('mainPlayer').src = ch.url;
-    }
+        function playChannel(id) {
+            const ch = channels.find(c => c.id === id);
+            if (ch) document.getElementById('mainPlayer').src = ch.url;
+        }
 
-    function resetToDefaults() {
-        localStorage.removeItem('novaTV_channels');
-        location.reload();
-    }
-
-    init();
-</script>
+        init();
+    </script>
 </body>
 </html>
