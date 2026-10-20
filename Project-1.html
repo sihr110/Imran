@@ -6,7 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=5.0, user-scalable=yes">
     <meta name="theme-color" content="#1e4a6b">
     <title>اسلامی اخلاقی صفات – چیک لسٹ</title>
+    
+    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Google Fonts for Nastaliq Urdu -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         * {
             box-sizing: border-box;
@@ -31,14 +37,13 @@
         ::-webkit-scrollbar-corner { background: #e0d5d5; }
 
         body {
-            /* Jameel Noori Nastaleeq primary font */
-            font-family: 'Jameel Noori Nastaleeq', 'Jameel Noori Nastaleeq Regular',
-                         'Noto Nastaliq Urdu', 'Noto Naskh Arabic', 'Arial', sans-serif;
+            /* Forces Nastaliq Font */
+            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', Arial, sans-serif;
             background: #f4f7fc;
             padding: 0.8rem;
             padding-right: 1.8rem;
             color: #1e2b3c;
-            line-height: 2;
+            line-height: 2.2; /* Increased for Nastaliq spacing */
             font-size: 1.1rem;
             overflow-y: scroll;
         }
@@ -200,13 +205,13 @@
             transition: 0.15s;
             cursor: pointer;
             user-select: none;
-            line-height: 1.9;
+            line-height: 2; /* Increased for Nastaliq */
         }
         .point-item:active { background: #e7f0fa; }
         .point-item input[type="checkbox"] {
             width: 1.4rem;
             height: 1.4rem;
-            margin-top: 0.45rem;
+            margin-top: 0.6rem;
             accent-color: #1e4a6b;
             flex-shrink: 0;
             cursor: pointer;
@@ -216,7 +221,7 @@
             color: #142b3b;
             cursor: pointer;
             flex: 1;
-            line-height: 1.9;
+            line-height: 2;
         }
         .point-item label strong { color: #0a3147; }
 
@@ -228,7 +233,7 @@
             padding: 0.9rem 1.2rem;
             margin-bottom: 1.4rem;
             border-right: 6px solid #1e4a6b;
-            line-height: 1.9;
+            line-height: 2;
         }
 
         .output-section {
@@ -290,7 +295,7 @@
             display: flex;
             gap: 0.5rem;
             font-size: 1.02rem;
-            line-height: 1.9;
+            line-height: 2;
         }
         .result-list li:last-child { border-bottom: none; }
         .result-list .item-num { color: #4b6e8c; min-width: 1.8rem; }
