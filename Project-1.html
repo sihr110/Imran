@@ -219,12 +219,12 @@
             color: #ffffff;
             margin: 1.6rem 0 0.8rem 0;
             padding: 0.6rem 1.2rem;
-            background: #1b5e20; /* Changed to Dark Green */
+            background: #1b5e20; /* Dark Green */
             border-right: none;
             border-radius: 1rem;
             line-height: 1.8;
             font-weight: 600;
-            box-shadow: 0 3px 8px rgba(27,94,32,0.25); /* Updated shadow */
+            box-shadow: 0 3px 8px rgba(27,94,32,0.25);
         }
 
         /* ===== VERTICAL LIST (single column) ===== */
@@ -288,7 +288,7 @@
             padding: 0.4rem 1.2rem;
             border-radius: 1.5rem;
             border: 1.5px solid #b8cde0;
-            background: #fff9c4;
+            background: #fff9c4; /* Light yellow */
             color: black;
             cursor: pointer;
             font-size: 1rem;
@@ -301,7 +301,7 @@
             content: '\f078';
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
-            color: white; /* White arrow */
+            color: black;
             font-size: 0.8rem;
             margin-right: 0.5rem;
         }
@@ -309,7 +309,6 @@
             border-color: #2b6f9e;
             box-shadow: 0 0 0 3px rgba(43,111,158,0.15);
         }
- 
 
         /* Popup Container base */
         .custom-options {
@@ -324,7 +323,7 @@
             display: none;
             overflow: hidden;
             border: 1.5px solid #b8cde0;
-            background: #fff9c4; /* Light Yellow Background for the whole popup */
+            background: #fff9c4; /* Light Yellow Background */
         }
         .custom-select-container.open .custom-options {
             display: block;
@@ -372,12 +371,12 @@
                 text-align: right;
                 margin-bottom: 0.2rem;
             }
+            /* Fixed mobile width (no longer stretches full width) */
             .custom-select-container {
-                width: 30%;
-                max-width: 30%;
-                min-width: 30%;
+                width: 220px;
+                max-width: 220px;
+                min-width: 220px;
             }
-            /* Keep popup same width as box on mobile */
             .custom-options {
                 width: 100%;
                 min-width: 100%;
@@ -407,7 +406,7 @@
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            background: #1e4a6b;
+            background: #1b5e20; /* Dark Green */
             color: white;
             padding: 0.9rem 1.2rem;
             border-radius: 2rem;
@@ -459,19 +458,22 @@
 
         .result-list { padding: 0.8rem 1.2rem 1.2rem; list-style: none; }
         .result-list li {
-            padding: 0.55rem 0;
-            border-bottom: 1px solid #e3edf5;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.6rem;
+            border: 1.5px solid #cfdeec;
+            border-radius: 0.8rem;
+            background: white;
             display: flex;
             gap: 0.5rem;
-            font-size: 1.02rem;
+            font-size: 1.05rem;
             line-height: 2;
             align-items: flex-start;
-            font-weight: 600; /* Made text bold as requested */
+            font-weight: 700;
         }
-        .result-list li:last-child { border-bottom: none; }
+        .result-list li:last-child { margin-bottom: 0; border-bottom: 1.5px solid #cfdeec; }
         .result-list .item-num { color: #4b6e8c; min-width: 1.8rem; flex-shrink: 0; font-weight: bold; }
         .result-list .item-text { color: #15304a; flex: 1; }
-        .empty-msg { color: #7a8b9b; font-style: italic; padding: 0.8rem 0; text-align: center; font-weight: normal; }
+        .empty-msg { color: #7a8b9b; font-style: italic; padding: 0.8rem 0; text-align: center; font-weight: normal; border: none !important; background: transparent !important; }
         
         .footer-note { text-align: center; margin-top: 1.6rem; color: #5a7d9a; font-size: 1rem; }
         .no-print { display: flex; justify-content: flex-end; margin-top: 1.2rem; gap: 0.6rem; flex-wrap: wrap; }
@@ -564,6 +566,49 @@
         }
         @media print { #customScrollbar { display: none !important; } }
 
+        /* ---------- NEW NAME VALIDATION POPUP ---------- */
+        #nameBlocker {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px);
+        }
+        .name-popup {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 90%;
+            position: relative;
+        }
+        .name-popup p {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #8b0000;
+            animation: blinkSlow 2s infinite;
+            margin: 0;
+        }
+        @keyframes blinkSlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.1; }
+        }
+        .close-popup-btn {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #333;
+            font-weight: bold;
+            line-height: 1;
+        }
+        .close-popup-btn:hover { color: #800000; }
+
         /* ---------- PRINT ---------- */
         @media print {
             @page { margin: 1cm 0.8cm; }
@@ -583,7 +628,7 @@
                 max-width: 100%; 
             }
             h1, .name-row, .btn-group, .page1-note, .btn-top,
-            .section-title, .points-grid, .no-print, .footer-note { display: none !important; }
+            .section-title, .points-grid, .no-print, .footer-note, #nameBlocker { display: none !important; }
             .output-section {
                 display: block !important;
                 margin: 0 !important;
@@ -644,6 +689,8 @@
                 padding: 2pt 0;
                 page-break-inside: avoid;
                 break-inside: avoid;
+                border: none !important;
+                margin: 0 !important;
             }
             .summary-section {
                 display: block !important;
@@ -662,6 +709,14 @@
     </style>
 </head>
 <body>
+
+<!-- Name Validation Overlay -->
+<div id="nameBlocker">
+    <div class="name-popup">
+        <div class="close-popup-btn" id="closeNamePopup">✕</div>
+        <p>براہ کرم اپنا نام درج کریں</p>
+    </div>
+</div>
 
 <div id="customScrollbar">
     <div id="customScrollbarThumb"></div>
@@ -1120,6 +1175,39 @@
     const closeOutputBtn = document.getElementById('closeOutputBtn');
     const printFromOutputBtn = document.getElementById('printFromOutputBtn');
 
+    // Name Validation Elements
+    const nameBlocker = document.getElementById('nameBlocker');
+    const closeNamePopup = document.getElementById('closeNamePopup');
+    
+    // Unfreeze and hide popup when user types their name
+    fullNameInput.addEventListener('input', () => {
+        if (fullNameInput.value.trim() !== '') {
+            nameBlocker.style.display = 'none';
+        }
+        if (outputSection.classList.contains('visible')) {
+            userNameDisplay.textContent = fullNameInput.value.trim() || 'بے نام';
+        }
+    });
+
+    // Close popup via X button
+    closeNamePopup.addEventListener('click', () => {
+        nameBlocker.style.display = 'none';
+    });
+
+    // Close popup by clicking outside the white box
+    nameBlocker.addEventListener('click', (e) => {
+        if (e.target === nameBlocker) {
+            nameBlocker.style.display = 'none';
+        }
+    });
+
+    // Freeze and show popup function
+    function showNameBlocker() {
+        nameBlocker.style.display = 'flex';
+        fullNameInput.focus();
+        fullNameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
     const count1El = document.getElementById('count1');
     const count2El = document.getElementById('count2');
     const count3El = document.getElementById('count3');
@@ -1165,7 +1253,12 @@
     }
 
     function generateOutput() {
-        const name = fullNameInput.value.trim() || 'بے نام';
+        if (!fullNameInput.value.trim()) {
+            showNameBlocker();
+            return;
+        }
+
+        const name = fullNameInput.value.trim();
         userNameDisplay.textContent = name;
 
         const selects = getAllSelects();
@@ -1213,6 +1306,11 @@
     }
 
     function triggerPrint() {
+        if (!fullNameInput.value.trim()) {
+            showNameBlocker();
+            return;
+        }
+
         generateOutput();
         updateSummaryCounts();
         setTimeout(() => {
@@ -1255,12 +1353,6 @@
     });
     
     closeOutputBtn.addEventListener('click', () => outputSection.classList.remove('visible'));
-    
-    fullNameInput.addEventListener('input', () => {
-        if (outputSection.classList.contains('visible')) {
-            userNameDisplay.textContent = fullNameInput.value.trim() || 'بے نام';
-        }
-    });
 
     updateSummaryCounts();
 </script>
