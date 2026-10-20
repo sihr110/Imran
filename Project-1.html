@@ -305,6 +305,56 @@
         .no-print { display: flex; justify-content: flex-end; margin-top: 1.2rem; gap: 0.6rem; flex-wrap: wrap; }
         .small-btn { padding: 0.55rem 1.2rem; font-size: 1rem; }
 
+        /* ===== SUMMARY SECTION (RESULT COUNTS) ===== */
+        .summary-section {
+            margin-top: 1.8rem;
+            background: #f0f6fe;
+            border-radius: 1.5rem;
+            padding: 1rem 1.4rem;
+            border: 1px solid #cdddec;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+        .summary-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #800000;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 2px solid #cbd9e8;
+            padding-bottom: 0.5rem;
+        }
+        .summary-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem 2rem;
+            font-size: 1.15rem;
+            line-height: 2.2;
+        }
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            padding: 0.3rem 1.2rem;
+            border-radius: 2rem;
+            border: 1px solid #dbe7f0;
+        }
+        .summary-item .label {
+            font-weight: 600;
+            color: #1e4a6b;
+        }
+        .summary-item .count {
+            font-weight: 700;
+            color: #800000;
+            min-width: 2.5rem;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        .summary-item .count.ticked-count { color: #1d6b1d; }
+        .summary-item .count.unticked-count { color: #a13030; }
+
         /* ===== CUSTOM ALWAYS-VISIBLE SCROLLBAR — RIGHT SIDE (RTL) ===== */
         #customScrollbar {
             position: fixed;
@@ -418,6 +468,19 @@
                 page-break-inside: avoid;
                 break-inside: avoid;
             }
+            .summary-section {
+                display: block !important;
+                margin-top: 8pt !important;
+                border: 1px solid #aaa !important;
+                border-radius: 0 !important;
+                padding: 4pt 8pt !important;
+                background: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .summary-title { font-size: 12pt; color: black !important; border-bottom: 1px solid #999; }
+            .summary-item { background: #f0f0f0 !important; border: 1px solid #ccc; }
+            .summary-item .label, .summary-item .count { color: black !important; }
         }
     </style>
 </head>
@@ -457,6 +520,7 @@
 
     <div id="checklistContainer"></div>
 
+    <!-- OUTPUT SECTION (detailed lists) -->
     <div class="output-section" id="outputSection">
         <div class="output-header">
             <h2><i class="fas fa-clipboard-check"></i> منتخب کردہ صفات</h2>
@@ -483,6 +547,23 @@
         <div class="no-print">
             <button class="btn small-btn" id="printFromOutputBtn"><i class="fas fa-print"></i> پرنٹ</button>
             <button class="btn small-btn" id="closeOutputBtn"><i class="fas fa-times"></i> بند کریں</button>
+        </div>
+    </div>
+
+    <!-- ===== NEW SUMMARY SECTION (نتیجہ) ===== -->
+    <div class="summary-section" id="summarySection">
+        <div class="summary-title">
+            <i class="fas fa-chart-simple"></i> نتیجہ
+        </div>
+        <div class="summary-row">
+            <div class="summary-item">
+                <span class="label">منتخب صفات:</span>
+                <span class="count ticked-count" id="tickedCount">00</span>
+            </div>
+            <div class="summary-item">
+                <span class="label">غیر منتخب صفات:</span>
+                <span class="count unticked-count" id="untickedCount">00</span>
+            </div>
         </div>
     </div>
 
@@ -611,8 +692,10 @@
             itemDiv.addEventListener('click', (e) => {
                 if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL') {
                     cb.checked = !cb.checked;
+                    updateSummaryCounts();
                 }
             });
+            cb.addEventListener('change', updateSummaryCounts);
         });
 
         secDiv.appendChild(grid);
@@ -742,8 +825,28 @@
     const closeOutputBtn = document.getElementById('closeOutputBtn');
     const printFromOutputBtn = document.getElementById('printFromOutputBtn');
 
+    // Summary elements
+    const tickedCountEl = document.getElementById('tickedCount');
+    const untickedCountEl = document.getElementById('untickedCount');
+
     function getAllCheckboxes() {
         return document.querySelectorAll('.point-item input[type="checkbox"]');
+    }
+
+    function padNumber(n) {
+        return n < 10 ? '0' + n : '' + n;
+    }
+
+    // Update the summary counts (always visible)
+    function updateSummaryCounts() {
+        const checkboxes = getAllCheckboxes();
+        let tickedCount = 0;
+        let total = checkboxes.length;
+        checkboxes.forEach(cb => { if (cb.checked) tickedCount++; });
+        const untickedCount = total - tickedCount;
+
+        tickedCountEl.textContent = padNumber(tickedCount);
+        untickedCountEl.textContent = padNumber(untickedCount);
     }
 
     function generateOutput() {
@@ -786,6 +889,9 @@
             });
         }
 
+        // Update summary counts as well
+        updateSummaryCounts();
+
         outputSection.classList.add('visible');
         outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -793,6 +899,8 @@
     // Print function with automatic file name
     function triggerPrint() {
         generateOutput();
+        // Make sure summary counts are up-to-date before print
+        updateSummaryCounts();
         setTimeout(() => {
             const defaultName = "اسلامی اخلاقی صفات";
             const userName = fullNameInput.value.trim();
@@ -814,6 +922,7 @@
     clearBtn.addEventListener('click', () => {
         getAllCheckboxes().forEach(cb => cb.checked = false);
         outputSection.classList.remove('visible');
+        updateSummaryCounts();
     });
     
     clearNameBtn.addEventListener('click', () => {
@@ -831,6 +940,9 @@
             userNameDisplay.textContent = fullNameInput.value.trim() || 'بے نام';
         }
     });
+
+    // Initial summary count update (all unchecked -> 0 ticked, 75 unticked)
+    updateSummaryCounts();
 </script>
 </body>
 </html>
