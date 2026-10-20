@@ -2,15 +2,11 @@
 <html lang="ur" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <!-- NATIVE 50% ZOOM ON MOBILE, 100% ON PC -->
     <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=5.0, user-scalable=yes">
     <meta name="theme-color" content="#1e4a6b">
-    <title>اسلامی اخلاقی صفات – چیک لسٹ</title>
+    <title>اسلامی اخلاقی صفات – درجہ بندی</title>
     
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <!-- Google Fonts for Nastaliq Urdu -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -37,13 +33,12 @@
         ::-webkit-scrollbar-corner { background: #e0d5d5; }
 
         body {
-            /* Forces Nastaliq Font */
             font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', Arial, sans-serif;
             background: #f4f7fc;
             padding: 0.8rem;
             padding-right: 1.8rem;
             color: #1e2b3c;
-            line-height: 2.2; /* Increased for Nastaliq spacing */
+            line-height: 2.2;
             font-size: 1.1rem;
             overflow-y: scroll;
         }
@@ -165,65 +160,229 @@
             min-height: 44px;
             line-height: 1.4;
         }
-        .btn-primary { background: #1e4a6b; color: white; border: 1.5px solid #1e4a6b; }
         .btn:active { transform: scale(0.97); }
-        .btn-primary:active { background: #0f3350; }
+
+        /* Yellow "نتیجہ دیکھیں" button */
+        .btn.btn-primary {
+            background: #ffd700 !important;
+            color: #1e2b3c !important;
+            border: 1.5px solid #d4af37 !important;
+            font-weight: 600;
+        }
+        .btn.btn-primary:active {
+            background: #e6c200 !important;
+        }
+
+        /* Light Green Print Button */
+        .btn.btn-print {
+            background: #e6f4ea !important;
+            color: #1e4a6b !important;
+            border: 1.5px solid #aed581 !important;
+        }
+        .btn.btn-print:active {
+            background: #d4ecd9 !important;
+        }
+
+        /* Clear All Button (Same as Clear Name button) */
+        .btn.btn-clear {
+            background: #f3e5e5 !important;
+            color: #7a2e2e !important;
+            border: 1.5px solid #e0b8b8 !important;
+        }
+        .btn.btn-clear:active {
+            background: #e8d4d4 !important;
+        }
+
+        /* Go to Top Button */
+        .btn-top {
+            display: flex;
+            margin: 2rem auto 0 auto;
+            background: #1e4a6b;
+            color: white;
+            border: 1.5px solid #0f3350;
+            padding: 0.7rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 3rem;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            font-family: inherit;
+            transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(30, 74, 107, 0.3);
+        }
+        .btn-top:hover { background: #0f3350; }
+        .btn-top:active { transform: scale(0.96); }
 
         .section-title {
             font-size: 1.4rem;
             color: #ffffff;
             margin: 1.6rem 0 0.8rem 0;
             padding: 0.6rem 1.2rem;
-            background: #800000;
+            background: #1b5e20; /* Changed to Dark Green */
             border-right: none;
             border-radius: 1rem;
             line-height: 1.8;
             font-weight: 600;
-            box-shadow: 0 3px 8px rgba(128,0,0,0.25);
+            box-shadow: 0 3px 8px rgba(27,94,32,0.25); /* Updated shadow */
         }
 
+        /* ===== VERTICAL LIST (single column) ===== */
         .points-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
             margin-bottom: 0.4rem;
         }
-        @media (min-width: 700px) {
-            .points-grid {
-                grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-                gap: 0.7rem 1.2rem;
-            }
-        }
+        
+        /* Base Styles for Point Item */
         .point-item {
             display: flex;
-            align-items: flex-start;
-            gap: 0.6rem;
-            background: #f9fcff;
+            align-items: center;
+            gap: 0.7rem;
             padding: 0.7rem 0.9rem;
             border-radius: 1.2rem;
-            border: 1px solid #dbe7f0;
             transition: 0.15s;
-            cursor: pointer;
-            user-select: none;
-            line-height: 2; /* Increased for Nastaliq */
-        }
-        .point-item:active { background: #e7f0fa; }
-        .point-item input[type="checkbox"] {
-            width: 1.4rem;
-            height: 1.4rem;
-            margin-top: 0.6rem;
-            accent-color: #1e4a6b;
-            flex-shrink: 0;
-            cursor: pointer;
-        }
-        .point-item label {
-            font-size: 1.08rem;
-            color: #142b3b;
-            cursor: pointer;
-            flex: 1;
             line-height: 2;
         }
-        .point-item label strong { color: #0a3147; }
+
+        /* ODD POINTS: Light Green */
+        .point-item.odd-point {
+            background: #e8f5e9;
+            border: 1px solid #c8e6c9;
+        }
+
+        /* EVEN POINTS: Light Blue */
+        .point-item.even-point {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+        }
+
+        .point-item .point-text {
+            flex: 1 1 auto;
+            font-size: 1.08rem;
+            color: #142b3b;
+            line-height: 2;
+            min-width: 0;
+            word-break: break-word;
+        }
+        .point-item .point-text strong { color: #0a3147; }
+        
+        /* Custom Dropdown Styling */
+        .custom-select-container {
+            position: relative;
+            flex-shrink: 0;
+            min-width: 175px;
+            max-width: 220px;
+        }
+        
+        .custom-select-container.open {
+            z-index: 9999 !important;
+        }
+
+        .custom-select-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0.4rem 1.2rem;
+            border-radius: 1.5rem;
+            border: 1.5px solid #b8cde0;
+            background: #fff9c4;
+            color: black;
+            cursor: pointer;
+            font-size: 1rem;
+            min-height: 42px;
+            transition: 0.15s;
+            font-family: inherit;
+            font-weight: 700; /* Bold */
+        }
+        .custom-select-trigger::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: white; /* White arrow */
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+        .custom-select-trigger.active {
+            border-color: #2b6f9e;
+            box-shadow: 0 0 0 3px rgba(43,111,158,0.15);
+        }
+ 
+
+        /* Popup Container base */
+        .custom-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 100%;
+            min-width: 200px;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            margin-top: 0.3rem;
+            display: none;
+            overflow: hidden;
+            border: 1.5px solid #b8cde0;
+            background: #fff9c4; /* Light Yellow Background for the whole popup */
+        }
+        .custom-select-container.open .custom-options {
+            display: block;
+        }
+
+        /* Common option text style */
+        .custom-option {
+            padding: 0.6rem 1rem;
+            cursor: pointer;
+            font-size: 1rem;
+            text-align: right;
+            transition: background 0.1s;
+            color: #1e2b3c; 
+            font-weight: 700; /* Bold text */
+            border-bottom: 2px solid #d4af37; /* Bold lines */
+        }
+        .custom-option:last-child {
+            border-bottom: none;
+        }
+
+        /* 1st Option: Maroon Background, White Text */
+        .custom-option:nth-child(1) {
+            background: #800000;
+            color: white;
+        }
+        .custom-option:nth-child(1):hover {
+            background: #990000;
+        }
+
+        /* Other Options: Inherit Light Yellow from parent, hover effect */
+        .custom-option:not(:nth-child(1)):hover {
+            background: #fff59d;
+        }
+
+        /* ===== MOBILE LAYOUT FIX ===== */
+        @media (max-width: 700px) {
+            .point-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+                padding: 0.8rem;
+            }
+            .point-text {
+                width: 100%;
+                text-align: right;
+                margin-bottom: 0.2rem;
+            }
+            .custom-select-container {
+                width: 30%;
+                max-width: 30%;
+                min-width: 30%;
+            }
+            /* Keep popup same width as box on mobile */
+            .custom-options {
+                width: 100%;
+                min-width: 100%;
+            }
+        }
 
         .page1-note {
             font-size: 1rem;
@@ -264,6 +423,8 @@
             font-size: 1.15rem;
             border: 1px solid #ffffff50;
         }
+        
+        /* Table Layout for Results */
         .result-columns {
             display: grid;
             grid-template-columns: 1fr;
@@ -275,19 +436,27 @@
         .result-card {
             background: #f9fcff;
             border-radius: 1.5rem;
-            border: 1px solid #cfdeec;
+            border: 2px solid #cfdeec;
             overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
         .result-card .card-header {
             padding: 0.8rem 1.2rem;
             font-size: 1.15rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 0.6rem;
             line-height: 1.7;
+            border-bottom: 2px solid #cfdeec;
         }
-        .card-header.ticked { background: #d4e7d4; color: #1d4d1d; border-bottom: 2px solid #aacfaa; }
-        .card-header.unticked { background: #f8e0e0; color: #7a2e2e; border-bottom: 2px solid #e0b8b8; }
+        .card-header.rated-1 { background: #c8e6c9; color: #1b5e20; border-bottom-color: #81c784; }
+        .card-header.rated-2 { background: #dcedc8; color: #33691e; border-bottom-color: #aed581; }
+        .card-header.rated-3 { background: #fff9c4; color: #827717; border-bottom-color: #fff176; }
+        .card-header.rated-4 { background: #ffe0b2; color: #e65100; border-bottom-color: #ffb74d; }
+        .card-header.rated-5 { background: #ffcdd2; color: #b71c1c; border-bottom-color: #e57373; }
+        .card-header.rated-0 { background: #e0e0e0; color: #424242; border-bottom-color: #bdbdbd; }
+
         .result-list { padding: 0.8rem 1.2rem 1.2rem; list-style: none; }
         .result-list li {
             padding: 0.55rem 0;
@@ -296,16 +465,19 @@
             gap: 0.5rem;
             font-size: 1.02rem;
             line-height: 2;
+            align-items: flex-start;
+            font-weight: 600; /* Made text bold as requested */
         }
         .result-list li:last-child { border-bottom: none; }
-        .result-list .item-num { color: #4b6e8c; min-width: 1.8rem; }
-        .result-list .item-text { color: #15304a; }
-        .empty-msg { color: #7a8b9b; font-style: italic; padding: 0.8rem 0; text-align: center; }
+        .result-list .item-num { color: #4b6e8c; min-width: 1.8rem; flex-shrink: 0; font-weight: bold; }
+        .result-list .item-text { color: #15304a; flex: 1; }
+        .empty-msg { color: #7a8b9b; font-style: italic; padding: 0.8rem 0; text-align: center; font-weight: normal; }
+        
         .footer-note { text-align: center; margin-top: 1.6rem; color: #5a7d9a; font-size: 1rem; }
         .no-print { display: flex; justify-content: flex-end; margin-top: 1.2rem; gap: 0.6rem; flex-wrap: wrap; }
         .small-btn { padding: 0.55rem 1.2rem; font-size: 1rem; }
 
-        /* ===== SUMMARY SECTION (RESULT COUNTS) ===== */
+        /* ===== SUMMARY SECTION ===== */
         .summary-section {
             margin-top: 1.8rem;
             background: #f0f6fe;
@@ -328,8 +500,8 @@
         .summary-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 1.2rem 2rem;
-            font-size: 1.15rem;
+            gap: 0.8rem 1.2rem;
+            font-size: 1.05rem;
             line-height: 2.2;
         }
         .summary-item {
@@ -337,25 +509,30 @@
             align-items: center;
             gap: 0.5rem;
             background: white;
-            padding: 0.3rem 1.2rem;
+            padding: 0.3rem 1rem;
             border-radius: 2rem;
             border: 1px solid #dbe7f0;
         }
         .summary-item .label {
             font-weight: 600;
             color: #1e4a6b;
+            white-space: nowrap;
         }
         .summary-item .count {
             font-weight: 700;
             color: #800000;
-            min-width: 2.5rem;
+            min-width: 2rem;
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
         }
-        .summary-item .count.ticked-count { color: #1d6b1d; }
-        .summary-item .count.unticked-count { color: #a13030; }
+        .summary-item.rating-1 .count { color: #1b5e20; }
+        .summary-item.rating-2 .count { color: #33691e; }
+        .summary-item.rating-3 .count { color: #827717; }
+        .summary-item.rating-4 .count { color: #e65100; }
+        .summary-item.rating-5 .count { color: #b71c1c; }
+        .summary-item.rating-0 .count { color: #616161; }
 
-        /* ===== CUSTOM ALWAYS-VISIBLE SCROLLBAR — RIGHT SIDE (RTL) ===== */
+        /* ===== CUSTOM SCROLLBAR ===== */
         #customScrollbar {
             position: fixed;
             top: 0;
@@ -387,7 +564,7 @@
         }
         @media print { #customScrollbar { display: none !important; } }
 
-        /* ---------- PRINT / SAVE-AS-PDF FIX ---------- */
+        /* ---------- PRINT ---------- */
         @media print {
             @page { margin: 1cm 0.8cm; }
             body {
@@ -405,7 +582,7 @@
                 border-radius: 0; 
                 max-width: 100%; 
             }
-            h1, .name-row, .btn-group, .page1-note,
+            h1, .name-row, .btn-group, .page1-note, .btn-top,
             .section-title, .points-grid, .no-print, .footer-note { display: none !important; }
             .output-section {
                 display: block !important;
@@ -453,7 +630,7 @@
                 page-break-after: avoid !important;
                 break-after: avoid !important;
             }
-            .card-header.ticked, .card-header.unticked {
+            .card-header[class*="rated-"] {
                 background: #e0e0e0 !important;
                 color: black !important;
                 -webkit-print-color-adjust: exact;
@@ -486,7 +663,6 @@
 </head>
 <body>
 
-<!-- Custom always-visible scrollbar (RIGHT side for RTL) -->
 <div id="customScrollbar">
     <div id="customScrollbarThumb"></div>
 </div>
@@ -494,7 +670,7 @@
 <div class="container">
     <h1>
         <i class="fas fa-mosque"></i>
-        اسلامی اخلاقی صفات – چیک لسٹ - 01
+        اسلامی اخلاقی صفات – درجہ بندی - 01
     </h1>
 
     <div class="name-row">
@@ -508,72 +684,119 @@
     </div>
 
     <div class="btn-group">
-        <button class="btn btn-primary" id="viewBtn"><i class="fas fa-eye"></i> دیکھیں</button>
-        <button class="btn" id="printBtn"><i class="fas fa-print"></i> پرنٹ</button>
-        <button class="btn" id="clearBtn"><i class="fas fa-undo-alt"></i> تمام صفات کو غیر منتخب کریں</button>
+        <button class="btn btn-primary" id="viewBtn"><i class="fas fa-eye"></i> نتیجہ دیکھیں</button>
+        <button class="btn btn-print" id="printBtn"><i class="fas fa-print"></i> پرنٹ</button>
+        <button class="btn btn-clear" id="clearBtn"><i class="fas fa-undo-alt"></i> تمام درجہ بندیاں صاف کریں</button>
     </div>
 
     <div class="page1-note">
         <i class="fas fa-quote-right"></i>
-        اسلامی و اخلاقی تعلیمات، روایاتِ معصومین (ع) اور سیرتِ اہل بیت (ع) کی روشنی میں انسان کی اپنی ذاتی اخلاقی صفات اور اردگرد کے ساتھیوں کی مطلوبہ خوبیاں ایک دوسرے سے گہرا تعلق رکھتی ہیں۔
+        اسلامی و اخلاقی تعلیمات، روایاتِ معصومین (ع) اور سیرتِ اہل بیت (ع) کی روشنی میں <strong>انسان کی اپنی ذاتی اخلاقی صفات</strong> اور <strong>اردگرد کے ساتھیوں کی مطلوبہ خوبیاں</strong> ایک دوسرے سے گہرا تعلق رکھتی ہیں۔ جو اخلاقی معیار انسان اپنے لیے پسند کرتا ہے، وہی معیار اسے اپنے ماحول اور دوستوں میں بھی تلاش کرنا چاہیے۔
     </div>
 
     <div id="checklistContainer"></div>
 
-    <!-- OUTPUT SECTION (detailed lists) -->
+    <button class="btn-top" id="goTopBtn"><i class="fas fa-arrow-up"></i> اوپر جائیں</button>
+
     <div class="output-section" id="outputSection">
         <div class="output-header">
-            <h2><i class="fas fa-clipboard-check"></i> منتخب کردہ صفات</h2>
+            <h2><i class="fas fa-clipboard-check"></i> درجہ بندی کے نتائج</h2>
             <div class="user-name-display" id="userNameDisplay">—</div>
         </div>
         <div class="result-columns">
             <div class="result-card">
-                <div class="card-header ticked">
-                    <i class="fas fa-check-circle"></i> منتخب
+                <div class="card-header rated-1">
+                    <i class="fas fa-star"></i> 1- ہمیشہ
                 </div>
-                <ul class="result-list" id="tickedList">
-                    <li class="empty-msg">کوئی آئٹم منتخب نہیں</li>
+                <ul class="result-list" id="list1">
+                    <li class="empty-msg">کوئی آئٹم نہیں</li>
                 </ul>
             </div>
             <div class="result-card">
-                <div class="card-header unticked">
-                    <i class="fas fa-times-circle"></i> غیر منتخب
+                <div class="card-header rated-2">
+                    <i class="fas fa-star-half-alt"></i> 2- زیادہ تر
                 </div>
-                <ul class="result-list" id="untickedList">
-                    <li class="empty-msg">تمام آئٹمز منتخب ہیں</li>
+                <ul class="result-list" id="list2">
+                    <li class="empty-msg">کوئی آئٹم نہیں</li>
+                </ul>
+            </div>
+            <div class="result-card">
+                <div class="card-header rated-3">
+                    <i class="fas fa-circle"></i> 3- کبھی کبھی
+                </div>
+                <ul class="result-list" id="list3">
+                    <li class="empty-msg">کوئی آئٹم نہیں</li>
+                </ul>
+            </div>
+            <div class="result-card">
+                <div class="card-header rated-4">
+                    <i class="fas fa-circle-notch"></i> 4- بہت کم
+                </div>
+                <ul class="result-list" id="list4">
+                    <li class="empty-msg">کوئی آئٹم نہیں</li>
+                </ul>
+            </div>
+            <div class="result-card">
+                <div class="card-header rated-5">
+                    <i class="fas fa-exclamation-circle"></i> 5- بالکل بھی نہیں
+                </div>
+                <ul class="result-list" id="list5">
+                    <li class="empty-msg">کوئی آئٹم نہیں</li>
+                </ul>
+            </div>
+            <div class="result-card">
+                <div class="card-header rated-0">
+                    <i class="fas fa-minus-circle"></i> درجہ بندی نہیں کی گئی
+                </div>
+                <ul class="result-list" id="list0">
+                    <li class="empty-msg">کوئی آئٹم نہیں</li>
                 </ul>
             </div>
         </div>
         <div class="no-print">
-            <button class="btn small-btn" id="printFromOutputBtn"><i class="fas fa-print"></i> پرنٹ</button>
+            <button class="btn btn-print small-btn" id="printFromOutputBtn"><i class="fas fa-print"></i> پرنٹ</button>
             <button class="btn small-btn" id="closeOutputBtn"><i class="fas fa-times"></i> بند کریں</button>
         </div>
     </div>
 
-    <!-- ===== NEW SUMMARY SECTION (نتیجہ) ===== -->
     <div class="summary-section" id="summarySection">
         <div class="summary-title">
-            <i class="fas fa-chart-simple"></i> نتیجہ
+            <i class="fas fa-chart-simple"></i> خلاصہ
         </div>
         <div class="summary-row">
-            <div class="summary-item">
-                <span class="label">منتخب صفات:</span>
-                <span class="count ticked-count" id="tickedCount">00</span>
+            <div class="summary-item rating-1">
+                <span class="label">1- ہمیشہ:</span>
+                <span class="count" id="count1">00</span>
             </div>
-            <div class="summary-item">
-                <span class="label">غیر منتخب صفات:</span>
-                <span class="count unticked-count" id="untickedCount">00</span>
+            <div class="summary-item rating-2">
+                <span class="label">2- زیادہ تر:</span>
+                <span class="count" id="count2">00</span>
+            </div>
+            <div class="summary-item rating-3">
+                <span class="label">3- کبھی کبھی:</span>
+                <span class="count" id="count3">00</span>
+            </div>
+            <div class="summary-item rating-4">
+                <span class="label">4- بہت کم:</span>
+                <span class="count" id="count4">00</span>
+            </div>
+            <div class="summary-item rating-5">
+                <span class="label">5- بالکل بھی نہیں:</span>
+                <span class="count" id="count5">00</span>
+            </div>
+            <div class="summary-item rating-0">
+                <span class="label">بغیر درجہ:</span>
+                <span class="count" id="count0">00</span>
             </div>
         </div>
     </div>
 
     <div class="footer-note">
-        <i class="fas fa-heart"></i> التماسِ دعا . . . .  Sihr
+        <i class="fas fa-heart"></i> التماس ِ دعا ۔۔۔۔۔۔ Sihr
     </div>
 </div>
 
 <script>
-    // ---------- DATA ----------
     const pointsData = [
         { section: "ایمان، عقیدہ اور معنویت", text: "تقویٰ اور خوفِ خدا: زندگی کے ہر شعبے میں اللہ تعالیٰ کی حدود کا احترام کرنا۔", num: 1 },
         { section: "ایمان، عقیدہ اور معنویت", text: "اہلِ بیت (ع) کی سچی ولایت: محمد و آلِ محمد (ع) کی محبت، معرفت اور اطاعت پر قائم رہنا۔", num: 2 },
@@ -674,35 +897,109 @@
         grid.className = 'points-grid';
 
         sec.points.forEach(point => {
+            const isOdd = point.num % 2 !== 0;
+            const pointClass = isOdd ? 'odd-point' : 'even-point';
+
             const itemDiv = document.createElement('div');
-            itemDiv.className = 'point-item';
-            const cb = document.createElement('input');
-            cb.type = 'checkbox';
-            cb.id = `point_${point.num}`;
-            cb.value = point.num;
+            itemDiv.className = `point-item ${pointClass}`;
 
-            const label = document.createElement('label');
-            label.htmlFor = `point_${point.num}`;
-            label.innerHTML = `<strong>${point.num}.</strong> ${point.text}`;
+            const textSpan = document.createElement('span');
+            textSpan.className = 'point-text';
+            textSpan.innerHTML = `<strong>${point.num}.</strong> ${point.text}`;
 
-            itemDiv.appendChild(cb);
-            itemDiv.appendChild(label);
-            grid.appendChild(itemDiv);
+            // Custom Dropdown HTML
+            const customSelect = document.createElement('div');
+            customSelect.className = `custom-select-container ${pointClass}`;
+            customSelect.dataset.num = point.num;
 
-            itemDiv.addEventListener('click', (e) => {
-                if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL') {
-                    cb.checked = !cb.checked;
+            const trigger = document.createElement('div');
+            trigger.className = 'custom-select-trigger';
+            trigger.textContent = 'درجہ منتخب کریں';
+
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'custom-options';
+
+            const options = [
+                { value: '', label: 'درجہ منتخب کریں' },
+                { value: '1', label: '1- ہمیشہ' },
+                { value: '2', label: '2- زیادہ تر' },
+                { value: '3', label: '3- کبھی کبھی' },
+                { value: '4', label: '4- بہت کم' },
+                { value: '5', label: '5- بالکل بھی نہیں' }
+            ];
+
+            options.forEach(opt => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'custom-option';
+                optionDiv.dataset.value = opt.value;
+                optionDiv.textContent = opt.label;
+                if (opt.value === '') optionDiv.classList.add('selected');
+
+                optionDiv.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    // Close other dropdowns
+                    document.querySelectorAll('.custom-select-container').forEach(c => {
+                        c.classList.remove('open');
+                        c.style.zIndex = 'auto';
+                    });
+                    
+                    customSelect.dataset.value = opt.value;
+                    trigger.textContent = opt.label; 
+                    
+                    optionsDiv.querySelectorAll('.custom-option').forEach(o => o.classList.remove('selected'));
+                    optionDiv.classList.add('selected');
+                    
+                    customSelect.classList.remove('open');
+                    customSelect.style.zIndex = 'auto';
                     updateSummaryCounts();
+                });
+
+                optionsDiv.appendChild(optionDiv);
+            });
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = customSelect.classList.contains('open');
+                
+                // Close all first and remove high z-index
+                document.querySelectorAll('.custom-select-container').forEach(c => {
+                    c.classList.remove('open');
+                    c.style.zIndex = 'auto';
+                });
+                
+                // Toggle current
+                if (!isOpen) {
+                    customSelect.classList.add('open');
+                    customSelect.style.zIndex = '9999'; // Force popup to the front
                 }
             });
-            cb.addEventListener('change', updateSummaryCounts);
+
+            customSelect.appendChild(trigger);
+            customSelect.appendChild(optionsDiv);
+
+            itemDiv.appendChild(textSpan);
+            itemDiv.appendChild(customSelect);
+            grid.appendChild(itemDiv);
         });
 
         secDiv.appendChild(grid);
         checklistContainer.appendChild(secDiv);
     });
 
-    // ---------- CUSTOM SCROLLBAR LOGIC ----------
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.custom-select-container').forEach(c => {
+            c.classList.remove('open');
+            c.style.zIndex = 'auto';
+        });
+    });
+
+    // ---------- GO TO TOP BUTTON LOGIC ----------
+    document.getElementById('goTopBtn').addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ---------- CUSTOM SCROLLBAR ----------
     (function () {
         const track = document.getElementById('customScrollbar');
         const thumb = document.getElementById('customScrollbarThumb');
@@ -820,89 +1117,106 @@
     const clearNameBtn = document.getElementById('clearNameBtn');
     const outputSection = document.getElementById('outputSection');
     const userNameDisplay = document.getElementById('userNameDisplay');
-    const tickedList = document.getElementById('tickedList');
-    const untickedList = document.getElementById('untickedList');
     const closeOutputBtn = document.getElementById('closeOutputBtn');
     const printFromOutputBtn = document.getElementById('printFromOutputBtn');
 
-    // Summary elements
-    const tickedCountEl = document.getElementById('tickedCount');
-    const untickedCountEl = document.getElementById('untickedCount');
+    const count1El = document.getElementById('count1');
+    const count2El = document.getElementById('count2');
+    const count3El = document.getElementById('count3');
+    const count4El = document.getElementById('count4');
+    const count5El = document.getElementById('count5');
+    const count0El = document.getElementById('count0');
 
-    function getAllCheckboxes() {
-        return document.querySelectorAll('.point-item input[type="checkbox"]');
+    const list1 = document.getElementById('list1');
+    const list2 = document.getElementById('list2');
+    const list3 = document.getElementById('list3');
+    const list4 = document.getElementById('list4');
+    const list5 = document.getElementById('list5');
+    const list0 = document.getElementById('list0');
+
+    function getAllSelects() {
+        return document.querySelectorAll('.custom-select-container');
     }
 
     function padNumber(n) {
         return n < 10 ? '0' + n : '' + n;
     }
 
-    // Update the summary counts (always visible)
     function updateSummaryCounts() {
-        const checkboxes = getAllCheckboxes();
-        let tickedCount = 0;
-        let total = checkboxes.length;
-        checkboxes.forEach(cb => { if (cb.checked) tickedCount++; });
-        const untickedCount = total - tickedCount;
+        const selects = getAllSelects();
+        let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c0 = 0;
 
-        tickedCountEl.textContent = padNumber(tickedCount);
-        untickedCountEl.textContent = padNumber(untickedCount);
+        selects.forEach(sel => {
+            const val = sel.dataset.value;
+            if (val === '1') c1++;
+            else if (val === '2') c2++;
+            else if (val === '3') c3++;
+            else if (val === '4') c4++;
+            else if (val === '5') c5++;
+            else c0++;
+        });
+
+        count1El.textContent = padNumber(c1);
+        count2El.textContent = padNumber(c2);
+        count3El.textContent = padNumber(c3);
+        count4El.textContent = padNumber(c4);
+        count5El.textContent = padNumber(c5);
+        count0El.textContent = padNumber(c0);
     }
 
     function generateOutput() {
         const name = fullNameInput.value.trim() || 'بے نام';
         userNameDisplay.textContent = name;
 
-        const checkboxes = getAllCheckboxes();
-        const ticked = [];
-        const unticked = [];
+        const selects = getAllSelects();
+        const groups = { '1': [], '2': [], '3': [], '4': [], '5': [], '0': [] };
 
-        checkboxes.forEach(cb => {
-            const num = parseInt(cb.value);
+        selects.forEach(sel => {
+            const num = parseInt(sel.dataset.num);
             const point = pointsData.find(p => p.num === num);
-            if (cb.checked) ticked.push(point);
-            else unticked.push(point);
+            const val = sel.dataset.value;
+            if (val === '1' || val === '2' || val === '3' || val === '4' || val === '5') {
+                groups[val].push(point);
+            } else {
+                groups['0'].push(point);
+            }
         });
 
-        ticked.sort((a,b) => a.num - b.num);
-        unticked.sort((a,b) => a.num - b.num);
+        Object.keys(groups).forEach(key => {
+            groups[key].sort((a, b) => a.num - b.num);
+        });
 
-        tickedList.innerHTML = '';
-        if (ticked.length === 0) {
-            tickedList.innerHTML = '<li class="empty-msg">کوئی آئٹم منتخب نہیں</li>';
-        } else {
-            ticked.forEach(p => {
-                const li = document.createElement('li');
-                li.innerHTML = `<span class="item-num">${p.num}.</span> <span class="item-text">${p.text}</span>`;
-                tickedList.appendChild(li);
-            });
+        function renderList(container, items, emptyMsg) {
+            container.innerHTML = '';
+            if (items.length === 0) {
+                container.innerHTML = `<li class="empty-msg">${emptyMsg}</li>`;
+            } else {
+                items.forEach(p => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span class="item-num">${p.num}.</span> <span class="item-text">${p.text}</span>`;
+                    container.appendChild(li);
+                });
+            }
         }
 
-        untickedList.innerHTML = '';
-        if (unticked.length === 0) {
-            untickedList.innerHTML = '<li class="empty-msg">تمام آئٹمز منتخب ہیں</li>';
-        } else {
-            unticked.forEach(p => {
-                const li = document.createElement('li');
-                li.innerHTML = `<span class="item-num">${p.num}.</span> <span class="item-text">${p.text}</span>`;
-                untickedList.appendChild(li);
-            });
-        }
+        renderList(list1, groups['1'], 'کوئی آئٹم نہیں');
+        renderList(list2, groups['2'], 'کوئی آئٹم نہیں');
+        renderList(list3, groups['3'], 'کوئی آئٹم نہیں');
+        renderList(list4, groups['4'], 'کوئی آئٹم نہیں');
+        renderList(list5, groups['5'], 'کوئی آئٹم نہیں');
+        renderList(list0, groups['0'], 'کوئی آئٹم نہیں (تمام آئٹمز کی درجہ بندی کر دی گئی ہے)');
 
-        // Update summary counts as well
         updateSummaryCounts();
 
         outputSection.classList.add('visible');
         outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    // Print function with automatic file name
     function triggerPrint() {
         generateOutput();
-        // Make sure summary counts are up-to-date before print
         updateSummaryCounts();
         setTimeout(() => {
-            const defaultName = "اسلامی اخلاقی صفات";
+            const defaultName = "اسلامی اخلاقی صفات - درجہ بندی";
             const userName = fullNameInput.value.trim();
             const fileName = userName ? `${defaultName} - ${userName}` : defaultName;
             
@@ -920,7 +1234,14 @@
     printFromOutputBtn.addEventListener('click', triggerPrint);
     
     clearBtn.addEventListener('click', () => {
-        getAllCheckboxes().forEach(cb => cb.checked = false);
+        getAllSelects().forEach(sel => {
+            sel.dataset.value = '';
+            sel.querySelector('.custom-select-trigger').textContent = 'درجہ منتخب کریں';
+            sel.querySelectorAll('.custom-option').forEach(o => {
+                if (o.dataset.value === '') o.classList.add('selected');
+                else o.classList.remove('selected');
+            });
+        });
         outputSection.classList.remove('visible');
         updateSummaryCounts();
     });
@@ -941,7 +1262,6 @@
         }
     });
 
-    // Initial summary count update (all unchecked -> 0 ticked, 75 unticked)
     updateSummaryCounts();
 </script>
 </body>
