@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FBR Property Valuer · Karachi 2024</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; font-family: 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif; }
+        body {
+            background: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem 1rem;
+        }
+        .card {
+            max-width: 820px;
+            width: 100%;
+            background: #1e293b;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05);
+            padding: 2.2rem 2.2rem 2.5rem;
+            color: #e2e8f0;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .header h1 {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: #f8fafc;
+            letter-spacing: -0.4px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header .badge {
+            background: #3b82f6;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+        .sub {
+            color: #cbd5e1;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            border-left: 3px solid #3b82f6;
+            padding-left: 1rem;
+            background: #1e293b;
+            padding: 0.7rem 1.2rem;
+            border-radius: 0 12px 12px 0;
+            line-height: 1.5;
+            border: 1px solid #334155;
+            border-left-width: 4px;
+        }
+        .sub i {
+            font-style: normal;
+            background: #422006;
+            padding: 0.1rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #fbbf24;
+            font-weight: 800;
+        }
+
+        .field {
+            margin-bottom: 1.6rem;
+        }
+        .field label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            color: #cbd5e1;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .field label span {
+            font-weight: 700;
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-left: auto;
+        }
+
+        .search-wrap {
+            position: relative;
+        }
+        .search-wrap input {
+            width: 100%;
+            padding: 0.9rem 3rem 0.9rem 1.2rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            background: #0f172a;
+            border: 1.5px solid #475569;
+            border-radius: 14px;
+            outline: none;
+            transition: 0.15s;
+            color: #f1f5f9;
+        }
+        .search-wrap input::placeholder { color: #94a3b8; font-weight: 500; }
+        .search-wrap input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+        .clear-search {
+            position: absolute;
+            right: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+            transition: 0.1s;
+            display: none;
+        }
+        .clear-search:hover { color: #f8fafc; background: #475569; }
+        .clear-search.visible { display: block; }
+
+        .dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0; right: 0;
+            background: #1e293b;
+            border-radius: 14px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+            max-height: 240px;
+            overflow-y: auto;
+            z-index: 100;
+            border: 1px solid #475569;
+            display: none;
+            padding: 0.3rem;
+            list-style: none;
+        }
+        .dropdown.show { display: block; }
+        .dropdown li {
+            padding: 0.65rem 0.9rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+        .dropdown li:last-child { border-bottom: none; }
+        .dropdown li:hover { background: #334155; }
+        .dropdown li .hint {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            background: #0f172a;
+            padding: 1px 8px;
+            border-radius: 30px;
+            white-space: nowrap;
+        }
+
+        .selected-tag {
+            display: inline-block;
+            background: #1e3a5f;
+            color: #93c5fd;
+            font-size: 0.8rem;
+            font-weight: 800;
+            padding: 0.25rem 1rem;
+            border-radius: 30px;
+            margin-top: 0.4rem;
+        }
+
+        .types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            background: #0f172a;
+            padding: 0.3rem;
+            border-radius: 14px;
+            border: 1px solid #475569;
+        }
+        .types button {
+            flex: 1 0 auto;
+            border: none;
+            background: transparent;
+            padding: 0.6rem 0.7rem;
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #cbd5e1;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.12s;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .types button:hover { background: #334155; color: #f8fafc; }
+        .types button.active {
+            background: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59,130,246,0.4);
+            color: #ffffff;
+            font-weight: 900;
+        }
+
+        .row-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            align-items: start;
+        }
+        .input-box {
+            position: relative;
+        }
+        .input-box input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            font-size: 1rem;
+            font-weight: 700;
+            background: #0f172a;
+            border: 1.5px solid #475569;
+            border-radius: 14px;
+            outline: none;
+            transition: 0.15s;
+            color: #f1f5f9;
+        }
+        .input-box input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+
+        .unit-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .unit-toggle {
+            display: flex;
+            gap: 0.3rem;
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 0.25rem;
+            border: 1px solid #475569;
+            width: fit-content;
+        }
+        .unit-toggle button {
+            border: none;
+            background: transparent;
+            padding: 0.4rem 1.1rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: 0.12s;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .unit-toggle button.active {
+            background: #3b82f6;
+            color: #fff;
+            font-weight: 900;
+        }
+        .reset-size-btn {
+            background: #1e293b;
+            border: 1px solid #475569;
+            color: #cbd5e1;
+            padding: 0.35rem 0.9rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            letter-spacing: 0.3px;
+        }
+        .reset-size-btn:hover {
+            background: #334155;
+            color: #f8fafc;
+            border-color: #64748b;
+        }
+
+        .hint-blink {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: #fbbf24;
+            background: #1c1917;
+            padding: 0.65rem 1rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            height: 100%;
+            border: 1px solid #422006;
+            animation: blink 1.2s infinite;
+            line-height: 1.4;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
+        }
+
+        .result {
+            background: #0f172a;
+            border-radius: 1.4rem;
+            padding: 1.6rem 1.8rem;
+            margin-top: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            border: 1px solid #475569;
+            box-shadow: 0 10px 25px -8px #000000;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .result-row.main {
+            border-bottom: 1px solid #334155;
+            padding-bottom: 0.8rem;
+            margin-bottom: 0.4rem;
+        }
+        .result .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            color: #94a3b8;
+            font-weight: 800;
+            margin-bottom: 0.2rem;
+        }
+        .result .amount {
+            font-size: 2.1rem;
+            font-weight: 900;
+            color: #60a5fa;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        .result .meta {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-top: 0.4rem;
+            line-height: 1.5;
+            letter-spacing: 0.2px;
+            word-break: break-word;
+        }
+        .tax-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #cbd5e1;
+        }
+        .tax-row span:last-child {
+            color: #f8fafc;
+        }
+        .tax-row.seller {
+            color: #fca5a5;
+        }
+        .tax-row.buyer {
+            color: #fbbf24;
+        }
+        .tax-row.seller span:last-child {
+            color: #fca5a5;
+        }
+        .tax-row.buyer span:last-child {
+            color: #fbbf24;
+        }
+        .footnote {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #94a3b8;
+            text-align: center;
+            margin-top: 1.2rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 560px) {
+            .card { padding: 1.5rem; }
+            .row-inputs { grid-template-columns: 1fr; }
+            .result { padding: 1.2rem 1.3rem; }
+            .result .amount { font-size: 1.6rem; }
+            .result .meta { font-size: 0.75rem; }
+            .types button { font-size: 0.65rem; padding: 0.5rem 0.4rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="header">
+        <h1>FBR Valuer</h1>
+        <span class="badge">Karachi 2024</span>
+    </div>
+    <div class="sub">
+        <i>S.R.O. 1724(I)/2024</i> · w.e.f. 1 Nov 2024 · all rates per sq. ft.
+    </div>
+
+    <!-- FORM ONLY COVERS PROPERTY TYPE & SEARCH AREA -->
+    <form autocomplete="off" onsubmit="return false;">
+        <!-- Property type -->
+        <div class="field">
+            <label><i>🏠</i> Property type</label>
+            <div class="types" id="typeGroup">
+                <button data-type="resOpen" class="active" type="button">Res. open</button>
+                <button data-type="resBuilt" type="button">Res. built-up</button>
+                <button data-type="comOpen" type="button">Com. open</button>
+                <button data-type="comBuilt" type="button">Com. built-up</button>
+                <button data-type="flat" type="button">Flat / apt</button>
+                <button data-type="indOpen" type="button">Ind. open</button>
+                <button data-type="indBuilt" type="button">Ind. built-up</button>
+            </div>
+        </div>
+
+        <!-- Area search -->
+        <div class="field">
+            <label>
+                <i>📍</i> Select area
+                <span id="areaCount">237 areas</span>
+            </label>
+            <div class="search-wrap" id="searchWrap">
+                <input 
+                    type="search" 
+                    id="searchInput" 
+                    placeholder="Search area (e.g. DHA, Gulshan, Clifton)…" 
+                    autocomplete="new-password" 
+                    autocorrect="off" 
+                    autocapitalize="off" 
+                    spellcheck="false" 
+                    name="q_search_123" 
+                    aria-autocomplete="none"
+                    data-lpignore="true"
+                    role="presentation"
+                >
+                <button class="clear-search" id="clearSearch" type="button" title="Clear search">✕</button>
+                <ul class="dropdown" id="dropdownList"></ul>
+            </div>
+            <div id="selectedTag" class="selected-tag" style="display: none;"></div>
+        </div>
+    </form>
+
+    <!-- PROPERTY SIZE INPUT IS NOW COMPLETELY OUTSIDE THE FORM (NO WHITE BOX) -->
+    <div class="field">
+        <label>
+            <i>📐</i> Property size
+            <span>choose unit below</span>
+        </label>
+        <div class="row-inputs">
+            <div class="input-box">
+                <input 
+                    type="text" 
+                    inputmode="decimal" 
+                    id="areaInput" 
+                    placeholder="e.g. 120"
+                    autocomplete="off"
+                    autocorrect="off"
+                    spellcheck="false"
+                >
+            </div>
+            <div class="hint-blink" id="dynamicHint">Enter area in sq. yd.</div>
+        </div>
+        <div class="unit-row">
+            <div class="unit-toggle" id="unitToggle">
+                <button data-unit="yd" class="active" type="button">Sq. yd.</button>
+                <button data-unit="ft" type="button">Sq. ft.</button>
+            </div>
+            <button class="reset-size-btn" id="resetSizeBtn" type="button">↺ Reset size</button>
+        </div>
+    </div>
+
+    <!-- Result -->
+    <div class="result" id="resultCard">
+        <div class="result-row main">
+            <div class="left">
+                <div class="label">Fair market value</div>
+                <div class="amount" id="totalDisplay">—</div>
+                <div class="meta" id="metaDisplay">—</div>
+            </div>
+        </div>
+        <div class="tax-row seller">
+            <span>236C Seller Tax (2.75%)</span>
+            <span id="sellerTaxDisplay">—</span>
+        </div>
+        <div class="tax-row buyer">
+            <span>236K Buyer Tax (1.25%)</span>
+            <span id="buyerTaxDisplay">—</span>
+        </div>
+    </div>
+
+    <div class="footnote">
+        <br>
+        <span style="font-weight: 800; color: #86efac;">Designed by : Sihr-Imran</span>
+    </div>
+</div>
+
+<script>
+(function() {
+    const AREA_DATA = [
+        { name: "Abdullah Haroon Road", resOpen: 5000, resBuilt: 7000, comOpen: 20000, comBuilt: 12000, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Air force Officers Cooperative Housing Society at Scheme 33", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1550, indBuilt: 3400 },
+        { name: "Air Force Officers Housing Scheme (Falcon-I) near Baloch Colony Bridge, Karachi", resOpen: 30000, resBuilt: 35000, comOpen: 40000, comBuilt: 45000, flat: null, indOpen: null, indBuilt: null },
+        { name: "Akhtar Colony", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Al-Falah Cooperative Housing Society", resOpen: 1400, resBuilt: 3000, comOpen: 12000, comBuilt: 6250, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Al-Hilal Cooperative Housing Society", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Ali Bisti", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Aminabad", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Area Facing Drig Colony(PIA green Col)", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Army Officers Housing Scheme (AFOHS) near National Stadium, Karachi", resOpen: 50000, resBuilt: 55000, comOpen: 70000, comBuilt: 75000, flat: null, indOpen: null, indBuilt: null },
+        { name: "Artillary Maidan Quarters", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Ashraf Nagar", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Askari I,II,III", resOpen: 8200, resBuilt: 10200, comOpen: 20000, comBuilt: 12000, flat: 8000, indOpen: null, indBuilt: null },
+        { name: "Askari IV", resOpen: 8200, resBuilt: 10200, comOpen: 20000, comBuilt: 12000, flat: 10000, indOpen: null, indBuilt: null },
+        { name: "Askari V", resOpen: 15000, resBuilt: 17000, comOpen: 24000, comBuilt: 18150, flat: 15000, indOpen: null, indBuilt: null },
+        { name: "Azam Basti", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Baba Bhit Island", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Bahria Town Karachi superhighway (excluding precinct 1,2,5,8,19 and Jinnah Commercial & Midway Commercial (A&B)", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 2150, indOpen: 700, indBuilt: 2500 },
+        { name: "Bahria Town Karachi superhighway Jinnah Commercial & Midway Commercial (A&B)", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 700, indBuilt: 2500 },
+        { name: "Bahria Town Karachi superhighway precinct 1,2,5,8,19", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 3400, indOpen: 700, indBuilt: 2500 },
+        { name: "Bakshan Village", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Baldia Town", resOpen: 500, resBuilt: 1300, comOpen: 900, comBuilt: 600, flat: 950, indOpen: 1550, indBuilt: 3400 },
+        { name: "Baloch Colony", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Bandar Quarters", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Bath Island", resOpen: 8200, resBuilt: 10200, comOpen: 12000, comBuilt: 6250, flat: 16000, indOpen: null, indBuilt: null },
+        { name: "Behar Colony Claytown Road", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Bhittai Colony", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 950, indOpen: 1550, indBuilt: 3400 },
+        { name: "Bhori Bazar", resOpen: 1400, resBuilt: 3000, comOpen: 12000, comBuilt: 6250, flat: 2150, indOpen: 1350, indBuilt: 3150 },
+        { name: "Bhutta Village", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Bin Qasim (Pipri Excluding Gulshan-e-hadeed)", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1350, indBuilt: 3150 },
+        { name: "Bombay Bazar", resOpen: 5000, resBuilt: 7000, comOpen: 20000, comBuilt: 12000, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Buffer Zone", resOpen: 1400, resBuilt: 3000, comOpen: 14000, comBuilt: 8150, flat: 2150, indOpen: 1350, indBuilt: 3150 },
+        { name: "Burns Road", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Cattle Colony", resOpen: 700, resBuilt: 2200, comOpen: 5150, comBuilt: 3200, flat: 1250, indOpen: 700, indBuilt: 2500 },
+        { name: "Chandio Village PS Defence", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Chandni Chowk KDA Scheme-7", resOpen: 2600, resBuilt: 4600, comOpen: 20000, comBuilt: 12000, flat: 3400, indOpen: 700, indBuilt: 2500 },
+        { name: "Chanesar Goth", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Civil Lines", resOpen: 8200, resBuilt: 10200, comOpen: 20000, comBuilt: 12000, flat: 7350, indOpen: 1550, indBuilt: 3400 },
+        { name: "Clifton Block-I", resOpen: 5000, resBuilt: 7000, comOpen: 20000, comBuilt: 12000, flat: 6200, indOpen: 1550, indBuilt: 3400 },
+        { name: "Clifton Quarters Excluding Shireen Jinnah Colony and Clifton Block-I", resOpen: 8200, resBuilt: 10200, comOpen: 20000, comBuilt: 12000, flat: 7350, indOpen: 1550, indBuilt: 3400 },
+        { name: "Commissioner Society and humayun street(DHA phase VII extension & VIIextension)", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 1550, indBuilt: 3400 },
+        { name: "Commercial plots facing on Jinnah Avenue Scheme-33, (Sector-40)", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 3400, indOpen: 1350, indBuilt: 3150 },
+        { name: "Creek Vista Defence Housing Authority Phase-VIII", resOpen: null, resBuilt: null, comOpen: null, comBuilt: null, flat: 15000, indOpen: null, indBuilt: null },
+        { name: "Darakhshan Cooperative Housing Society", resOpen: 1400, resBuilt: 3000, comOpen: 12000, comBuilt: 6250, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Darussalam and Lucknow Cooperative Society", resOpen: 15000, resBuilt: 17000, comOpen: 24000, comBuilt: 18150, flat: 17000, indOpen: 1550, indBuilt: 3400 },
+        { name: "Defence Housing Authority Phase I, II, III,IV,V,VI,VII (excluding Naval Housing Society Zamzama)", resOpen: 8200, resBuilt: 10200, comOpen: 18000, comBuilt: 9000, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Defence Housing Authority Phase VII Extension (including commissioner society and humayun street)", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: null, indBuilt: null },
+        { name: "Defence Housing Authority Phase VIII Extension (excluding commissioner society and humayun street)", resOpen: 7300, resBuilt: 9300, comOpen: 18000, comBuilt: 9000, flat: 6200, indOpen: null, indBuilt: null },
+        { name: "Defence Housing Authority High Rises", resOpen: null, resBuilt: null, comOpen: null, comBuilt: null, flat: 7350, indOpen: null, indBuilt: null },
+        { name: "Defence Officers Housing Scheme (DOHS) near National Stadium, Karachi", resOpen: 50000, resBuilt: 55000, comOpen: 70000, comBuilt: 75000, flat: 7350, indOpen: 1350, indBuilt: 3150 },
+        { name: "Defence Officers Housing Scheme, Malir", resOpen: 10200, resBuilt: 12200, comOpen: 22000, comBuilt: 14000, flat: 7350, indOpen: null, indBuilt: null },
+        { name: "Defence Officers Housing Society near Stadium Road, Karachi", resOpen: null, resBuilt: null, comOpen: null, comBuilt: null, flat: null, indOpen: 1550, indBuilt: 3400 },
+        { name: "Deh Drig", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Deh Khata", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Dehli Colony", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Dehli Mercantile", resOpen: 10200, resBuilt: 12200, comOpen: 22000, comBuilt: 14000, flat: 12200, indOpen: 1350, indBuilt: 3150 },
+        { name: "DehThamoo", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Depot Line", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "DHA Phase-IX DHA City (excluding sector 1 & 3)", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 700, indBuilt: 2500 },
+        { name: "DHA Phase-IX DHA City Sector 1 & 3", resOpen: 1400, resBuilt: 2700, comOpen: 4250, comBuilt: 1900, flat: 2150, indOpen: 700, indBuilt: 2500 },
+        { name: "Dhoraji Cooperative Housing Society", resOpen: 8200, resBuilt: 10200, comOpen: 20000, comBuilt: 12000, flat: 7350, indOpen: 1350, indBuilt: 3150 },
+        { name: "Doda Village", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Dolmen Mall Hyderi", resOpen: null, resBuilt: 8000, comOpen: null, comBuilt: 12000, flat: 4200, indOpen: null, indBuilt: null },
+        { name: "Drig Cantonment", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Ejaz Colony", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "EMAAR Defence Housing Authority Phase-VIII (All Projects)", resOpen: null, resBuilt: null, comOpen: null, comBuilt: null, flat: 20000, indOpen: 1350, indBuilt: 3150 },
+        { name: "Fatima Jinnah Colony", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Federal B Area (Block-1,2,3,7,8,9,14,15,16,17,18, 19 & 20)", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 700, indBuilt: 2500 },
+        { name: "Federal B Area (Block-4,5,6,10,11,12, 13, 21 & 22)", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 1550, indBuilt: 3400 },
+        { name: "Firdous Colony", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 2150, indOpen: 1350, indBuilt: 3150 },
+        { name: "Frere Quarters", resOpen: 8200, resBuilt: 10200, comOpen: 20000, comBuilt: 12000, flat: 9000, indOpen: 1550, indBuilt: 3400 },
+        { name: "Future Colony", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1350, indBuilt: 3150 },
+        { name: "G. Allan road", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Garden East Quarters", resOpen: 8200, resBuilt: 10200, comOpen: 14000, comBuilt: 8150, flat: 7350, indOpen: 1350, indBuilt: 3150 },
+        { name: "Garden West Quarters", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1550, indBuilt: 3400 },
+        { name: "Ghulam Hussain Qasim Quakers", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Gizri Village", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Government Approved Katchi Abadies", resOpen: 500, resBuilt: 1300, comOpen: 900, comBuilt: 600, flat: 950, indOpen: 1550, indBuilt: 3400 },
+        { name: "GulBai", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1350, indBuilt: 3150 },
+        { name: "Gulistan-e-Jauhar (Block-2,3,14,15,&16)", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 3400, indOpen: 1550, indBuilt: 3400 },
+        { name: "Gulistan-e-Jauhar (excluding block-2,3,14, 15 &16)", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Gulnar Cooperative Housing Society", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 3400, indOpen: 1350, indBuilt: 3150 },
+        { name: "Gulshan-e- Faisal", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Gulshan-e-Hadeed", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1350, indBuilt: 3150 },
+        { name: "Gulshan-e-Iqbal Block (4,6,7 & 17)", resOpen: 8000, resBuilt: 10000, comOpen: 18000, comBuilt: 12150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Gulshan-e-Iqbal Block-1,2,3", resOpen: 8200, resBuilt: 10200, comOpen: 20000, comBuilt: 12000, flat: 2150, indOpen: 1350, indBuilt: 3150 },
+        { name: "Gulshan-e-Iqbal Excluding Block (4,6,7&17)", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 7350, indOpen: 1350, indBuilt: 3150 },
+        { name: "Gulshan-e-Jamal Project-II", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 2150, indOpen: 1350, indBuilt: 3150 },
+        { name: "Gulshan-e-Maymar (excluding sector W, X, Y & Z)", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 700, indBuilt: 2500 },
+        { name: "Gulshan-e-Maymar (Sector 51/52)", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 700, indBuilt: 2500 },
+        { name: "Gulshan-e-Maymar (Sector W, X, Y & Z)", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 700, indBuilt: 2500 },
+        { name: "Haji Mureed Goth", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "HarichandaiVishandas Quarters", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 2150, indOpen: 1350, indBuilt: 3150 },
+        { name: "HasratMohani Colony", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Hawks Bay", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Hyderabad Colony", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "I.I. Chundrigar Road", resOpen: 5000, resBuilt: 7000, comOpen: 20000, comBuilt: 12000, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Ibrahim Hyderi", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 950, indOpen: 1550, indBuilt: 3400 },
+        { name: "Iqbal Colony", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Ishaqabad", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Jacobilne (Including Lines Area)", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 1350, indBuilt: 3150 },
+        { name: "Jamoria Colony", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Jamshed Quarters", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Joria Bazar", resOpen: 2600, resBuilt: 4600, comOpen: 20000, comBuilt: 12000, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Junna Market", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "K.B.R.", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: null, indOpen: null, indBuilt: null },
+        { name: "K.D.A. Officers Housing Society", resOpen: 8200, resBuilt: 10200, comOpen: 20000, comBuilt: 12000, flat: 7350, indOpen: 1350, indBuilt: 3150 },
+        { name: "K.D.A. Scheme No.1 & 1A", resOpen: 8200, resBuilt: 10200, comOpen: 14000, comBuilt: 8150, flat: 7350, indOpen: 1350, indBuilt: 3150 },
+        { name: "Kagzi Bazar", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Karachi Administrative Cooperative Housing Society", resOpen: 8200, resBuilt: 10200, comOpen: 14000, comBuilt: 8150, flat: 7350, indOpen: 1350, indBuilt: 3150 },
+        { name: "Karachi Cooperative Housing Society", resOpen: 8200, resBuilt: 10200, comOpen: 14000, comBuilt: 8150, flat: 7350, indOpen: 1350, indBuilt: 3150 },
+        { name: "KausarNiazi Colony", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "KBR", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Khaliquzzaman Colony", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Khatto Colony", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Khokhrapar", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Khudadad Colony", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Kiamari", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Kolachi Co-operative Housing Society", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 700, indBuilt: 2500 },
+        { name: "Korangi Creek (Cantonment Board)", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 1550, indBuilt: 3400 },
+        { name: "Korangi Creek Deh Dih", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 950, indOpen: 1550, indBuilt: 3400 },
+        { name: "Korangi Industrial Area", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 1550, indBuilt: 3400 },
+        { name: "Korani Township", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Laiqabad", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Landhi Industrial Area", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Landi Township KDA", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Lawrance Quarters", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 1350, indBuilt: 3150 },
+        { name: "Lea Quarter", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Liaqatabad", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Liaquat Ashraf Colony", resOpen: 500, resBuilt: 1300, comOpen: 900, comBuilt: 600, flat: 950, indOpen: 1550, indBuilt: 3400 },
+        { name: "Llanchor Quarters", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 1350, indBuilt: 3150 },
+        { name: "Luckyone Mall", resOpen: 4600, resBuilt: 8000, comOpen: 12000, comBuilt: 15000, flat: 8000, indOpen: null, indBuilt: null },
+        { name: "Lyari Quarters", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "M.A Jinnah Road", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Mahajir Colony", resOpen: 500, resBuilt: 1300, comOpen: 900, comBuilt: 600, flat: 950, indOpen: 1550, indBuilt: 3400 },
+        { name: "Mahmoodabad", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Main Clifton Road Khayaban E Iqbal Road", resOpen: 8200, resBuilt: 10200, comOpen: 20000, comBuilt: 12000, flat: 16000, indOpen: null, indBuilt: null },
+        { name: "Malir Cantonment", resOpen: 10200, resBuilt: 12200, comOpen: 22000, comBuilt: 14000, flat: 4000, indOpen: 700, indBuilt: 2500 },
+        { name: "Malir City", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Manghopir Road & Adjacent Locality", resOpen: 500, resBuilt: 1300, comOpen: 900, comBuilt: 600, flat: 950, indOpen: 1550, indBuilt: 3400 },
+        { name: "Manora", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Maripure", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Market Quarters", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Marriot Road", resOpen: 2600, resBuilt: 4600, comOpen: 20000, comBuilt: 12000, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Metrovil 2 Corridor Area", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Metrovil I", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Metrovil II & III KDA", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Model Colony", resOpen: 10200, resBuilt: 12200, comOpen: 22000, comBuilt: 14000, flat: 3400, indOpen: 700, indBuilt: 2500 },
+        { name: "Modern Colony", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "MolJee Street", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Muhammad Ali Cooperative Housing Society", resOpen: 8200, resBuilt: 10200, comOpen: 20000, comBuilt: 12000, flat: 7350, indOpen: 1350, indBuilt: 3150 },
+        { name: "Muslim Colony", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 1350, indBuilt: 3150 },
+        { name: "Muslim Leage Quarter", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 700, indBuilt: 2500 },
+        { name: "Mustafa Abad", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Nafisabad", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Nasim Colony", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "National Cemnet Employees Cooperativ", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 1350, indBuilt: 3150 },
+        { name: "Naval Housing Society, Karsaz, Shahrah-e-Faisal, Karachi", resOpen: 30000, resBuilt: 35000, comOpen: 40000, comBuilt: 45000, flat: 12000, indOpen: null, indBuilt: null },
+        { name: "Naval Housing Society, Zamzama, Defence Housing Authority, Phase V, Karachi", resOpen: 55000, resBuilt: 60000, comOpen: 70000, comBuilt: 75000, flat: null, indOpen: null, indBuilt: null },
+        { name: "Navel Colony, Karachi West", resOpen: 1100, resBuilt: 2600, comOpen: 12000, comBuilt: 6250, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Nazimabad", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 1350, indBuilt: 3150 },
+        { name: "Neelum Colony", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Nepiar Quarter", resOpen: 2600, resBuilt: 4600, comOpen: 14000, comBuilt: 8150, flat: 3400, indOpen: 1550, indBuilt: 3400 },
+        { name: "New Challi", resOpen: 5000, resBuilt: 7000, comOpen: 20000, comBuilt: 12000, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "New Golimar", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "NORE-II", resOpen: 8200, resBuilt: 10200, comOpen: 20000, comBuilt: 12000, flat: 7350, indOpen: null, indBuilt: null },
+        { name: "North Karachi (All sectors except 1 to 6)", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "North Karachi (sector 1 to 6)", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "North Karachi Industrial Area (Sector-12)", resOpen: 700, resBuilt: 2200, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "North Nazimabad (Block-B & F)", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "North Nazimabad (excluding Block-B & F)", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 1550, indBuilt: 3400 },
+        { name: "North Town Residency, Gadap Town", resOpen: 500, resBuilt: 1300, comOpen: 900, comBuilt: 600, flat: 950, indOpen: 700, indBuilt: 2500 },
+        { name: "Nusrat Bhutto Colony", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Old Frere Street", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Old Golimar", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Old Town Quarters", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Orangabad Quarters", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Orangi Town", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "P.I.B. COLONY", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "P.S. Mahmoodabad", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: null, indBuilt: null },
+        { name: "Pak Colony", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Pakistan Employees Cooperative Housing Society", resOpen: 8200, resBuilt: 10200, comOpen: 20000, comBuilt: 12000, flat: 7350, indOpen: 1350, indBuilt: 3150 },
+        { name: "Pakistan Railway Employees Coop Housing Society, Project 2A-1, Depot Hill Station", resOpen: 500, resBuilt: 1300, comOpen: 900, comBuilt: 600, flat: 950, indOpen: null, indBuilt: null },
+        { name: "Paposh Nagar Quarters", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Paria Street", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Parsi Colony (Silence Towers)", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 1700, indOpen: null, indBuilt: null },
+        { name: "Pasban Muhallah", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Peerabad", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Port Qasim", resOpen: 700, resBuilt: 2200, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Preedy Quarters", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Qaidabad", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Qasba Colony", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Qasimabad", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Queens Road Quarters", resOpen: 5000, resBuilt: 7000, comOpen: 20000, comBuilt: 12000, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "R.A. Lines", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Rafa e Aam Cooperative Housing Society", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Railway Quarters", resOpen: 5000, resBuilt: 7000, comOpen: 20000, comBuilt: 12000, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Ram Bagh Quarters", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Ram Sawami Quarters", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 1350, indBuilt: 3150 },
+        { name: "Rizvia Colony", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 1350, indBuilt: 3150 },
+        { name: "Sadar Bazar Quarters", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Saeedadad", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Saima Arabian Villas", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 3000, indOpen: 700, indBuilt: 2500 },
+        { name: "Saima Paari Mall Hyderi", resOpen: 4000, resBuilt: 6500, comOpen: 12000, comBuilt: 15000, flat: 4200, indOpen: null, indBuilt: null },
+        { name: "Saima Square One Mall", resOpen: 4000, resBuilt: 6500, comOpen: 12000, comBuilt: 15000, flat: 6200, indOpen: null, indBuilt: null },
+        { name: "Saleh Mohammad Street Housing Society", resOpen: 5000, resBuilt: 7000, comOpen: 20000, comBuilt: 12000, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Sands Pit", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Sarafa Bazaar", resOpen: 5000, resBuilt: 7000, comOpen: 20000, comBuilt: 12000, flat: 7350, indOpen: 1350, indBuilt: 3400 },
+        { name: "Saudabad", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Scheme-33 (excluding Metroville-III)", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Shah Faisal Colony", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Shah Faisal Town", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Shah Latif Town Scheme-25 KDA", resOpen: 500, resBuilt: 1300, comOpen: 900, comBuilt: 600, flat: 950, indOpen: 1550, indBuilt: 3400 },
+        { name: "Shahrah e Iraq", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Shahrah-e-Faisal", resOpen: 5000, resBuilt: 7000, comOpen: 20000, comBuilt: 12000, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Shahrah-e-Liaquat (Frere Road)", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8100, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Shanti Nagar", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Shershah Colony & Village", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Shireen Jinnah Colony", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: null, indBuilt: null },
+        { name: "Sindhi Muslim Cooperative HousingSociety", resOpen: 15000, resBuilt: 17000, comOpen: 24000, comBuilt: 18150, flat: 7350, indOpen: 1350, indBuilt: 3150 },
+        { name: "Serai Quarters", resOpen: 5000, resBuilt: 7000, comOpen: 20000, comBuilt: 12000, flat: 10000, indOpen: 1350, indBuilt: 3150 },
+        { name: "SITE II Superhighway", resOpen: 700, resBuilt: 2200, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "SITE Industrial Area", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 7350, indOpen: 1350, indBuilt: 3150 },
+        { name: "Soldier Bazar Quarters", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 1350, indBuilt: 3150 },
+        { name: "South Napier Road", resOpen: 5000, resBuilt: 7000, comOpen: 14000, comBuilt: 8150, flat: 6200, indOpen: 1350, indBuilt: 3150 },
+        { name: "Surjani Town KDA Scheme-41", resOpen: 400, resBuilt: 900, comOpen: 800, comBuilt: 1000, flat: 950, indOpen: 700, indBuilt: 2500 },
+        { name: "Tahilram Quarters", resOpen: 2600, resBuilt: 4600, comOpen: 12000, comBuilt: 6250, flat: 3400, indOpen: 1350, indBuilt: 3150 },
+        { name: "Taiser Town, Gadap Town", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 950, indOpen: 700, indBuilt: 2500 },
+        { name: "UP Muhajireen Society", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Upper Gizri PS Gizri", resOpen: 8200, resBuilt: 10200, comOpen: 14000, comBuilt: 8150, flat: 7350, indOpen: 1350, indBuilt: 3150 },
+        { name: "Usmani Colony Society Near Rizvia Col", resOpen: 1400, resBuilt: 3000, comOpen: 5150, comBuilt: 3200, flat: 2150, indOpen: 1550, indBuilt: 3400 },
+        { name: "Wadhomal Odhoram Quarters", resOpen: 2600, resBuilt: 4600, comOpen: 14000, comBuilt: 8150, flat: 3400, indOpen: 1550, indBuilt: 3400 },
+        { name: "Waheedabad", resOpen: 700, resBuilt: 2200, comOpen: 1500, comBuilt: 1000, flat: 1250, indOpen: 1550, indBuilt: 3400 },
+        { name: "Wilayatabad", resOpen: 1100, resBuilt: 2600, comOpen: 4250, comBuilt: 1900, flat: 1700, indOpen: 1550, indBuilt: 3400 },
+        { name: "Zaibunnisa Street", resOpen: 5000, resBuilt: 7000, comOpen: 20000, comBuilt: 12000, flat: 6200, indOpen: 1350, indBuilt: 3150 }
+    ];
+
+    document.getElementById('areaCount').textContent = AREA_DATA.length + ' areas';
+
+    let selectedArea = null;
+    let selectedType = "resOpen";
+    let currentUnit = "yd";
+
+    const searchInput = document.getElementById('searchInput');
+    const clearSearchBtn = document.getElementById('clearSearch');
+    const dropdown = document.getElementById('dropdownList');
+    const selectedTag = document.getElementById('selectedTag');
+    const typeGroup = document.getElementById('typeGroup');
+    const areaInput = document.getElementById('areaInput');
+    const totalDisplay = document.getElementById('totalDisplay');
+    const metaDisplay = document.getElementById('metaDisplay');
+    const sellerTaxDisplay = document.getElementById('sellerTaxDisplay');
+    const buyerTaxDisplay = document.getElementById('buyerTaxDisplay');
+    const dynamicHint = document.getElementById('dynamicHint');
+    const unitToggle = document.getElementById('unitToggle');
+    const resetSizeBtn = document.getElementById('resetSizeBtn');
+
+    function renderDropdown(filter = '') {
+        const q = filter.trim().toLowerCase();
+        const filtered = AREA_DATA.filter(item => item.name.toLowerCase().includes(q));
+        dropdown.innerHTML = '';
+        
+        if (filtered.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = 'No matching areas';
+            li.style.color = '#64748b';
+            li.style.cursor = 'default';
+            li.style.justifyContent = 'center';
+            dropdown.appendChild(li);
+            dropdown.classList.add('show');
+            return;
+        }
+        
+        filtered.forEach(item => {
+            const li = document.createElement('li');
+            let rateToShow = item[selectedType]; 
+            let displayRate = rateToShow ? rateToShow.toLocaleString() : '—';
+
+            li.innerHTML = `<span>${item.name}</span><span class="hint">${displayRate}</span>`;
+
+            li.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectArea(item);
+            });
+            dropdown.appendChild(li);
+        });
+        dropdown.classList.add('show');
+    }
+
+    function selectArea(obj) {
+        selectedArea = obj;
+        searchInput.value = obj.name;
+        selectedTag.textContent = `📍 ${obj.name}`;
+        selectedTag.style.display = 'inline-block';
+        dropdown.classList.remove('show');
+        clearSearchBtn.classList.add('visible');
+        recalculate();
+    }
+
+    searchInput.addEventListener('focus', () => renderDropdown(searchInput.value));
+    searchInput.addEventListener('input', (e) => {
+        renderDropdown(e.target.value);
+        clearSearchBtn.classList.toggle('visible', e.target.value.length > 0);
+    });
+
+    clearSearchBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        searchInput.value = '';
+        selectedTag.style.display = 'none';
+        selectedArea = null;
+        dropdown.classList.remove('show');
+        clearSearchBtn.classList.remove('visible');
+        searchInput.focus();
+        recalculate();
+    });
+
+    document.addEventListener('click', (e) => {
+        const wrap = document.getElementById('searchWrap');
+        if (!wrap.contains(e.target)) dropdown.classList.remove('show');
+    });
+
+    areaInput.addEventListener('input', recalculate);
+
+    resetSizeBtn.addEventListener('click', () => {
+        areaInput.value = '';
+        areaInput.focus();
+        recalculate();
+    });
+
+    unitToggle.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        [...unitToggle.children].forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentUnit = btn.dataset.unit;
+        updateHint();
+        recalculate();
+    });
+
+    typeGroup.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        [...typeGroup.children].forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedType = btn.dataset.type;
+        updateHint();
+        recalculate();
+        renderDropdown(searchInput.value);
+    });
+
+    function updateHint() {
+        const isBuilt = (selectedType === 'resBuilt' || selectedType === 'comBuilt' || selectedType === 'indBuilt' || selectedType === 'flat');
+        const unitLabel = (currentUnit === 'yd') ? 'sq. yd.' : 'sq. ft.';
+
+        if (isBuilt) {
+            dynamicHint.textContent = `Enter constructed covered area in ${unitLabel}`;
+        } else {
+            if (currentUnit === 'ft') {
+                dynamicHint.textContent = 'Enter area in sq. ft.';
+            } else {
+                dynamicHint.textContent = 'Enter area in sq. yd.';
+            }
+        }
+    }
+
+    function recalculate() {
+        if (!selectedArea) {
+            totalDisplay.textContent = '—';
+            sellerTaxDisplay.textContent = '—';
+            buyerTaxDisplay.textContent = '—';
+            metaDisplay.textContent = 'Please select an area first';
+            return;
+        }
+
+        const rawValue = parseFloat(areaInput.value);
+        if (isNaN(rawValue) || rawValue <= 0) {
+            totalDisplay.textContent = '₨ 0';
+            sellerTaxDisplay.textContent = '₨ 0';
+            buyerTaxDisplay.textContent = '₨ 0';
+            metaDisplay.textContent = 'Enter a valid property size';
+            return;
+        }
+
+        let sqFt = 0;
+        let sqYd = 0;
+        if (currentUnit === 'yd') {
+            sqYd = rawValue;
+            sqFt = rawValue * 9;
+        } else {
+            sqFt = rawValue;
+            sqYd = rawValue / 9;
+        }
+
+        const rates = selectedArea;
+        let rate = null;
+        let label = '';
+
+        switch (selectedType) {
+            case 'resOpen': rate = rates.resOpen; label = 'Residential open plot'; break;
+            case 'resBuilt': rate = rates.resBuilt; label = 'Residential built-up'; break;
+            case 'comOpen': rate = rates.comOpen; label = 'Commercial open plot'; break;
+            case 'comBuilt': rate = rates.comBuilt; label = 'Commercial built-up'; break;
+            case 'flat': rate = rates.flat; label = 'Flat / apartment'; break;
+            case 'indOpen': rate = rates.indOpen; label = 'Industrial open plot'; break;
+            case 'indBuilt': rate = rates.indBuilt; label = 'Industrial built-up plot'; break;
+        }
+
+        if (rate === null || rate === undefined) {
+            totalDisplay.textContent = 'N/A';
+            sellerTaxDisplay.textContent = 'N/A';
+            buyerTaxDisplay.textContent = 'N/A';
+            metaDisplay.textContent = `No rate for ${label} in ${selectedArea.name}`;
+            return;
+        }
+
+        const total = sqFt * rate;
+
+        const formatted = new Intl.NumberFormat('en-PK', {
+            style: 'currency',
+            currency: 'PKR',
+            maximumFractionDigits: 0,
+            minimumFractionDigits: 0
+        }).format(total);
+
+        totalDisplay.textContent = formatted;
+
+        const sellerTax = total * 0.0275;
+        const buyerTax = total * 0.0125;
+
+        const sellerTaxFormatted = new Intl.NumberFormat('en-PK', {
+            style: 'currency',
+            currency: 'PKR',
+            maximumFractionDigits: 0,
+            minimumFractionDigits: 0
+        }).format(sellerTax);
+
+        const buyerTaxFormatted = new Intl.NumberFormat('en-PK', {
+            style: 'currency',
+            currency: 'PKR',
+            maximumFractionDigits: 0,
+            minimumFractionDigits: 0
+        }).format(buyerTax);
+
+        sellerTaxDisplay.textContent = sellerTaxFormatted;
+        buyerTaxDisplay.textContent = buyerTaxFormatted;
+
+        const rateFormatted = rate.toLocaleString();
+        const sqFtFormatted = sqFt.toLocaleString(undefined, { maximumFractionDigits: 1 });
+        const sqYdFormatted = sqYd.toLocaleString(undefined, { maximumFractionDigits: 1 });
+
+        metaDisplay.textContent = `${label} · ${rateFormatted} PKR/sq.ft. × ${sqFtFormatted} sq.ft. (${sqYdFormatted} sq.yd.)`;
+    }
+
+    updateHint();
+    recalculate();
+})();
+</script>
+</body>
+</html>
